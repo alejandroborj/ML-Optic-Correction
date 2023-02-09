@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+	<product name="accmodels-lhc-generation" version="0.6.0" directory="DO_NOT_RELEASE!">
+		<dependencies>
+			<dep product="slf4j-log4j12" groupId="org.slf4j" />
+			<dep product="jmad-gui-pro" groupId="cern.org.jmad" />
+			<dep product="junit" groupId="junit" scope="test" />
+			<dep product="JUnitParams" groupId="pl.pragmatists" version="1.1.1" scope="test" />
+			<dep product="assertj-core" groupId="org.assertj" scope="test" />
+		</dependencies>
+	</product>
+</products>

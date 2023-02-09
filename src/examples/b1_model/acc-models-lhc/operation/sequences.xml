@@ -1,0 +1,8 @@
+<sequence-mapping>
+  <sequence name="lhcb1" accelerator="LHC" particle-transfer="LHCRING">
+    <zone name="LHC" end="28000.0"/>
+  </sequence>
+  <sequence name="lhcb2" accelerator="LHC" particle-transfer="LHCRING">
+    <zone name="LHC" end="28000.0"/>
+  </sequence>
+</sequence-mapping>

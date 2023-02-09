@@ -1,0 +1,483 @@
+<jmad-model-definition name="LHC 2020">
+  <optics>
+    <optic name="R2022a_A11mC11mA10mL10m_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/11m.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A10mC10mA10mL10m_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/10m.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A960cmC960cmA10mL960cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/960cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A910cmC910cmA10mL910cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/910cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A830cmC830cmA10mL830cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/830cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A710cmC710cmA10mL710cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/710cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A590cmC590cmA10mL590cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/590cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A490cmC490cmA10mL490cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/490cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A410cmC410cmA10mL410cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/410cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A330cmC330cmA10mL330cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/330cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A260cmC260cmA10mL260cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/260cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A210cmC210cmA10mL210cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/210cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A170cmC170cmA10mL170cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/170cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1-12_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022_V1/150cm_1-12.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1-33_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022_V1/150cm_1-33.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1-53_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022_V1/150cm_1-53.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1-86_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022_V1/150cm_1-86.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-2-24_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022_V1/150cm_2-24.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-2-50_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022_V1/150cm_2-50.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_1.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1.15_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_1-15.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1.3_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_1-3.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1.45_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_1-45.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1.66_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_1-66.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-1.97_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_1-97.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-2.27_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_2-27.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A150cmC150cmA10mL150cm_ind-2.5_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/150cm_2-5.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A133cmC133cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/133cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A116cmC116cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/116cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A100cmC100cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/100cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A84cmC84cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/84cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A71cmC71cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/71cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A60cmC60cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/60cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A51cmC51cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/51cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A43cmC43cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/43cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A36cmC36cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/36cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A30cmC30cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/30cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A25cmC25cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/25cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A22cmC22cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/22cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2022a_A20cmC20cmA10mL150cm_test" overlay="false">
+      <init-files>
+        <call-file path="strengths/ATS_Nominal/Test2022/20cm.madx" parse="STRENGTHS"/>
+        <call-file location="RESOURCE" path="reset-bump-flags.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+  </optics>
+  <default-optic ref-name="R2022a_A11mC11mA10mL10m_test"/>
+  <sequences>
+    <sequence name="lhcb1">
+      <beam>
+        <particle value="PROTON"/>
+        <energy value="450.0"/>
+        <ex value="7.297671095555556E-9"/>
+        <ey value="7.297671095555556E-9"/>
+        <sigt value="0.077"/>
+        <sige value="5.0E-4"/>
+        <npart value="1.1E11"/>
+        <bv value="PLUS"/>
+      </beam>
+      <ranges>
+        <range name="ALL">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lsa-definition">
+            <chrom value="true"/>
+            <closed-orbit value="true"/>
+            <centre value="true"/>
+          </twiss-initial-conditions>
+        </range>
+        <range name="ALL first turn">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lhcb1-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="55.679041"/>
+            <bety value="71.515031"/>
+            <alfx value="2.128241"/>
+            <alfy value="-1.679855"/>
+            <dx value="-0.1103"/>
+            <dy value="0.0"/>
+            <dpx value="0.03792"/>
+            <dpy value="0.0"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+        </range>
+        <range name="Inj. Sector 2-3">
+          <madx-range first="LHCINJ.B1" last="TCLA.7R3.B1"/>
+          <twiss-initial-conditions name="lhcb1-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="55.679041"/>
+            <bety value="71.515031"/>
+            <alfx value="2.128241"/>
+            <alfy value="-1.679855"/>
+            <dx value="-0.1103"/>
+            <dy value="0.0"/>
+            <dpx value="0.03792"/>
+            <dpy value="0.0"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+        </range>
+        <range name="Inj. Sector 2-5">
+          <madx-range first="LHCINJ.B1" last="IP5"/>
+          <twiss-initial-conditions name="lhcb1-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="55.679041"/>
+            <bety value="71.515031"/>
+            <alfx value="2.128241"/>
+            <alfy value="-1.679855"/>
+            <dx value="-0.1103"/>
+            <dy value="0.0"/>
+            <dpx value="0.03792"/>
+            <dpy value="0.0"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+        </range>
+      </ranges>
+      <default-range ref-name="ALL"/>
+    </sequence>
+    <sequence name="lhcb2">
+      <beam>
+        <particle value="PROTON"/>
+        <energy value="450.0"/>
+        <ex value="7.297671095555556E-9"/>
+        <ey value="7.297671095555556E-9"/>
+        <sigt value="0.077"/>
+        <sige value="5.0E-4"/>
+        <npart value="1.1E11"/>
+        <bv value="MINUS"/>
+      </beam>
+      <ranges>
+        <range name="ALL">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lsa-definition">
+            <chrom value="true"/>
+            <closed-orbit value="true"/>
+            <centre value="true"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="ALL first turn">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-7">
+          <madx-range first="TCLA.A7L7.B2" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-6">
+          <madx-range first="TCDQA.A4L6.B2" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-5">
+          <madx-range first="IP5" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-4">
+          <madx-range first="IP4" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-1">
+          <madx-range first="IP1" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+      </ranges>
+      <default-range ref-name="ALL"/>
+    </sequence>
+  </sequences>
+  <default-sequence ref-name="lhcb1"/>
+  <init-files>
+    <call-file location="RESOURCE" path="init-constants.madx"/>
+    <call-file path="sequence/lhc2018_modifiedIR7_V2.seq"/>
+  </init-files>
+  <path-offsets>
+    <repository-offset value="2020"/>
+  </path-offsets>
+  <svn-revision>$Revision$</svn-revision>
+</jmad-model-definition>

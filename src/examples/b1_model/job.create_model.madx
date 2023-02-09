@@ -1,0 +1,29 @@
+! ----- Calling Sequence and Optics -----
+call, file = 'macros/general.macros.madx';
+call, file = 'macros/lhc.macros.madx';
+call, file = 'macros/lhc.macros.run3.madx';
+call, file = 'acc-models-lhc/lhc.seq';
+
+exec, define_nominal_beams();
+call, file="acc-models-lhc/operation/optics/R2022a_A30cmC30cmA10mL200cm.madx";
+
+! ----- Matching Knobs and Output Files -----
+exec, match_tunes(0.31, 0.32, 1);
+
+! ----- Output optics of lattice -----
+exec, do_twiss_monitors(LHCB1, 'twiss.dat', 0.0);
+exec, do_twiss_elements(LHCB1, 'twiss_elements.dat', 0.0);
+
+! ----- Make lattice thin and rematch tunes -----
+call, file = 'acc-models-lhc/toolkit/slice.madx';
+exec, match_tunes(0.31, 0.32, 1);
+
+
+! ----- Track particle -----
+track, deltap=0.0, onetable, dump, file="./track_out";
+start, x=0.00001, px=0.0, y=0.00001, py=0.0;
+
+call, file="madxobserveLIST_B1.madx";
+run, turns=6000;
+endtrack;
+
