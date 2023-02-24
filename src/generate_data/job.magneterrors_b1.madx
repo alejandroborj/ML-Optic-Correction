@@ -91,8 +91,7 @@ select, flag=error, pattern = "^MQX[AB]\..*";
 B2r = 4;
 ON_B2R = 1;
 ! to make all triplets have a different B2S component
-B2sX = 10-20*RANF(
-    triplet_errors= get_errors_from_sim(common_errors_b1));
+B2sX = 10-20*RANF();
 ON_B2S = 1;
 Rr = 0.050;
 

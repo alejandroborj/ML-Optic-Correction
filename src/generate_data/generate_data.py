@@ -1,4 +1,6 @@
 #%%
+# cat generate_data.py | ssh aborjess@cs-ccr-dev3 python - RUNNING FILE IN SERVER
+
 from __future__ import print_function
 import os
 import glob
@@ -26,15 +28,6 @@ import joblib
 import pandas as pd
 import time
 
-# DIY verbose turn off
-# Disable
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-
-# Restore
-def enablePrint():
-    sys.stdout = sys.__stdout__
-
 # mad-x scripts and model files
 OPTICS_40CM_2016 = './modifiers.madx'
 NOMINAL_TWISS_TEMPL = './job.nominal2016.madx'
@@ -48,22 +41,36 @@ B2_MONITORS_MDL_TFS = tfs.read_tfs("./b2_nominal_monitors.dat").set_index("NAME"
 QX = 64.28
 QY = 59.31
 
+# DIY verbose turn off
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
+
 def main():
+    #global madx # Global variable
     set_name = "training_set"
-    num_sim = 100
+    num_sim = 5
     all_samples = []
     valid_samples = []
     GENERATE_DATA = True
     start = time.time()
+
     print("\nStart creating dataset\n")
     if GENERATE_DATA==True:
-        '''# Run simulations in parallel
-        pool = Pool(processes=5) #30
+
+        # Run simulations in parallel
+        pool = Pool(processes=5) # Max 7 # Max Elena30
         all_samples = pool.map(create_sample, range(num_sim))
         pool.close()
-        pool.join()'''
+        pool.join()
         
-        all_samples = [create_sample(i) for i in range(num_sim)] # No parallel computing
+        #all_samples = [create_sample(i) for i in range(num_sim)] # No parallel computing
 
         # if twiss failed, sample will be None --> filter, check number of samples
         # usually, around ~2% of simulations fail due to generated error distribition
@@ -91,7 +98,7 @@ def train_model(set_name):
     estimator = BaggingRegressor(base_estimator=ridge, n_estimators=10, \
         max_samples=0.9, max_features=1.0, n_jobs=16, verbose=3)
     estimator.fit(train_inputs, train_outputs)
-    # Optionally: save fitted model or load already trained model
+    # Optionally: save fitted model or load al    enablePrint()ready trained model
     joblib.dump(estimator, 'estimator.pkl')
     #estimator = joblib.load('estimator.pkl')
 
@@ -105,6 +112,7 @@ def train_model(set_name):
     print("Training: R2 = {0}, MAE = {1}".format(training_score, mae_train))
     print("Test: R2 = {0}, MAE = {1}".format(test_score, mae_test))
 
+
 def load_data(set_name):
     #Function that inputs the .npy file and returns the data in a readable format for the algoritms
     all_samples = np.load('./{}.npy'.format(set_name), allow_pickle=True)
@@ -112,6 +120,7 @@ def load_data(set_name):
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
             delta_muy_b2, n_disp_b1, n_disp_b2, \
                 triplet_errors = all_samples.T
+    madx = cpymad.madx.Madx()
     # select features for input
     # Optionally: add noise to simulated optics functions
     input_data = np.concatenate(( \
@@ -125,6 +134,7 @@ def load_data(set_name):
     output_data = np.vstack(triplet_errors)#np.concatenate(( \np.vstack(triplet_errors), np.vstack(arc_errors_b1), \np.vstack(arc_errors_b2), np.vstack(mqt_errors_b1), \np.vstack(mqt_errors_b2),), axis=1)
     return input_data, output_data
 
+
 # Add noise to generated phase advance deviations as estimated from measurements
 def add_phase_noise(phase_errors, betas, expected_noise):
     my_phase_errors = np.array(phase_errors)
@@ -133,14 +143,6 @@ def add_phase_noise(phase_errors, betas, expected_noise):
     noise_with_beta_fact = np.multiply(noises, betas_fact)
     phase_errors_with_noise = my_phase_errors + noise_with_beta_fact
     return phase_errors_with_noise
-
-
-# Add noise to generated dispersion deviations as estimated from measurements in 2018
-def add_dispersion_noise(disp_errors, noise):
-    my_disp_errors = np.array(disp_errors)
-    noises = noise * np.random.noncentral_chisquare(4, 0.0035, disp_errors.shape)
-    disp_errors_with_noise = my_disp_errors + noises
-    return disp_errors_with_noise
 
 
 # Read all generated error tables (as tfs), return k1l absolute for sample output
@@ -153,27 +155,33 @@ def get_errors_from_sim(common_errors):#, b1_errors_file_path, b2_errors_file_pa
 
 
 def create_nominal_twiss():
-    blockPrint()
     madx = cpymad.madx.Madx()
+    blockPrint()
     with open(NOMINAL_TWISS_TEMPL, 'r') as template:
         template_str = template.read()
     madx.input(template_str % {"OPTICS": OPTICS_40CM_2016})
     enablePrint()
+    madx.quit()
 
 
 def create_sample(index):
+    print("\nDoing index: ", str(index), "\n")
+
+    blockPrint() # Interrupt MADX output messages
+    madx = cpymad.madx.Madx()
     sample = None
     np.random.seed(seed=None)
-    print("\nDoing index: ", str(index), "\n")
     seed = random.randint(0, 999999999)
 
     # Run mad-x for b1 and b2
     with open(MAGNETS_TEMPLATE_B1, 'r') as template:
-        template_str = template.read()
-    blockPrint()
-    madx = cpymad.madx.Madx() #Creating another instance of MADX
+        template_str = template.read() 
+
     madx.input(template_str % {"INDEX": str(index), \
         "OPTICS": OPTICS_40CM_2016, "SEED": seed})
+
+    #madx.quit()
+    #print("Sim1")
 
     twiss_data_b1 = madx.table.twiss.dframe()
     common_errors = madx.table.cetab.dframe()
@@ -181,15 +189,13 @@ def create_sample(index):
     with open(MAGNETS_TEMPLATE_B2, 'r') as template:
         template_str = template.read()
      #Creating another instance of MADX
-    madx = cpymad.madx.Madx() #Creating another instance of MADX
-    madx.verbose(False)
+
     madx.input(template_str % {"INDEX": str(index), \
         "OPTICS": OPTICS_40CM_2016, "SEED": seed})
 
     twiss_data_b2 = madx.table.twiss.dframe()
-    #errors_matched_b2 = tfs_to_df(madx.table.errtab)
 
-    enablePrint()
+    #errors_matched_b2 = tfs_to_df(madx.table.errtab)
 
     delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(twiss_data_b1,  B1_MONITORS_MDL_TFS, 1)
@@ -204,11 +210,16 @@ def create_sample(index):
         delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
             triplet_errors
 
-    files = glob.glob("./magnet_errors/*")
-    for f in files: # Remove files
+    files = glob.glob(f"./magnet_errors/*{index}.tfs")
+    for f in files: # Remove files for this simulation
         os.remove(f)
 
+    madx.quit() # Stop all processes and free memory
+
+    enablePrint()
+
     return sample
+
 
 # extract input data from generated twiss
 def get_input_for_beam(twiss_df, meas_mdl, beam):
@@ -243,11 +254,13 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
 
     return np.array(delta_beta_star_x), np.array(delta_beta_star_y), np.array(delta_phase_adv_x), np.array(delta_phase_adv_y), np.array(n_disp)
 
-def tfs_to_df(madx_table):
+
+'''def tfs_to_df(madx_table):
     df = pd.DataFrame(np.array([madx_table[col] for col in list(madx_table)]).transpose())
     df.columns = list(madx_table)
     df.transpose
-    return df
+    return df'''
+
 
 def get_phase_adv(total_phase, tune):
     phase_diff = np.diff(total_phase)
