@@ -1,5 +1,8 @@
 #%%
-# cat generate_data.py | ssh aborjess@cs-ccr-dev3 python - RUNNING FILE IN SERVER
+# cat generate_data.py | ssh aborjess@cs-ccr-dev3 /afs/cern.ch/eng/sl/lintrack/omc_python3/bin/python - RUNNING FILE IN SERVER
+
+#cat generate_data.py | ssh aborjess@cs-ccr-dev3 /home/alejandro/anaconda3/envs/ml-op/bin/python
+
 
 from __future__ import print_function
 import os
@@ -55,7 +58,7 @@ def enablePrint():
 def main():
     #global madx # Global variable
     set_name = "training_set"
-    num_sim = 5
+    num_sim = 200
     all_samples = []
     valid_samples = []
     GENERATE_DATA = True
@@ -65,7 +68,7 @@ def main():
     if GENERATE_DATA==True:
 
         # Run simulations in parallel
-        pool = Pool(processes=5) # Max 7 # Max Elena30
+        pool = Pool(processes=5) # Max 7 # Max Elena 30
         all_samples = pool.map(create_sample, range(num_sim))
         pool.close()
         pool.join()
@@ -120,7 +123,7 @@ def load_data(set_name):
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
             delta_muy_b2, n_disp_b1, n_disp_b2, \
                 triplet_errors = all_samples.T
-    madx = cpymad.madx.Madx()
+    
     # select features for input
     # Optionally: add noise to simulated optics functions
     input_data = np.concatenate(( \
@@ -165,59 +168,56 @@ def create_nominal_twiss():
 
 
 def create_sample(index):
+    sample = None
     print("\nDoing index: ", str(index), "\n")
 
     blockPrint() # Interrupt MADX output messages
+
+    # Madx wrapper
     madx = cpymad.madx.Madx()
-    sample = None
+
     np.random.seed(seed=None)
     seed = random.randint(0, 999999999)
 
     # Run mad-x for b1 and b2
     with open(MAGNETS_TEMPLATE_B1, 'r') as template:
         template_str = template.read() 
+    try:
+        madx.input(template_str % {"INDEX": str(index), \
+            "OPTICS": OPTICS_40CM_2016, "SEED": seed})
+        twiss_data_b1 = madx.table.twiss.dframe()
+        common_errors = madx.table.cetab.dframe()
 
-    madx.input(template_str % {"INDEX": str(index), \
-        "OPTICS": OPTICS_40CM_2016, "SEED": seed})
+        with open(MAGNETS_TEMPLATE_B2, 'r') as template:
+            template_str = template.read()
+        #Creating another instance of MADX
 
-    #madx.quit()
-    #print("Sim1")
+        madx.input(template_str % {"INDEX": str(index), \
+            "OPTICS": OPTICS_40CM_2016, "SEED": seed})
 
-    twiss_data_b1 = madx.table.twiss.dframe()
-    common_errors = madx.table.cetab.dframe()
+        twiss_data_b2 = madx.table.twiss.dframe()
 
-    with open(MAGNETS_TEMPLATE_B2, 'r') as template:
-        template_str = template.read()
-     #Creating another instance of MADX
-
-    madx.input(template_str % {"INDEX": str(index), \
-        "OPTICS": OPTICS_40CM_2016, "SEED": seed})
-
-    twiss_data_b2 = madx.table.twiss.dframe()
-
-    #errors_matched_b2 = tfs_to_df(madx.table.errtab)
-
-    delta_beta_star_x_b1, delta_beta_star_y_b1, \
+        delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(twiss_data_b1,  B1_MONITORS_MDL_TFS, 1)
     
-    delta_beta_star_x_b2, delta_beta_star_y_b2, \
-        delta_mux_b2, delta_muy_b2, n_disp_b2 = get_input_for_beam(twiss_data_b2 , B2_MONITORS_MDL_TFS, 2)
-    
-    triplet_errors= get_errors_from_sim(common_errors)
+        delta_beta_star_x_b2, delta_beta_star_y_b2, \
+            delta_mux_b2, delta_muy_b2, n_disp_b2 = get_input_for_beam(twiss_data_b2 , B2_MONITORS_MDL_TFS, 2)
+        
+        triplet_errors= get_errors_from_sim(common_errors)
 
-    # Create a training sample
-    sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
-        delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
-            triplet_errors
+        # Create a training sample
+        sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
+            delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
+                triplet_errors
 
-    files = glob.glob(f"./magnet_errors/*{index}.tfs")
-    for f in files: # Remove files for this simulation
-        os.remove(f)
+        files = glob.glob(f"./magnet_errors/*{index}.tfs")
+        for f in files: # Remove files for this simulation
+            os.remove(f)
+    except:
+        print("TWISS Failed")
 
     madx.quit() # Stop all processes and free memory
-
     enablePrint()
-
     return sample
 
 
@@ -253,13 +253,6 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
     n_disp = tw_perturbed['NDX']
 
     return np.array(delta_beta_star_x), np.array(delta_beta_star_y), np.array(delta_phase_adv_x), np.array(delta_phase_adv_y), np.array(n_disp)
-
-
-'''def tfs_to_df(madx_table):
-    df = pd.DataFrame(np.array([madx_table[col] for col in list(madx_table)]).transpose())
-    df.columns = list(madx_table)
-    df.transpose
-    return df'''
 
 
 def get_phase_adv(total_phase, tune):
