@@ -21,6 +21,9 @@ import tfs
 import cpymad.madx
 
 from multiprocessing import Pool
+from multiprocessing import Process
+from multiprocessing import Queue
+
 from collections import OrderedDict
 from sklearn import linear_model
 from sklearn.ensemble import BaggingRegressor
@@ -30,6 +33,7 @@ import joblib
 
 import pandas as pd
 import time
+from functools import partial
 
 # mad-x scripts and model files
 OPTICS_40CM_2016 = './modifiers.madx'
@@ -44,36 +48,37 @@ B2_MONITORS_MDL_TFS = tfs.read_tfs("./b2_nominal_monitors.dat").set_index("NAME"
 QX = 64.28
 QY = 59.31
 
+# Initialize all madx wrappers
+n_processes = 1
+madx_wrappers = [cpymad.madx.Madx() for i in range(n_processes)]
+
 # DIY verbose turn off
 # Disable
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
 
-
 # Restore
 def enablePrint():
     sys.stdout = sys.__stdout__
 
-
 def main():
-    #global madx # Global variable
+    # GLOBAL VARIABLES, Madx wrapper and number of parallel simulations
+
     set_name = "training_set"
-    num_sim = 200
-    all_samples = []
+    num_sim = 6
     valid_samples = []
     GENERATE_DATA = True
     start = time.time()
 
     print("\nStart creating dataset\n")
     if GENERATE_DATA==True:
-
         # Run simulations in parallel
-        pool = Pool(processes=5) # Max 7 # Max Elena 30
-        all_samples = pool.map(create_sample, range(num_sim))
-        pool.close()
-        pool.join()
+        #pool = Pool(processes=n_processes) # Max 7 # Max Elena 30
+        #all_samples = pool.map(create_sample, range(num_sim))
+        #pool.close()
+        #pool.join()
         
-        #all_samples = [create_sample(i) for i in range(num_sim)] # No parallel computing
+        all_samples = [create_sample(i) for i in range(num_sim)] # No parallel computing
 
         # if twiss failed, sample will be None --> filter, check number of samples
         # usually, around ~2% of simulations fail due to generated error distribition
@@ -168,34 +173,34 @@ def create_nominal_twiss():
 
 
 def create_sample(index):
+        
+    mdx = madx_wrappers[index%n_processes]# Is this correct? How do indexes change each iteration
+
     sample = None
     print("\nDoing index: ", str(index), "\n")
-
-    blockPrint() # Interrupt MADX output messages
-
-    # Madx wrapper
-    madx = cpymad.madx.Madx()
 
     np.random.seed(seed=None)
     seed = random.randint(0, 999999999)
 
     # Run mad-x for b1 and b2
+
+    blockPrint() # Interrupt MADX output messages
     with open(MAGNETS_TEMPLATE_B1, 'r') as template:
         template_str = template.read() 
     try:
-        madx.input(template_str % {"INDEX": str(index), \
+        mdx.input(template_str % {"INDEX": str(index), \
             "OPTICS": OPTICS_40CM_2016, "SEED": seed})
-        twiss_data_b1 = madx.table.twiss.dframe()
-        common_errors = madx.table.cetab.dframe()
-
+        twiss_data_b1 = mdx.table.twiss.dframe()
+        common_errors = mdx.table.cetab.dframe()
+        
         with open(MAGNETS_TEMPLATE_B2, 'r') as template:
             template_str = template.read()
         #Creating another instance of MADX
 
-        madx.input(template_str % {"INDEX": str(index), \
+        mdx.input(template_str % {"INDEX": str(index), \
             "OPTICS": OPTICS_40CM_2016, "SEED": seed})
 
-        twiss_data_b2 = madx.table.twiss.dframe()
+        twiss_data_b2 = mdx.table.twiss.dframe()
 
         delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(twiss_data_b1,  B1_MONITORS_MDL_TFS, 1)
@@ -209,17 +214,16 @@ def create_sample(index):
         sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
             delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
                 triplet_errors
-
-        files = glob.glob(f"./magnet_errors/*{index}.tfs")
-        for f in files: # Remove files for this simulation
-            os.remove(f)
     except:
         print("TWISS Failed")
+        
+    files = glob.glob(f"./magnet_errors/*{index}.tfs")
+    for f in files: # Remove files for this simulation
+        os.remove(f)
 
-    madx.quit() # Stop all processes and free memory
+    #madx.quit() # Stop all processes and free memory
     enablePrint()
     return sample
-
 
 # extract input data from generated twiss
 def get_input_for_beam(twiss_df, meas_mdl, beam):
