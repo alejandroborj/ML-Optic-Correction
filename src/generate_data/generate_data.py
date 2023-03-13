@@ -20,6 +20,8 @@ import tfs
 #from omc3 import madx_wrapper Old Version
 import cpymad.madx
 
+from madx_jobs import madx_ml_op
+
 from multiprocessing import Pool
 from multiprocessing import Process
 from multiprocessing import Queue
@@ -31,9 +33,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 import joblib
 
-import pandas as pd
 import time
-from functools import partial
 
 # mad-x scripts and model files
 OPTICS_40CM_2016 = './modifiers.madx'
@@ -50,7 +50,7 @@ QY = 59.31
 
 # Initialize all madx wrappers
 n_processes = 1
-madx_wrappers = [cpymad.madx.Madx() for i in range(n_processes)]
+#madx_wrappers = [cpymad.madx.Madx() for i in range(n_processes)]
 
 # DIY verbose turn off
 # Disable
@@ -156,7 +156,7 @@ def add_phase_noise(phase_errors, betas, expected_noise):
 # Read all generated error tables (as tfs), return k1l absolute for sample output
 def get_errors_from_sim(common_errors):#, b1_errors_file_path, b2_errors_file_path, b1_tw_before_match, b1_tw_after_match, b2_tw_before_match, b2_tw_after_match):
     # Triplet errors 
-    #triplet_errors_tfs = tfs.read_tfs(common_errors).set_index("NAME")
+    # triplet_errors_tfs = tfs.read_tfs(common_errors).set_index("NAME")
     triplet_errors = common_errors.k1l
 
     return np.array(triplet_errors)#, np.array(arc_errors_b1), np.array(arc_errors_b2), np.array(mqt_errors_b1), np.array(mqt_errors_b2)
@@ -174,7 +174,9 @@ def create_nominal_twiss():
 
 def create_sample(index):
         
-    mdx = madx_wrappers[index%n_processes]# Is this correct? How do indexes change each iteration
+    #mdx = madx_wrappers[index%n_processes]# Is this correct? How do indexes change each iteration
+
+    mdx = madx_ml_op() # Creating a madx wrapper with extra funcitonality
 
     sample = None
     print("\nDoing index: ", str(index), "\n")
@@ -184,23 +186,32 @@ def create_sample(index):
 
     # Run mad-x for b1 and b2
 
-    blockPrint() # Interrupt MADX output messages
-    with open(MAGNETS_TEMPLATE_B1, 'r') as template:
-        template_str = template.read() 
+    #blockPrint() # Interrupt MADX output messages
+
     try:
-        mdx.input(template_str % {"INDEX": str(index), \
-            "OPTICS": OPTICS_40CM_2016, "SEED": seed})
+        with open(MAGNETS_TEMPLATE_B1, 'r') as template:   
+            template_str = template.read() 
+        
+        mdx.job_magneterrors_b1(OPTICS_40CM_2016, str(index), seed)
+
+        #mdx.input(template_str % {"INDEX": str(index), \
+        #    "OPTICS": OPTICS_40CM_2016, "SEED": seed})
         twiss_data_b1 = mdx.table.twiss.dframe()
         common_errors = mdx.table.cetab.dframe()
         
-        with open(MAGNETS_TEMPLATE_B2, 'r') as template:
-            template_str = template.read()
-        #Creating another instance of MADX
+        #with open(MAGNETS_TEMPLATE_B2, 'r') as template:
+        #    template_str = template.read()
 
-        mdx.input(template_str % {"INDEX": str(index), \
-            "OPTICS": OPTICS_40CM_2016, "SEED": seed})
+        print("READYYYYYYYYYYYYYYYYYYYYYYYY")
+
+        mdx.job_magneterrors_b2(OPTICS_40CM_2016, str(index), seed)
 
         twiss_data_b2 = mdx.table.twiss.dframe()
+
+        """
+        mdx.input(template_str % {"INDEX": str(index), \
+            "OPTICS": OPTICS_40CM_2016, "SEED": seed})
+        twiss_data_b2 = mdx.table.twiss.dframe()"""
 
         delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(twiss_data_b1,  B1_MONITORS_MDL_TFS, 1)
@@ -222,7 +233,7 @@ def create_sample(index):
         os.remove(f)
 
     #madx.quit() # Stop all processes and free memory
-    enablePrint()
+    #enablePrint()
     return sample
 
 # extract input data from generated twiss
