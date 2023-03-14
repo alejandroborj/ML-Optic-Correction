@@ -1,8 +1,19 @@
 #%%
-# cat generate_data.py | ssh aborjess@cs-ccr-dev3 /afs/cern.ch/eng/sl/lintrack/omc_python3/bin/python - RUNNING FILE IN SERVER
+# UPDATING SCRIPT AND RUNNING IT ON THE SERVER
+"""
+rsync -ar /home/alejandro/Desktop/ML-Optic-Correction/src/generate_data aborjess@cs-ccr-dev3:work/public/ML-Optic-Correction/src
 
-#cat generate_data.py | ssh aborjess@cs-ccr-dev3 /home/alejandro/anaconda3/envs/ml-op/bin/python
+cat generate_data.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python
 
+!/bin/bash
+cd work/public/ML-Optic-Correction/src/generate_data
+for i in {1..60}
+do
+    echo -e "\nInstance $i\n"
+    cat generate_data.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python &
+done
+wait
+"""
 
 from __future__ import print_function
 import os
@@ -14,7 +25,7 @@ from scipy import stats
 import random
 # Beta-Beat.src to import tfs_pandas
 # Using python 3 --> import tfs
-sys.path.append('/afs/cern.ch/work/e/efol/public/Beta-Beat.src/')
+#sys.path.append('/afs/cern.ch/work/e/efol/public/Beta-Beat.src/')
 #from Utilities import tfs_pandas
 import tfs
 #from omc3 import madx_wrapper Old Version
@@ -50,7 +61,8 @@ QY = 59.31
 
 # Initialize all madx wrappers
 n_processes = 1
-#madx_wrappers = [cpymad.madx.Madx() for i in range(n_processes)]
+#madx_wrappers = [madx_ml_op() for i in range(n_processes)]
+mdx = madx_ml_op()
 
 # DIY verbose turn off
 # Disable
@@ -64,11 +76,12 @@ def enablePrint():
 def main():
     # GLOBAL VARIABLES, Madx wrapper and number of parallel simulations
 
-    set_name = "training_set"
-    num_sim = 6
+    start = time.time()
+    set_name = f"training_set_{int(divmod(start,1)[1]*1000)}"
+    num_sim = 10
     valid_samples = []
     GENERATE_DATA = True
-    start = time.time()
+    TRAIN = False
 
     print("\nStart creating dataset\n")
     if GENERATE_DATA==True:
@@ -86,12 +99,13 @@ def main():
             if sample is not None:
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
-        np.save('./{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
+        np.save('./data/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
         
     stop = time.time()
     print('Execution time (s): ', stop-start)
     # Train on generated data
-    train_model(set_name)
+    if TRAIN==True:
+        train_model(set_name)
 
 
 # example of reading the data, training ML model and validate results
@@ -103,7 +117,7 @@ def train_model(set_name):
     
     # create and fit a regression model
     ridge = linear_model.Ridge(tol=1e-50, alpha=1e-03) #normalize=false
-    estimator = BaggingRegressor(base_estimator=ridge, n_estimators=10, \
+    estimator = BaggingRegressor(estimator=ridge, n_estimators=10, \
         max_samples=0.9, max_features=1.0, n_jobs=16, verbose=3)
     estimator.fit(train_inputs, train_outputs)
     # Optionally: save fitted model or load al    enablePrint()ready trained model
@@ -123,7 +137,7 @@ def train_model(set_name):
 
 def load_data(set_name):
     #Function that inputs the .npy file and returns the data in a readable format for the algoritms
-    all_samples = np.load('./{}.npy'.format(set_name), allow_pickle=True)
+    all_samples = np.load('./data/{}.npy'.format(set_name), allow_pickle=True)
     delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, \
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
             delta_muy_b2, n_disp_b1, n_disp_b2, \
@@ -161,22 +175,9 @@ def get_errors_from_sim(common_errors):#, b1_errors_file_path, b2_errors_file_pa
 
     return np.array(triplet_errors)#, np.array(arc_errors_b1), np.array(arc_errors_b2), np.array(mqt_errors_b1), np.array(mqt_errors_b2)
 
-
-def create_nominal_twiss():
-    madx = cpymad.madx.Madx()
-    blockPrint()
-    with open(NOMINAL_TWISS_TEMPL, 'r') as template:
-        template_str = template.read()
-    madx.input(template_str % {"OPTICS": OPTICS_40CM_2016})
-    enablePrint()
-    madx.quit()
-
-
 def create_sample(index):
-        
     #mdx = madx_wrappers[index%n_processes]# Is this correct? How do indexes change each iteration
-
-    mdx = madx_ml_op() # Creating a madx wrapper with extra funcitonality
+    #mdx = madx_ml_op() # Creating a madx wrapper with extra funcitonality
 
     sample = None
     print("\nDoing index: ", str(index), "\n")
@@ -186,32 +187,17 @@ def create_sample(index):
 
     # Run mad-x for b1 and b2
 
-    #blockPrint() # Interrupt MADX output messages
+    blockPrint() # Interrupt MADX output messages
 
     try:
-        with open(MAGNETS_TEMPLATE_B1, 'r') as template:   
-            template_str = template.read() 
-        
         mdx.job_magneterrors_b1(OPTICS_40CM_2016, str(index), seed)
 
-        #mdx.input(template_str % {"INDEX": str(index), \
-        #    "OPTICS": OPTICS_40CM_2016, "SEED": seed})
         twiss_data_b1 = mdx.table.twiss.dframe()
         common_errors = mdx.table.cetab.dframe()
         
-        #with open(MAGNETS_TEMPLATE_B2, 'r') as template:
-        #    template_str = template.read()
-
-        print("READYYYYYYYYYYYYYYYYYYYYYYYY")
-
         mdx.job_magneterrors_b2(OPTICS_40CM_2016, str(index), seed)
 
         twiss_data_b2 = mdx.table.twiss.dframe()
-
-        """
-        mdx.input(template_str % {"INDEX": str(index), \
-            "OPTICS": OPTICS_40CM_2016, "SEED": seed})
-        twiss_data_b2 = mdx.table.twiss.dframe()"""
 
         delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(twiss_data_b1,  B1_MONITORS_MDL_TFS, 1)
@@ -232,8 +218,7 @@ def create_sample(index):
     for f in files: # Remove files for this simulation
         os.remove(f)
 
-    #madx.quit() # Stop all processes and free memory
-    #enablePrint()
+    enablePrint()
     return sample
 
 # extract input data from generated twiss

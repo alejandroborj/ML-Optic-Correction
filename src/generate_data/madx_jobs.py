@@ -8,10 +8,11 @@ class madx_ml_op(cpymad.madx.Madx):
     def job_magneterrors_b1(self, OPTICS, index, seed):
         self.input('''
         option, -echo;
-        call, file = "./afs/beta_beat.macros.madx";
-        !"/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
-        call, file = "./afs/lhc.macros.madx";
-        !"/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
+        option, -info;
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
+        !"./afs/beta_beat.macros.madx";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
+        !"./afs/lhc.macros.madx";
         option, echo;
         
         ! in the litrack macros kqts are defined wrong for 2016 optics
@@ -24,13 +25,13 @@ class madx_ml_op(cpymad.madx.Madx):
             endmatch;
         };
 
-        call, file = "./afs/Esubroutines.madx";
-        !"/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
+        call, file = "/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
+        !"./afs/Esubroutines.madx";
 
         ! load main sequence
         option, -echo;
-        call, file = "./afs/main.seq";
-        !"/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/model/accelerators/lhc/2016/main.seq";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/model/accelerators/lhc/2016/main.seq";
+        !"./afs/main.seq";
 
         beam, sequence=LHCB1, particle=proton, energy=6500, kbunch=1, npart=1.15E11, bv=1;
         call, file = "%(OPTICS)s";
@@ -128,7 +129,7 @@ class madx_ml_op(cpymad.madx.Madx):
         select, flag=error, pattern = "^MQX[AB]\..*";
 
         etable, table="cetab"; ! Saving errors in table 
-        esave, file="./magnet_errors/common_errors_%(INDEX)s.tfs";
+        !esave, file="./magnet_errors/common_errors_%(INDEX)s.tfs";
 
         ! Add sextupole misalignments: 
         ! --> not needed anymore, because MQ arcs B2R is increased by 1 unit.
@@ -143,9 +144,9 @@ class madx_ml_op(cpymad.madx.Madx):
         ! EALIGN, DS := 0.006*TGAUSS(3);
 
         !Assign average dipole errors (best knowldge model)
-        readmytable, file = "./afs/MBx-0001.errors", table=errtab;
+        !readmytable, file = "./afs/MBx-0001.errors", table=errtab;
+        readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
         seterr, table=errtab;
-        !readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
 
         ! Save all assigned errors in one error table
         select, flag=error, clear;
@@ -153,26 +154,30 @@ class madx_ml_op(cpymad.madx.Madx):
         etable, table="etabb1"; ! Saving errors in table 
         !esave, file="./magnet_errors/b1_errors_%(INDEX)s.tfs";
 
-        exec, do_twiss_elements(LHCB1, "./magnet_errors/b1_twiss_before_match_%(INDEX)s.tfs", 0.0);
+        exec, do_twiss_elements(LHCB1, "", 0.0);
+        !./magnet_errors/b1_twiss_before_match_%(INDEX)s.tfs
         exec, match_tunes_kqt(64.28, 59.31, 1);
-        exec, do_twiss_elements(LHCB1, "./magnet_errors/b1_twiss_after_match_%(INDEX)s.tfs", 0.0);
+        exec, do_twiss_elements(LHCB1, "", 0.0);
+        !./magnet_errors/b1_twiss_after_match_%(INDEX)s.tfs
 
         ! Generate twiss with columns needed for training data
         ndx := table(twiss,dx)/sqrt(table(twiss,betx));
         select, flag=twiss, clear;
         select, flag=twiss, pattern="^BPM.*B1$", column=name, s, betx, bety, ndx,
                                                     mux, muy;
-        twiss, chrom, sequence=LHCB1, deltap=0.0, file="./magnet_errors/b1_twiss_%(INDEX)s.tfs";
+        twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
+        !./magnet_errors/b1_twiss_%(INDEX)s.tfs
         ''' % {"INDEX": str(index), "OPTICS": OPTICS, "SEED": seed})
 
 
     def job_magneterrors_b2(self, OPTICS, index, seed):
         self.input('''
         option, -echo;
-        call, file = "./afs/beta_beat.macros.madx";
-        !call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
-        call, file = "./afs/lhc.macros.madx";
-        !call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
+        option, -info;
+        !call, file = "./afs/beta_beat.macros.madx";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
+        !call, file = "./afs/lhc.macros.madx";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
         option, echo;
 
         match_tunes_kqt(nqx, nqy, beam_number): macro = {
@@ -183,10 +188,10 @@ class madx_ml_op(cpymad.madx.Madx):
             lmdif, calls=2000, tolerance=1E-23;
             endmatch;
         };
-        call, file = "./afs/Esubroutines.madx";
-        !call, file="/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
-        call, file = "./afs/main.seq";
-        !call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/model/accelerators/lhc/2016/main.seq";
+        !call, file = "./afs/Esubroutines.madx";
+        call, file="/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
+        !call, file = "./afs/main.seq";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/model/accelerators/lhc/2016/main.seq";
         beam, sequence=LHCB2, particle=proton, energy=6500, kbunch=1, npart=1.15E11, bv=-1;
         call, file = "%(OPTICS)s";
         exec, cycle_sequences();
@@ -252,7 +257,7 @@ class madx_ml_op(cpymad.madx.Madx):
         exec, SetEfcomp_Q;
 
         select, flag=error, clear;
-        READMYTABLE, file="./magnet_errors/common_errors_%(INDEX)s.tfs", table=errtab;
+        !READMYTABLE, file="./magnet_errors/common_errors_%(INDEX)s.tfs", table=errtab;
         SETERR, TABLE=errtab;
 
         ! Add sextupole misalignments:
@@ -266,8 +271,8 @@ class madx_ml_op(cpymad.madx.Madx):
         ! EALIGN, DS := 0.006*TGAUSS(3);
 
         !Assign average dipole errors (best knowldge model)
-        !readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam2/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
-        readmytable, file = "./afs/MBx-0001.errors", table=errtab;
+        !readmytable, file = "./afs/MBx-0001.errors", table=errtab;
+        readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam2/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
         seterr, table=errtab;
 
         select, flag=error, clear;
@@ -275,14 +280,82 @@ class madx_ml_op(cpymad.madx.Madx):
         etable, table="etabb2"; ! Saving errors in table 
         !esave, file="./magnet_errors/b2_errors_%(INDEX)s.tfs";
 
-        exec, do_twiss_elements(LHCB2, "./magnet_errors/b2_twiss_before_match_%(INDEX)s.tfs", 0.0);
+        exec, do_twiss_elements(LHCB2, "", 0.0);
+        !./magnet_errors/b2_twiss_before_match_%(INDEX)s.tfs
         exec, match_tunes_kqt(64.28, 59.31, 2);
-        exec, do_twiss_elements(LHCB2, "./magnet_errors/b2_twiss_after_match_%(INDEX)s.tfs", 0.0);
+        exec, do_twiss_elements(LHCB2, "", 0.0);
+        !./magnet_errors/b2_twiss_after_match_%(INDEX)s.tfs
 
         ndx := table(twiss,dx)/sqrt(table(twiss,betx));
         select, flag=twiss, clear;
         select, flag=twiss, pattern="^BPM.*B2$", column=name, s, betx, bety, ndx,
                                                     mux, muy;
-        twiss, chrom, sequence=LHCB2, deltap=0.0, file="./magnet_errors/b2_twiss_%(INDEX)s.tfs";
+        twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
+        !./magnet_errors/b2_twiss_%(INDEX)s.tfs
         ''' % {"INDEX": str(index), "OPTICS": OPTICS, "SEED": seed})
+
+def job_nominal2016(self):
+        self.input('''
+        option, -info;
+        option, -echo;
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
+        option, echo;
+
+        match_tunes_kqt(nqx, nqy, beam_number): macro = {
+            match;
+            vary, name=KQTD.Bbeam_number;
+            vary, name=KQTF.Bbeam_number;
+            GLOBAL, Q1= nqx, Q2=nqy;
+            lmdif, calls=2000, tolerance=1E-23;
+            endmatch;
+        };
+        ! /afs/cern.ch/eng/lhc/optics/runII/2016
+
+        do_twiss_elements_with_dipoles(use_sequence, output_file, dpp): macro = {
+            exec, select_elements();
+            twiss, chrom, sequence=use_sequence, deltap=dpp, file=output_file;
+        };
+        select_elements(): macro = {
+            select, flag=twiss, clear;
+            select, flag=twiss, class=monitor, column=name, s, betx, alfx, bety, alfy, 
+                                                    mux, muy, dx, dy, dpx, dpy, x, y, k0l, k0,
+                                                    k1l, k1sl, k2l, k3l, k4l, wx, wy, phix,
+                                                    phiy, dmux, dmuy, keyword, dbx, dby,
+                                                    r11, r12, r21, r22;
+            select, flag=twiss, class=monitor;
+            select, flag=twiss, class=quadrupole;
+            ! select, flag=twiss, class=skewquadrupole;
+            ! select, flag=twiss, class=sextupole;
+            select, flag=twiss, pattern = "^MB\..*";
+
+        }
+
+
+        call, file="/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
+        option, -echo;
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/model/accelerators/lhc/2016/main.seq";
+        beam, sequence=LHCB1, particle=proton, energy=6500, kbunch=1, npart=1.15E11, bv=1;
+        call, file = "./modifiers.madx";
+        exec, cycle_sequences();
+        use, period = LHCB1;
+        option, echo;
+        exec, match_tunes_kqt(64.28, 59.31, 1);
+        ! exec, do_twiss_elements_with_dipoles(LHCB1, "./b1_nominal_elements_with_dipoles.dat", 0.0);
+        exec, do_twiss_monitors(LHCB1, "./b1_nominal_monitors.dat", 0.0);
+        exec, do_twiss_elements(LHCB1, "./b1_nominal_elements.dat", 0.0);
+
+
+        option, -echo;
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/model/accelerators/lhc/2016/main.seq";
+        beam, sequence=LHCB2, particle=proton, energy=6500, kbunch=1, npart=1.15E11, bv=-1;
+        call, file = "./modifiers.madx";
+        exec, cycle_sequences();
+        use, period = LHCB2;
+        option, echo;
+        exec, match_tunes_kqt(64.28, 59.31, 2);
+        ! exec, do_twiss_elements_with_dipoles(LHCB2, "./b2_nominal_elements_with_dipoles.dat", 0.0);
+        exec, do_twiss_monitors(LHCB2, "./b2_nominal_monitors.dat", 0.0);
+        exec, do_twiss_elements(LHCB2, "./b2_nominal_elements.dat", 0.0);
+        ''')
 # %%
