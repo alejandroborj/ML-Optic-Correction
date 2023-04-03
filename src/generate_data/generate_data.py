@@ -17,32 +17,22 @@ do
     cat generate_data.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python &
 done
 wait
+
+cat model_training.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python
+rsync -ar aborjess@cs-ccr-dev3:work/public/ML-Optic-Correction/src/generate_data/r2.pdf /home/alejandro/Desktop/ML-Optic-Correction/src/generate_data
+
 """
 
-from __future__ import print_function
-import os
-import sys
 import numpy as np
-from scipy import stats
 import random
 import tfs
-from madx_jobs import madx_ml_op
-
-
-from collections import OrderedDict
-from sklearn import linear_model
-from sklearn.ensemble import BaggingRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-import joblib
-from pathlib import Path
 
 import time
 
+from madx_jobs import madx_ml_op
+from model_training import train_model
+
 # mad-x scripts and model files
-OPTICS_40CM_2016 = './modifiers.madx'
-#/afs/cern.ch/work/f/fcarlier/public/for/Alejandro/models/LHCB1/B1_30cm_flat
-OPTICS_30CM_2023 = '/afs/cern.ch/work/f/fcarlier/public/for/Alejandro/models/LHCB1/B1_30cm_flat/modifiers.madx'
 OPTICS_30CM_2023 = '/afs/cern.ch/user/a/aborjess/work/private/models/LHCB1/B1_30cm_flat/modifiers.madx'
 
 B1_MONITORS_MDL_TFS = tfs.read_tfs("./b1_nominal_monitors.dat").set_index("NAME")
@@ -61,32 +51,17 @@ QY = 59.32
 QX = 62.31
 QY = 60.32
 
-# DIY verbose turn off
-# Disable
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-
-
-# Restore
-def enablePrint():
-    sys.stdout = sys.__stdout_
-
-
-#blockPrint()
-mdx = madx_ml_op()
-#enablePrint()
+#mdx = madx_ml_op()
 #mdx.job_nominal2023()
-
 
 def main():
     # GLOBAL VARIABLES, Madx wrapper and number of parallel simulations
 
     start = time.time()
-    set_name = f"training_set_{np.random.randint(low=0, high=99999)}"
-    num_sim = 1
+    set_name = f"training_set_{np.random.randint(0, 99999)}"
+    num_sim = 5
     valid_samples = []
     GENERATE_DATA = True
-    TRAIN = False
 
     print("\nStart creating dataset\n")
     if GENERATE_DATA==True:
@@ -99,87 +74,10 @@ def main():
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
         np.save('./data/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
-
-    mdx.quit()
     
     stop = time.time()
     print('Execution time (s): ', stop-start)
-    # Train on generated data
-    if TRAIN==True:
-        train_model(set_name)
 
-
-# example of reading the data, training ML model and validate results
-def train_model(set_name, MERGE=False):
-    # Load data
-    if MERGE == True:
-        input_data, output_data = merge_data(set_name)
-    else:
-        input_data, output_data = load_data(set_name)
-
-    # split into train and test
-    train_inputs, test_inputs, train_outputs, test_outputs = train_test_split(
-        input_data, output_data, test_size=0.2, random_state=None)
-    
-    # create and fit a regression model
-    ridge = linear_model.Ridge(tol=1e-50, alpha=1e-03) #normalize=false
-    estimator = BaggingRegressor(estimator=ridge, n_estimators=10, \
-        max_samples=0.9, max_features=1.0, n_jobs=16, verbose=3)
-    estimator.fit(train_inputs, train_outputs)
-
-    # Optionally: save fitted model or load already trained model
-    joblib.dump(estimator, 'estimator.pkl')
-    #estimator = joblib.load('estimator.pkl')
-
-    # Check scores: explained variance and MAE
-    training_score = estimator.score(train_inputs, train_outputs)
-    test_score = estimator.score(test_inputs, test_outputs)
-    prediction_train = estimator.predict(train_inputs)
-    mae_train = mean_absolute_error(train_outputs, prediction_train)
-    prediction_test = estimator.predict(test_inputs)
-    mae_test = mean_absolute_error(test_outputs, prediction_test)
-
-    print("Training: R2 = {0}, MAE = {1}".format(training_score, mae_train))
-    print("Test: R2 = {0}, MAE = {1}".format(test_score, mae_test))
-
-
-def load_data(set_name):
-    #Function that inputs the .npy file and returns the data in a readable format for the algoritms
-    all_samples = np.load('./data/{}.npy'.format(set_name), allow_pickle=True)
-
-    delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, \
-        delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
-            delta_muy_b2, n_disp_b1, n_disp_b2, \
-                triplet_errors, arc_errors_b1, arc_errors_b2, \
-                mqt_errors_b1, mqt_errors_b2 = all_samples.T
-    
-    # select features for input
-    # Optionally: add noise to simulated optics functions
-    input_data = np.concatenate(( \
-        np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
-        np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
-        np.vstack(delta_mux_b1), np.vstack(delta_muy_b1), \
-        np.vstack(delta_mux_b2), np.vstack(delta_muy_b2), \
-        np.vstack(n_disp_b1), np.vstack(n_disp_b2), \
-        ), axis=1)
-    # select targets for output
-    output_data = np.concatenate((np.vstack(triplet_errors), np.vstack(arc_errors_b1),\
-                                   np.vstack(arc_errors_b2)), axis=1)
-    #np.vstack(mqt_errors_b1), np.vstack(mqt_errors_b2),)
-    return input_data, output_data
-
-def merge_data(data_path):
-    #Takes folder path for all different data files and merges them
-    input_data, output_data = [], []
-    pathlist = Path(data_path).glob('**/*.npy')
-    file_names = [str(path).split('/')[-1][:-4] for path in pathlist]
-
-    for file_name in file_names:
-        aux_input, aux_output = load_data(file_name)
-        input_data.append(aux_input)
-        output_data.append(aux_output)
-
-    return np.concatenate(input_data), np.concatenate(output_data) 
 
 # Add noise to generated phase advance deviations as estimated from measurements
 def add_phase_noise(phase_errors, betas, expected_noise):
@@ -196,6 +94,7 @@ def create_sample(index):
 
     np.random.seed(seed=None)
     seed = random.randint(0, 999999999)
+    mdx = madx_ml_op()
 
     # Run mad-x for b1 and b2
     try:
@@ -220,7 +119,6 @@ def create_sample(index):
         mdx.match_tunes_b2()
 
         b2_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
-
         mdx.generate_twiss_train_b2()
 
         twiss_data_b2 = mdx.table.twiss.dframe() # Relevant to training Twiss data
@@ -241,6 +139,10 @@ def create_sample(index):
         sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
             delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
                 triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2
+        import matplotlib.pyplot as plt
+        plt.plot(b1_tw_before_match.s, (b1_tw_after_match.betx-b1_tw_before_match.betx)/b1_tw_before_match.betx)
+        plt.show()
+        mdx.quit()
     except:
         print("TWISS Failed")
 
@@ -256,9 +158,15 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
     # replace K1L of MQT in original table (0) with matched - unmatched difference, per knob (2 different values for all MQTs)
     b1_unmatched = b1_tw_before_match.set_index("name", drop=False)
     b1_matched = b1_tw_after_match.set_index("name", drop=False)
+
+    
     mqt_names_b1 = [name for name in b1_unmatched.index.values if "mqt." in name]
     mqt_errors_b1 = np.unique(np.array(b1_matched.loc[mqt_names_b1, "k1l"].values - \
         b1_unmatched.loc[mqt_names_b1, "k1l"].values, dtype=float).round(decimals=8))
+    print(b1_matched.loc[mqt_names_b1, "k1l"])
+    print(b1_unmatched.loc[mqt_names_b1, "k1l"])
+    print(b1_unmatched.loc[mqt_names_b1, "k1l"].values-b1_matched.loc[mqt_names_b1, "k1l"].values)
+    print("MQT ERR ", mqt_errors_b1)
     mqt_errors_b1 = [k for k in mqt_errors_b1 if k != 0]
     
     # The rest of magnets errors
@@ -272,8 +180,9 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
     mqt_names_b2 = [name for name in b2_unmatched.index.values if "mqt." in name]
     mqt_errors_b2 = np.unique(np.array(b2_matched.loc[mqt_names_b2, "k1l"].values - \
         b2_unmatched.loc[mqt_names_b2, "k1l"].values, dtype=float).round(decimals=8))
-    
+    print("MQT ERR ", mqt_errors_b2)
     mqt_errors_b2 = [k for k in mqt_errors_b2 if k != 0]
+
     arc_magnets_names_b2 = [name for name in tfs_error_file_b2.index.values if ("mqt." not in name and "mqx" not in name)]
     arc_errors_b2 = tfs_error_file_b2.loc[arc_magnets_names_b2, "k1l"]
 
@@ -329,4 +238,4 @@ def get_tot_phase(phase_from_twiss):
 if __name__ == "__main__":
     main()
 
-# %%
+ # %%

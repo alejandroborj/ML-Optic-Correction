@@ -27,12 +27,6 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         exec, cycle_sequences();
 
-        if(0==1){
-            exec, set_crossing_scheme_ON();
-        }else{
-            exec, set_default_crossing_scheme();
-        }
-
         ! BEAM 1
 
         use, period = LHCB1;
@@ -63,7 +57,9 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII.macros.madx";
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII_ats.macros.madx";
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2022.macros.madx";
-        call, file = "/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx"; ! ADDED
+        call, file = "/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx"; 
+        ! ADDED
+
         option, echo;
 
         !@require lhc_runIII_2022.macros.madx
@@ -76,18 +72,11 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         exec, cycle_sequences();
 
-        if(0==1){
-            exec, set_crossing_scheme_ON();
-        }else{
-            exec, set_default_crossing_scheme();
-        }
-
         ! BEAM 1
 
-        use, period = LHCB1;
-
         option, echo;
-
+        use, period = LHCB1;
+        
         exec, match_tunes(62.31, 60.32, 1);
 
         ! Assign errors per magnets family:
@@ -191,7 +180,6 @@ class madx_ml_op(cpymad.madx.Madx):
         ! EALIGN, DS := 0.006*TGAUSS(3);
 
         !Assign average dipole errors (best knowldge model)
-        !readmytable, file = "./afs/MBx-0001.errors", table=errtab;;
         readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
         seterr, table=errtab;
 
@@ -203,6 +191,13 @@ class madx_ml_op(cpymad.madx.Madx):
         !exec, do_twiss_elements(LHCB1, "", 0.0);
         twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
         '''% {"INDEX": str(index), "OPTICS": OPTICS, "SEED": seed})
+
+    def match_tunes_b2(self):
+        self.input('''
+        exec, match_tunes(62.31, 60.32, 2);
+        !exec, do_twiss_elements(LHCB2, "", 0.0);
+        twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
+        ''')
 
     def match_tunes_b1(self):
         self.input('''
@@ -224,7 +219,10 @@ class madx_ml_op(cpymad.madx.Madx):
 
     def job_magneterrors_b2(self, OPTICS, index, seed):
         self.input('''
-        !@require lhc_runIII_2022.macros.madx
+        !@require lhc_runIII_2022.macros.madx        
+        
+        !Reseting all previous errors
+        use, period = LHCB2;
 
         option, -echo;
 
@@ -233,12 +231,6 @@ class madx_ml_op(cpymad.madx.Madx):
         exec, define_nominal_beams();
         call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         exec, cycle_sequences();
-
-        if(0==1){
-            exec, set_crossing_scheme_ON();
-        }else{
-            exec, set_default_crossing_scheme();
-        }
 
         use, period = LHCB2;
 
@@ -345,6 +337,14 @@ class madx_ml_op(cpymad.madx.Madx):
         select, flag=twiss, pattern="^BPM.*B2$", column=name, s, betx, bety, ndx,
                                                     mux, muy;
         twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
+
+
+        !Reseting all previous errors
+        use, period = LHCB1;
+        resbeam, sequence = LHCB1;
+        use, period = LHCB2;
+        resbeam, sequence = LHCB2;
+        !ADDED
         ''')
 
 # %%
