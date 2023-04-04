@@ -43,9 +43,6 @@ B2_MONITORS_MDL_TFS = tfs.read_tfs("./b2_nominal_monitors.dat").set_index("NAME"
 QX = 64.28
 QY = 59.31
 
-# Injection optics 2023
-QX = 64.31
-QY = 59.32
 
 # Colision optics 2023
 QX = 62.31
@@ -140,9 +137,13 @@ def create_sample(index):
             delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
                 triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2
         import matplotlib.pyplot as plt
-        plt.plot(b1_tw_before_match.s, (b1_tw_after_match.betx-b1_tw_before_match.betx)/b1_tw_before_match.betx)
+        plt.title("Match comparison")
+        plt.plot(b1_tw_before_match.s, (b1_tw_before_match.betx-b1_tw_after_match.betx)/b1_tw_before_match.betx)
         plt.show()
+
         mdx.quit()
+        """if len(mqt_errors_b1) or len(mqt_errors_b2) != 2:
+            sample = None"""
     except:
         print("TWISS Failed")
 
@@ -151,7 +152,7 @@ def create_sample(index):
 # Read all generated error tables (as tfs), return k1l absolute for sample output
 def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,\
                             b1_tw_after_match, b2_tw_before_match, b2_tw_after_match):
-    # Triplet errors 
+    # Triplet errors  
     triplet_errors = common_errors.k1l
 
     tfs_error_file_b1 = b1_errors.set_index("name", drop=False) 
@@ -194,7 +195,7 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
     ip_bpms_b1 = ["BPMSW.1L1.B1", "BPMSW.1R1.B1", "BPMSW.1L2.B1", "BPMSW.1R2.B1", "BPMSW.1L5.B1", "BPMSW.1R5.B1", "BPMSW.1L8.B1", "BPMSW.1R8.B1"]
     ip_bpms_b2 = ["BPMSW.1L1.B2", "BPMSW.1R1.B2", "BPMSW.1L2.B2", "BPMSW.1R2.B2", "BPMSW.1L5.B2", "BPMSW.1R5.B2", "BPMSW.1L8.B2", "BPMSW.1R8.B2"]
 
-    #tw_perturbed_elements = tfs.read_tfs(twiss_pert_elements_path).set_index("NAME")
+    #tw_perturbed_elements = tTrueread_tfs(twiss_pert_elements_path).set_index("NAME")
     
     tw_perturbed_elements = twiss_df.set_index("name") 
     # Uppercase and taking the relevant index 
@@ -203,6 +204,12 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
 
     tw_perturbed = tw_perturbed_elements[tw_perturbed_elements.index.isin(meas_mdl.index)]
     ip_bpms = ip_bpms_b1 if beam == 1 else ip_bpms_b2
+
+    import matplotlib.pyplot as plt
+    #plt.plot(b1_tw_before_match.s, (b1_tw_before_match.betx-b1_tw_after_match.betx)/b1_tw_before_match.betx)
+    plt.title("Beta Beating")
+    plt.plot(meas_mdl.S, (tw_perturbed.BETX-meas_mdl.BETX)/meas_mdl.BETX)
+    plt.show()
     
     # phase advance deviations
     phase_adv_x = get_phase_adv(tw_perturbed['MUX'], QX)

@@ -192,15 +192,9 @@ class madx_ml_op(cpymad.madx.Madx):
         twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
         '''% {"INDEX": str(index), "OPTICS": OPTICS, "SEED": seed})
 
-    def match_tunes_b2(self):
-        self.input('''
-        exec, match_tunes(62.31, 60.32, 2);
-        !exec, do_twiss_elements(LHCB2, "", 0.0);
-        twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
-        ''')
-
     def match_tunes_b1(self):
         self.input('''
+        print, text="Matching Tunes B1";
         exec, match_tunes(62.31, 60.32, 1);
         !exec, do_twiss_elements(LHCB1, "", 0.0);
         twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
@@ -220,9 +214,6 @@ class madx_ml_op(cpymad.madx.Madx):
     def job_magneterrors_b2(self, OPTICS, index, seed):
         self.input('''
         !@require lhc_runIII_2022.macros.madx        
-        
-        !Reseting all previous errors
-        use, period = LHCB2;
 
         option, -echo;
 
@@ -296,8 +287,9 @@ class madx_ml_op(cpymad.madx.Madx):
 
         select, flag=error, clear;
 
+        !Assigning the common error tab
         !READMYTABLE, file="./magnet_errors/common_errors_%(INDEX)s.tfs", table=errtab;
-        SETERR, TABLE=errtab;
+        SETERR, TABLE=cetab;
 
         ! Add sextupole misalignments:
         ! select, flag=error, clear;
@@ -324,6 +316,7 @@ class madx_ml_op(cpymad.madx.Madx):
 
     def match_tunes_b2(self):
         self.input('''
+        print, text="Matching Tunes B2";
         exec, match_tunes(62.31, 60.32, 2);
         !exec, do_twiss_elements(LHCB2, "", 0.0);
         twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
@@ -338,13 +331,6 @@ class madx_ml_op(cpymad.madx.Madx):
                                                     mux, muy;
         twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
 
-
-        !Reseting all previous errors
-        use, period = LHCB1;
-        resbeam, sequence = LHCB1;
-        use, period = LHCB2;
-        resbeam, sequence = LHCB2;
-        !ADDED
         ''')
 
 # %%
