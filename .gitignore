@@ -1,4 +1,4 @@
 Literature/
-generate_data/data/
-generate_data/estimator.pkl
+src/generate_data/data/
+src/generate_data/estimator.pkl
 

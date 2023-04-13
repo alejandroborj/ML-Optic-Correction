@@ -64,8 +64,8 @@ def main():
     predicted_errtable_triplets.loc[:,"K1L"] = predicted_triplets
 
     #save predicted triplet errors as tfs error table
-    # current_prediction_fn = 'prediction_from_uncorrected_meas'
-    # tfs.write(os.path.join("./", '{}.tfs'.format(current_prediction_fn)), predicted_errtable_triplets, save_index=True)
+    current_prediction_fn = 'prediction_from_uncorrected_meas'
+    tfs.write(os.path.join("./", '{}.tfs'.format(current_prediction_fn)), predicted_errtable_triplets, save_index=True)
     
     # replace values in correctioins template file
     for IP_n in np.array([1,2,5,8]):
@@ -74,9 +74,12 @@ def main():
         t = Template(template_str)
         q2a_q2b_left = (predicted_errtable_triplets.loc["MQXB.A2L{}".format(IP_n),"K1L"] + predicted_errtable_triplets.loc["MQXB.B2L{}".format(IP_n),"K1L"])/2
         q2a_q2b_right = (predicted_errtable_triplets.loc["MQXB.A2R{}".format(IP_n),"K1L"] + predicted_errtable_triplets.loc["MQXB.B2R{}".format(IP_n),"K1L"])/2
-        content = t.substitute(IPn = str(IP_n), Q1L= str(predicted_errtable_triplets.loc["MQXA.1L{}".format(IP_n),"K1L"]/Q1Q3_LEN), Q1R= str(predicted_errtable_triplets.loc["MQXA.1R{}".format(IP_n),"K1L"]/Q1Q3_LEN),
-                                      Q3L= str(predicted_errtable_triplets.loc["MQXA.3L{}".format(IP_n),"K1L"]/Q1Q3_LEN), Q3R= str(predicted_errtable_triplets.loc["MQXA.3R{}".format(IP_n),"K1L"]/Q1Q3_LEN), 
-                                      Q2L= str(q2a_q2b_left/Q2_LEN), Q2R= str(q2a_q2b_right/Q2_LEN))
+        content = t.substitute(IPn = str(IP_n), Q1L= str(predicted_errtable_triplets.loc["MQXA.1L{}".format(IP_n),"K1L"]/Q1Q3_LEN), 
+                                      Q1R= str(predicted_errtable_triplets.loc["MQXA.1R{}".format(IP_n),"K1L"]/Q1Q3_LEN),
+                                      Q3L= str(predicted_errtable_triplets.loc["MQXA.3L{}".format(IP_n),"K1L"]/Q1Q3_LEN), 
+                                      Q3R= str(predicted_errtable_triplets.loc["MQXA.3R{}".format(IP_n),"K1L"]/Q1Q3_LEN), 
+                                      Q2L= str(q2a_q2b_left/Q2_LEN), 
+                                      Q2R= str(q2a_q2b_right/Q2_LEN))
         with open("./RF_IP{}_corrections_predicted.madx".format(IP_n), "w") as f:
             f.write(content)
 

@@ -19,6 +19,7 @@ done
 wait
 
 cat model_training.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python
+
 rsync -ar aborjess@cs-ccr-dev3:work/public/ML-Optic-Correction/src/generate_data/r2.pdf /home/alejandro/Desktop/ML-Optic-Correction/src/generate_data
 
 """
@@ -30,7 +31,6 @@ import tfs
 import time
 
 from madx_jobs import madx_ml_op
-from model_training import train_model
 
 # mad-x scripts and model files
 OPTICS_30CM_2023 = '/afs/cern.ch/user/a/aborjess/work/private/models/LHCB1/B1_30cm_flat/modifiers.madx'
@@ -38,12 +38,7 @@ OPTICS_30CM_2023 = '/afs/cern.ch/user/a/aborjess/work/private/models/LHCB1/B1_30
 B1_MONITORS_MDL_TFS = tfs.read_tfs("./b1_nominal_monitors.dat").set_index("NAME")
 B2_MONITORS_MDL_TFS = tfs.read_tfs("./b2_nominal_monitors.dat").set_index("NAME")
 
-# tunes for phase advance computation.
-# Injection optics 2016
-QX = 64.28
-QY = 59.31
-
-
+# tunes for phase advance computation
 # Colision optics 2023
 QX = 62.31
 QY = 60.32
@@ -94,58 +89,56 @@ def create_sample(index):
     mdx = madx_ml_op()
 
     # Run mad-x for b1 and b2
-    try:
-        # BEAM 1
-        mdx.job_magneterrors_b1(OPTICS_30CM_2023, str(index), seed)
-        b1_tw_before_match = mdx.table.twiss.dframe() # Twiss before match
+    #try:
+    # BEAM 1
+    mdx.job_magneterrors_b1(OPTICS_30CM_2023, str(index), seed)
+    b1_tw_before_match = mdx.table.twiss.dframe() # Twiss before match
 
-        mdx.match_tunes_b1()
-        b1_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
+    mdx.match_tunes_b1()
+    b1_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
+    #twiss_data_b1 = mdx.table.twiss.dframe() # Relevant to training Twiss data
+    common_errors = mdx.table.cetab.dframe() # Errors for both beams, triplet errors
+    b1_errors = mdx.table.etabb1.dframe() # Table error for MQX magnets
+    
+    # BEAM 2
+    mdx.job_magneterrors_b2(OPTICS_30CM_2023, str(index), seed)
 
-        mdx.generate_twiss_train_b1()
-        
-        twiss_data_b1 = mdx.table.twiss.dframe() # Relevant to training Twiss data
-        common_errors = mdx.table.cetab.dframe() # Errors for both beams, triplet errors
-        b1_errors = mdx.table.etabb1.dframe() # Table error for MQX magnets
-        
-        # BEAM 2
-        mdx.job_magneterrors_b2(OPTICS_30CM_2023, str(index), seed)
+    b2_tw_before_match = mdx.table.twiss.dframe() # Twiss before match
 
-        b2_tw_before_match = mdx.table.twiss.dframe() # Twiss before match
+    mdx.match_tunes_b2()
 
-        mdx.match_tunes_b2()
+    b2_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
+    #twiss_data_b2 = mdx.table.twiss.dframe() # Relevant to training Twiss data
+    b2_errors= mdx.table.etabb2.dframe() # Table error for MQX magnets     
 
-        b2_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
-        mdx.generate_twiss_train_b2()
+    delta_beta_star_x_b1, delta_beta_star_y_b1, \
+    delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(b1_tw_after_match,  B1_MONITORS_MDL_TFS, 1)
+    
+    delta_beta_star_x_b2, delta_beta_star_y_b2, \
+        delta_mux_b2, delta_muy_b2, n_disp_b2 = get_input_for_beam(b2_tw_after_match , B2_MONITORS_MDL_TFS, 2)
 
-        twiss_data_b2 = mdx.table.twiss.dframe() # Relevant to training Twiss data
-        b2_errors= mdx.table.etabb2.dframe() # Table error for MQX magnets     
+    # Reading errors from MADX tables
+    triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2 = \
+    get_errors_from_sim(common_errors, b1_errors, b2_errors, \
+            b1_tw_before_match, b1_tw_after_match, b2_tw_before_match, b2_tw_after_match)
+    
+    # Create a training sample
+    sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
+        delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
+            triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2
+    #import matplotlib.pyplot as plt
+    #plt.title("Match comparison")
+    #plt.plot(b1_tw_before_match.s, (b1_tw_before_match.betx-b1_tw_after_match.betx)/b1_tw_before_match.betx)
+    #plt.show()
 
-        delta_beta_star_x_b1, delta_beta_star_y_b1, \
-        delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(twiss_data_b1,  B1_MONITORS_MDL_TFS, 1)
-        
-        delta_beta_star_x_b2, delta_beta_star_y_b2, \
-            delta_mux_b2, delta_muy_b2, n_disp_b2 = get_input_for_beam(twiss_data_b2 , B2_MONITORS_MDL_TFS, 2)
-
-        # Reading errors from MADX tables
-        triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2 = \
-        get_errors_from_sim(common_errors, b1_errors, b2_errors, \
-                b1_tw_before_match, b1_tw_after_match, b2_tw_before_match, b2_tw_after_match)
-        
-        # Create a training sample
-        sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
-            delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
-                triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2
-        import matplotlib.pyplot as plt
-        plt.title("Match comparison")
-        plt.plot(b1_tw_before_match.s, (b1_tw_before_match.betx-b1_tw_after_match.betx)/b1_tw_before_match.betx)
-        plt.show()
-
-        mdx.quit()
-        """if len(mqt_errors_b1) or len(mqt_errors_b2) != 2:
-            sample = None"""
-    except:
-        print("TWISS Failed")
+    # Sometimes matching fails, this is a half measure
+    mdx.quit()
+    print("MQT MAGNET ERRORS: ", mqt_errors_b1, mqt_errors_b2)
+    if (len(mqt_errors_b1) or len(mqt_errors_b2)) != 2:
+        sample = None
+    #except:
+    sample = None
+    print("TWISS Failed")
 
     return sample
 
@@ -187,6 +180,8 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
     arc_magnets_names_b2 = [name for name in tfs_error_file_b2.index.values if ("mqt." not in name and "mqx" not in name)]
     arc_errors_b2 = tfs_error_file_b2.loc[arc_magnets_names_b2, "k1l"]
 
+    #print("Triplet error names: ", list(common_errors.name)+list(arc_magnets_names_b1)+arc_magnets_names_b2 + ["MQTB1", "MQTB2"])
+
     return np.array(triplet_errors), np.array(arc_errors_b1), \
         np.array(arc_errors_b2), np.array(mqt_errors_b1), np.array(mqt_errors_b2)
 
@@ -205,11 +200,10 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
     tw_perturbed = tw_perturbed_elements[tw_perturbed_elements.index.isin(meas_mdl.index)]
     ip_bpms = ip_bpms_b1 if beam == 1 else ip_bpms_b2
 
-    import matplotlib.pyplot as plt
-    #plt.plot(b1_tw_before_match.s, (b1_tw_before_match.betx-b1_tw_after_match.betx)/b1_tw_before_match.betx)
-    plt.title("Beta Beating")
-    plt.plot(meas_mdl.S, (tw_perturbed.BETX-meas_mdl.BETX)/meas_mdl.BETX)
-    plt.show()
+    #import matplotlib.pyplot as plt
+    #plt.title("Beta Beating")
+    #plt.plot(meas_mdl.S, (tw_perturbed.BETX-meas_mdl.BETX)/meas_mdl.BETX)
+    #plt.show()
     
     # phase advance deviations
     phase_adv_x = get_phase_adv(tw_perturbed['MUX'], QX)

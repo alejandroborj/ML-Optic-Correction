@@ -46,7 +46,6 @@ def get_beta_beating_from_measurement(measurement_path):
     return betabeatx, betabeaty
 
 
-
 def get_delta_and_meas_phase(measurement_path, twiss, phasecut_x, phasecut_y, bbeat_cut):
     if os.path.isfile(os.path.join(measurement_path, 'getphasex_free2.out')):
         getphasex_original = tfs_pandas.read_tfs(os.path.join(measurement_path, 'getphasex_free2.out')).set_index("NAME")

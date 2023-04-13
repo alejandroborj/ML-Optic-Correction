@@ -9,7 +9,7 @@ call, file="/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
 option, -echo;
 call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
 exec, define_nominal_beams();
-call, file = "./modifiers.madx";
+call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
 exec, cycle_sequences();
 use, period = LHCB2;
 

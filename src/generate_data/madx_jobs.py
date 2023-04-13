@@ -1,11 +1,14 @@
 #%%
 import cpymad.madx
+import pymadng
 
+#class madx_ml_op(pymadng.MAD):
 
 class madx_ml_op(cpymad.madx.Madx):
     '''Normal cpymad wrapper with extra methods for this exact project'''
 
     def job_nominal2023(self):
+        print(self)
         self.input('''
         option, -echo;
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
@@ -198,10 +201,9 @@ class madx_ml_op(cpymad.madx.Madx):
         exec, match_tunes(62.31, 60.32, 1);
         !exec, do_twiss_elements(LHCB1, "", 0.0);
         twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
-        ''')
 
-    def generate_twiss_train_b1(self):
-        self.input('''
+        !Maybe this second twiss is not needed
+
         ! Generate twiss with columns needed for training data
         ndx := table(twiss,dx)/sqrt(table(twiss,betx));
         select, flag=twiss, clear;
@@ -320,10 +322,9 @@ class madx_ml_op(cpymad.madx.Madx):
         exec, match_tunes(62.31, 60.32, 2);
         !exec, do_twiss_elements(LHCB2, "", 0.0);
         twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
-        ''')
 
-    def generate_twiss_train_b2(self):
-        self.input('''
+        !Maybe this second twiss is not needed
+
         ! Generate twiss with columns needed for training data
         ndx := table(twiss,dx)/sqrt(table(twiss,betx));
         select, flag=twiss, clear;

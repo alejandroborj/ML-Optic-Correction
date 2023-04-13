@@ -1,22 +1,20 @@
 option, -echo;
-call, file = "./Beta-Beat.src/madx/lib/beta_beat.macros.madx";
-call, file = "./Beta-Beat.src/madx/lib/lhc.macros.madx";
-call, file = "./Beta-Beat.src/madx/lib/lhc_runIII_2022.macros.madx";
+call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
+call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
+call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2022.macros.madx";
 option, echo;
 
 
-call, file="./Esubroutines.madx";
+call, file="/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
 option, -echo;
-call, file = "lhc.seq";
+call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
 exec, define_nominal_beams();
-call, file = "./modifiers.madx";
+call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
 exec, cycle_sequences();
 use, period = LHCB1;
 
 option, echo;
 exec, match_tunes(62.31, 60.32, 1);
-
-
 
 select, flag=error, clear;
 READMYTABLE, file="./predicted_triplets_fromPhaseandBetaIP_RIDGE.tfs", table=errtab;
