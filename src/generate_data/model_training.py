@@ -10,7 +10,6 @@ from sklearn.tree import DecisionTreeRegressor
 import joblib
 from pathlib import Path
 import matplotlib.pyplot as plt
-#%matplotlib
 
 
 # example of reading the data, training ML model and validate results
@@ -21,13 +20,14 @@ def main():
     MERGE = True
     algorithm = "ridge"
     # Train on generated data
+    # Load data
+    if MERGE == True:
+        input_data, output_data = merge_data(set_name)
+    else:
+        input_data, output_data = load_data(set_name)
+
     if TRAIN==True:
         metrics, n_samples = [], []
-        # Load data
-        if MERGE == True:
-            input_data, output_data = merge_data(set_name)
-        else:
-            input_data, output_data = load_data(set_name)
 
         n_splits=3
         input_data = np.array_split(input_data, n_splits, axis=0)
@@ -50,6 +50,7 @@ def main():
         plt.plot(n_samples, metrics[:,1], label="Train", marker='o')
         plt.plot(n_samples, metrics[:,3], label="Test", marker='o')
         plt.show()
+        plt.savefig(f"./figures/mae.pdf")
 
         #R2                                                                                                                             
         plt.clf()        
@@ -59,13 +60,17 @@ def main():
         plt.plot(n_samples, metrics[:,0], label="Train", marker='o')
         plt.plot(n_samples, metrics[:,2], label="Test", marker='o')
         plt.show()
+        plt.savefig(f"./figures/r2.pdf")
 
 
 def train_model(input_data, output_data, algorithm):
-    # split into train and test
+    print(11)
+    """
     indices = np.arange(len(input_data))
     train_inputs, test_inputs, train_outputs, test_outputs, indices_train, indices_test = train_test_split(
         input_data, output_data, indices, test_size=0.2, random_state=None)
+
+    np.save("test_idx.npy", indices_test)
     
     # create and fit a regression model
     if algorithm == "ridge":
@@ -82,7 +87,6 @@ def train_model(input_data, output_data, algorithm):
 
     # Optionally: save fitted model or load already trained model
     joblib.dump(estimator, 'estimator.pkl') 
-    #estimator = joblib.load('estimator.pkl')
 
     # Check scores: explained variance and MAE
     r2_train = estimator.score(train_inputs, train_outputs)
@@ -104,33 +108,19 @@ def train_model(input_data, output_data, algorithm):
     #mae_test_triplet = mean_absolute_error(test_outputs[:32], prediction_test)
 
     #print(mae_test_triplet, mae_train_triplet)
-    '''
-    pred_triplet, true_triplet, pred_arc, true_arc, pred_mqt, true_mqt = obtain_errors(input_data[3:4], output_data[3:4], estimator)
-    
-    errors = (("Triplet Errors: " ,pred_triplet, true_triplet), 
-            ("Arc Errors: ", pred_arc, true_arc), 
-            ("MQT Knob: ", pred_mqt, true_mqt))
 
-    for idx, (name, pred_error, true_error) in enumerate(errors):
-        x = [idx for idx, error in enumerate(true_error)]
-        plt.bar(x, true_error, label="True")
-        plt.bar(x, pred_error, label="Pred")
-
-        plt.title(f"{name}")
-        plt.xlabel(r"MQ")
-        plt.legend()
-        plt.savefig(f"{name}.pdf")
-        plt.clf()'''
         
     print("Training: R2 = {0}, MAE = {1}".format(r2_train, mae_train))
     print("Test: R2 = {0}, MAE = {1}".format(r2_test, mae_test))
 
     return r2_train, mae_train, r2_test, mae_test
+    """
+    # split into train and test
 
 
 def load_data(set_name):
     #Function that inputs the .npy file and returns the data in a readable format for the algoritms
-    all_samples = np.load('./data/{}.npy'.format(set_name), allow_pickle=True)
+    all_samples = np.load('./{}.npy'.format(set_name), allow_pickle=True)
     '''
     idxs = []
     for idx, sample in enumerate(all_samples):
@@ -150,21 +140,17 @@ def load_data(set_name):
     
     # select features for input
     # Optionally: add noise to simulated optics functions
+    print(len(delta_beta_star_x_b1[0]))
+    print(len(delta_beta_star_x_b2[0]))
+    print(len(delta_beta_star_y_b1[0]))
+    print(len(delta_beta_star_y_b2[0]))
+    print(len(delta_mux_b1[0]))
+    print(len(delta_mux_b2[0]))
+    print(len(delta_muy_b1[0]))
+    print(len(delta_mux_b2[0]))
+    print(len(n_disp_b1[0]))
+    print(len(n_disp_b2[0]))
     
-    #print(triplet_errors[0].shape, arc_errors_b1[0].shape, 
-    #      arc_errors_b2[0].shape, mqt_errors_b1[0].shape, 
-    #      mqt_errors_b2[0].shape)
-    
-    #print([len(mqt_errors_b1[i]) for i,_ in enumerate(mqt_errors_b1)])
-    #print([len(mqt_errors_b2[i]) for i,_ in enumerate(mqt_errors_b2)])
-    #print(set([len((mqt_errors_b2[i])) for i,_ in enumerate(mqt_errors_b2)]))
-    #print(set([len((mqt_errors_b1[i])) for i,_ in enumerate(mqt_errors_b1)]))
-    #print(set_name)
-    #print([len(mqt_errors_b2[i]) for i,_ in enumerate(mqt_errors_b2)].index(0))
-    #print([len(mqt_errors_b1[i]) for i,_ in enumerate(mqt_errors_b1)].index(0))
-
-    np.save('./data/{}.npy'.format(set_name), arr=all_samples , allow_pickle=True) # Save with correct dim
-
     input_data = np.concatenate(( \
         np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
         np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
@@ -185,7 +171,7 @@ def merge_data(data_path):
     #Takes folder path for all different data files and merges them
     input_data, output_data = [], []
     pathlist = Path(data_path).glob('**/*.npy')
-    file_names = [str(path).split('/')[-1][:-4] for path in pathlist][0:2]
+    file_names = [str(path).split('/')[-1][:-4] for path in pathlist][0:1]
 
     for file_name in file_names:
         aux_input, aux_output = load_data(file_name)
@@ -206,8 +192,11 @@ def obtain_errors(input_data, output_data, estimator):
     true_mqt = np.hstack(output_data[:,-4:])
 
     return pred_triplet, true_triplet, pred_arc, true_arc, pred_mqt, true_mqt
-    
 
+def obtain_twiss(input_data):
+    print(input_data.shape)
+
+    
 if __name__ == "__main__":
     main()
 
