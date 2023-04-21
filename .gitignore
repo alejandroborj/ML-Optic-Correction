@@ -1,4 +1,8 @@
 Literature/
 src/generate_data/data/
+src/generate_data/data_45cm/
 src/generate_data/estimator.pkl
+src/generate_data/estimator_ridge.pkl
+src/generate_data/estimator_linear.pkl
+src/generate_data/estimator_linear_45cm.pkl
 

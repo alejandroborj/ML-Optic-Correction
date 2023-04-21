@@ -1,6 +1,6 @@
 #%%
 import cpymad.madx
-import pymadng
+#import pymadng
 
 #class madx_ml_op(pymadng.MAD):
 
@@ -27,7 +27,8 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
 
         exec, define_nominal_beams();
-        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx";
         exec, cycle_sequences();
 
         ! BEAM 1
@@ -72,7 +73,8 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
 
         exec, define_nominal_beams();
-        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        call, file = "%(OPTICS)s";
         exec, cycle_sequences();
 
         ! BEAM 1
@@ -81,6 +83,8 @@ class madx_ml_op(cpymad.madx.Madx):
         use, period = LHCB1;
         
         exec, match_tunes(62.31, 60.32, 1);
+        
+        etable, table="etab_nominal"; ! Saving errors in table
 
         ! Assign errors per magnets family:
         ! the same systematic error in each magnet in one family (B2S)
@@ -222,7 +226,8 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
 
         exec, define_nominal_beams();
-        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        call, file = "%(OPTICS)s";
         exec, cycle_sequences();
 
         use, period = LHCB2;
@@ -298,7 +303,7 @@ class madx_ml_op(cpymad.madx.Madx):
         ! SELECT, FLAG = ERROR, PATTERN = "^MS\..*B2$";
         ! EALIGN, DX := 0.0003*TGAUSS(3);
 
-        ! Add quads longitudinal misalignments:
+        ! Add quads longitudinal misalignments: ALREADY DONE!
         ! select, flag=error, clear;
         ! select, flag=error, pattern = "^MQ[^I^S^D].*B2$";
         ! EALIGN, DS := 0.006*TGAUSS(3);
