@@ -1,29 +1,51 @@
 option, -echo;
 call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/beta_beat.macros.madx";
 call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
+call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII.macros.madx";
+call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII_ats.macros.madx";
 call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2022.macros.madx";
+call, file = "/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx"; 
+! ADDED
+
 option, echo;
 
+!@require lhc_runIII_2022.macros.madx
 
-call, file="/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx";
 option, -echo;
+
 call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
+
 exec, define_nominal_beams();
 call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
 exec, cycle_sequences();
-use, period = LHCB1;
+
+! BEAM 1
 
 option, echo;
+use, period = LHCB1;
+
 exec, match_tunes(62.31, 60.32, 1);
 
 select, flag=error, clear;
-READMYTABLE, file="./predicted_triplets_fromPhaseandBetaIP_RIDGE.tfs", table=errtab;
+
+!Assign average dipole errors (best knowldge model)
+readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
+seterr, table=errtab;
+
+READMYTABLE, file="./mag_errors.tfs", table=errtab;
 SETERR, TABLE=errtab;
 
+!exec, do_twiss_elements(LHCB1, "", 0.0);
+twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
+
+print, text="Matching Tunes B1";
+exec, match_tunes(62.31, 60.32, 1);
+!exec, do_twiss_elements(LHCB1, "", 0.0);
+twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
 
 ! Generate twiss with columns needed for training data
 ndx := table(twiss,dx)/sqrt(table(twiss,betx));
 select, flag=twiss, clear;
 select, flag=twiss, pattern="^BPM.*B1$", column=name, s, betx, bety, ndx,
-                                              mux, muy;
-twiss, chrom, sequence=LHCB1, deltap=0.0, file="./b1_predicted_twiss.tfs";
+                                            mux, muy;
+twiss, chrom, sequence=LHCB1, deltap=0.0, file="";

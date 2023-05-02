@@ -1246,5 +1246,7 @@ mqy.b4l8.b2:1
 mqy.a4l8.b2:1
 mqy.a4r8.b2:1
 mqy.b4r8.b2:1
-MQTB1
-MQTB2
+MQTB1.1
+MQTB1.2
+MQTB2.1
+MQTB2.2

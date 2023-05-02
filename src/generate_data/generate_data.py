@@ -30,14 +30,14 @@ import time
 
 from madx_jobs import madx_ml_op
 
-from plots import plot_example_betabeat
+#from plots import plot_example_betabeat
 
 # mad-x scripts and model files
 OPTICS_30CM_2023 = '/afs/cern.ch/user/a/aborjess/work/private/models/LHCB1/B1_30cm_flat/modifiers.madx'
 OPTICS_45CM_2023 =  '/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx'
 
-B1_MONITORS_MDL_TFS = tfs.read_tfs("./b1_nominal_monitors.dat").set_index("NAME")
-B2_MONITORS_MDL_TFS = tfs.read_tfs("./b2_nominal_monitors.dat").set_index("NAME")
+B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
+B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
 
 # tunes for phase advance computation
 # Colision optics 2023
@@ -51,7 +51,7 @@ def main():
     # GLOBAL VARIABLES, Madx wrapper and number of parallel simulations
 
     start = time.time()
-    set_name = f"training_set_{np.random.randint(0, 99999)}"
+    set_name = f"training_set_bb30_{np.random.randint(0, 99999)}"
     num_sim = 2000
     valid_samples = []
     GENERATE_DATA = True
@@ -66,20 +66,10 @@ def main():
             if sample is not None:
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
-        np.save('./data_45cm/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
+        np.save('./data_bb30/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
     
     stop = time.time()
     print('Execution time (s): ', stop-start)
-
-
-# Add noise to generated phase advance deviations as estimated from measurements
-def add_phase_noise(phase_errors, betas, expected_noise):
-    my_phase_errors = np.array(phase_errors)
-    noises = np.random.standard_normal(phase_errors.shape)
-    betas_fact = (expected_noise * np.sqrt(171) / np.sqrt(betas))
-    noise_with_beta_fact = np.multiply(noises, betas_fact)
-    phase_errors_with_noise = my_phase_errors + noise_with_beta_fact
-    return phase_errors_with_noise
 
 def create_sample(index):
     sample = None
@@ -130,8 +120,8 @@ def create_sample(index):
 
         # Sometimes matching fails, this is a half measure
         mdx.quit()
-        
-        if (len(mqt_errors_b1) or len(mqt_errors_b2)) != 2:
+        print("MQT!!!!", mqt_errors_b1, mqt_errors_b2)
+        if len(mqt_errors_b1) != 2 or len(mqt_errors_b2) != 2:
             sample = None
     except:
         sample = None
@@ -192,6 +182,24 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
     ip_bpms = ip_bpms_b1 if beam == 1 else ip_bpms_b2
 
     #plot_example_betabeat(meas_mdl, tw_perturbed, beam)
+    bbeat_x = 100*(np.array(tw_perturbed.BETX - meas_mdl.BETX))/meas_mdl.BETX
+    bbeat_y = 100*(np.array(tw_perturbed.BETY - meas_mdl.BETY))/meas_mdl.BETY
+    
+    mean_bbeat_x = np.mean(bbeat_x)
+    mean_bbeat_y = np.mean(bbeat_y)
+
+    max_bbeat_x = max(bbeat_x)
+    max_bbeat_y = max(bbeat_y)
+    
+    with open(f"./data_analysis/bbeat{beam}.csv", "a") as f:
+        f.write(f"{mean_bbeat_x}, {mean_bbeat_y}, {max_bbeat_x}, {max_bbeat_y}\n")
+
+    #Not taking non realistic small error data
+    print("MAX BETA BEAT: ", max_bbeat_x, " " , max_bbeat_y)
+    if max_bbeat_x < 30 and max_bbeat_y < 30:
+        print(max_bbeat_x, max_bbeat_y)
+        print("Non realistic sample")
+        return None
     
     # phase advance deviations
     phase_adv_x = get_phase_adv(tw_perturbed['MUX'], QX)
