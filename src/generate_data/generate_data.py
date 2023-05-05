@@ -30,14 +30,14 @@ import time
 
 from madx_jobs import madx_ml_op
 
-#from plots import plot_example_betabeat
+from plots import plot_example_betabeat
 
 # mad-x scripts and model files
 OPTICS_30CM_2023 = '/afs/cern.ch/user/a/aborjess/work/private/models/LHCB1/B1_30cm_flat/modifiers.madx'
 OPTICS_45CM_2023 =  '/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx'
 
-B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
-B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
+B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors_30.dat").set_index("NAME")
+B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors_30.dat").set_index("NAME")
 
 # tunes for phase advance computation
 # Colision optics 2023
@@ -51,8 +51,8 @@ def main():
     # GLOBAL VARIABLES, Madx wrapper and number of parallel simulations
 
     start = time.time()
-    set_name = f"training_set_bb30_{np.random.randint(0, 99999)}"
-    num_sim = 2000
+    set_name = "test"#f"test_sample_{np.random.randint(0, 99999)}"
+    num_sim = 1
     valid_samples = []
     GENERATE_DATA = True
 
@@ -66,7 +66,7 @@ def main():
             if sample is not None:
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
-        np.save('./data_bb30/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
+        np.save('./data/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
     
     stop = time.time()
     print('Execution time (s): ', stop-start)
@@ -100,7 +100,8 @@ def create_sample(index):
 
         b2_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
         #twiss_data_b2 = mdx.table.twiss.dframe() # Relevant to training Twiss data
-        b2_errors= mdx.table.etabb2.dframe() # Table error for MQX magnets     
+        b2_errors= mdx.table.etabb2.dframe() # Table error for MQX magnets
+        print("ERROR tab", b2_errors)
 
         delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(b1_tw_after_match,  B1_MONITORS_MDL_TFS, 1)
@@ -142,6 +143,7 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
 
     
     mqt_names_b1 = [name for name in b1_unmatched.index.values if "mqt." in name]
+    
     mqt_errors_b1 = np.unique(np.array(b1_matched.loc[mqt_names_b1, "k1l"].values - \
         b1_unmatched.loc[mqt_names_b1, "k1l"].values, dtype=float).round(decimals=8))
     mqt_errors_b1 = [k for k in mqt_errors_b1 if k != 0]
@@ -181,7 +183,9 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
     tw_perturbed = tw_perturbed_elements[tw_perturbed_elements.index.isin(meas_mdl.index)]
     ip_bpms = ip_bpms_b1 if beam == 1 else ip_bpms_b2
 
-    #plot_example_betabeat(meas_mdl, tw_perturbed, beam)
+    # Testing Beta Beating
+    plot_example_betabeat(meas_mdl, tw_perturbed, beam)
+    
     bbeat_x = 100*(np.array(tw_perturbed.BETX - meas_mdl.BETX))/meas_mdl.BETX
     bbeat_y = 100*(np.array(tw_perturbed.BETY - meas_mdl.BETY))/meas_mdl.BETY
     

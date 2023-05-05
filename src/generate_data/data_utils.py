@@ -1,22 +1,17 @@
+#%%
+
 import numpy as np
 import pandas as pd
 import tfs
 from pathlib import Path
+import joblib
 
+def main():
+    output_example_result_tfs()
 
 def load_data(set_name, noise):
     #Function that inputs the .npy file and returns the data in a readable format for the algoritms
     all_samples = np.load('./data/{}.npy'.format(set_name), allow_pickle=True)
-    '''
-    idxs = []
-    for idx, sample in enumerate(all_samples):
-        mqt_err_b1, mqt_err_b2 = sample[-2], sample[-1]
-        if len(mqt_err_b1) != 2 or len(mqt_err_b2) != 2:
-            idxs.append(idx)
-    print(idxs)
-    all_samples = np.delete(all_samples, idxs, axis=0) # Delete elements where mqt errors failed
-    np.save('./data/{}.npy'.format(set_name), arr=all_samples , allow_pickle=True) # Save with correct dim
-    '''
     
     delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, \
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
@@ -26,8 +21,6 @@ def load_data(set_name, noise):
     
     # select features for input
     # Optionally: add noise to simulated optics functions
-    #print("Not Noise", n_disp_b1[1])
-    #print("Not Noise", delta_mux_b1[1])
     n_disp_b1 = [add_dispersion_noise(n_disp, noise) for n_disp in n_disp_b1]  
     n_disp_b1 = [add_dispersion_noise(n_disp, noise) for n_disp in n_disp_b2]  
 
@@ -35,9 +28,6 @@ def load_data(set_name, noise):
     delta_muy_b1 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_muy_b1]
     delta_mux_b2 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_mux_b2]
     delta_muy_b2 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_muy_b2]
-
-    #print("Noise", n_disp_b1[1])
-    #print("Noise", delta_mux_b1[1])
 
     input_data = np.concatenate((np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
         np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
@@ -58,7 +48,7 @@ def merge_data(data_path, noise):
     #Takes folder path for all different data files and merges them
     input_data, output_data = [], []
     pathlist = Path(data_path).glob('**/*.npy')
-    file_names = [str(path).split('/')[-1][:-4] for path in pathlist][:2]
+    file_names = [str(path).split('/')[-1][:-4] for path in pathlist][:1]
 
     for file_name in file_names:
         aux_input, aux_output = load_data(file_name, noise)
@@ -107,17 +97,41 @@ def normalize_errors(data):
         data[i] = (sample)/nom_k1
     return data
 
-def save_np_errors_tfs(np_errors):
+def save_np_errors_tfs(np_errors, filename):
+    error_tfs_model_b1 = tfs.read_tfs("./data_analysis/errors_b1.tfs")
+    error_tfs_model_b2 = tfs.read_tfs("./data_analysis/errors_b2.tfs")
+    # For mqt values
+    mqt1 = ['MQT.14R2.B1', 'MQT.16R2.B1', 'MQT.18R2.B1', 'MQT.20R2.B1', 'MQT.20L3.B1', 'MQT.18L3.B1', 'MQT.16L3.B1', 'MQT.14L3.B1', 
+     'MQT.15R3.B1', 'MQT.17R3.B1', 'MQT.19R3.B1', 'MQT.21R3.B1', 'MQT.21L4.B1', 'MQT.19L4.B1', 'MQT.17L4.B1', 'MQT.15L4.B1', 
+     'MQT.14R6.B1', 'MQT.16R6.B1', 'MQT.18R6.B1', 'MQT.20R6.B1', 'MQT.20L7.B1', 'MQT.18L7.B1', 'MQT.16L7.B1', 'MQT.14L7.B1', 
+     'MQT.15R7.B1', 'MQT.17R7.B1', 'MQT.19R7.B1', 'MQT.21R7.B1', 'MQT.21L8.B1', 'MQT.19L8.B1', 'MQT.17L8.B1', 'MQT.15L8.B1']
+    mqt2 = ['MQT.15R2.B1', 'MQT.17R2.B1', 'MQT.19R2.B1', 'MQT.21R2.B1', 'MQT.21L3.B1', 'MQT.19L3.B1', 'MQT.17L3.B1', 'MQT.15L3.B1', 
+     'MQT.14R3.B1', 'MQT.16R3.B1', 'MQT.18R3.B1', 'MQT.20R3.B1', 'MQT.20L4.B1', 'MQT.18L4.B1', 'MQT.16L4.B1', 'MQT.14L4.B1', 
+     'MQT.15R6.B1', 'MQT.17R6.B1', 'MQT.19R6.B1', 'MQT.21R6.B1', 'MQT.21L7.B1', 'MQT.19L7.B1', 'MQT.17L7.B1', 'MQT.15L7.B1', 
+     'MQT.14R7.B1', 'MQT.16R7.B1', 'MQT.18R7.B1', 'MQT.20R7.B1', 'MQT.20L8.B1', 'MQT.18L8.B1', 'MQT.16L8.B1', 'MQT.14L8.B1']
+
     #Function that takes np errors and outputs .tfs file with all error values
     with open("./data_analysis/mq_names.txt", "r") as f:
         lines = f.readlines()
         names = [name.replace("\n", "") for name in lines]
 
-    df = pd.DataFrame(columns=["names","k1l"])
-    df.k1l = np_errors
-    df.names = names
-    df = tfs.frame.TfsDataFrame(df)
-    tfs.writer.write_tfs(tfs_file_path="./data_analysis/mag_errors.tfs", data_frame=df)
+    recons_df = pd.DataFrame(columns=["NAME","K1L"])
+    recons_df.K1L = np_errors
+    recons_df.NAME = names
+    
+    for beam, error_tfs_model in enumerate([error_tfs_model_b1, error_tfs_model_b2]):
+        for i in range(len(error_tfs_model)):
+            # check if the name is in recons_df
+            if error_tfs_model.loc[i, 'NAME'] in list(recons_df['NAME']):
+                error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1]
+            #print(error_tfs_model.loc[i, 'NAME'])
+            if error_tfs_model.loc[i, 'NAME'] in mqt1:
+                error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.1", 'K1L'].values
+            if error_tfs_model.loc[i, 'NAME'] in mqt2:
+                error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.2", 'K1L'].values
+
+    tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b1_{filename}", data_frame=error_tfs_model_b1)
+    tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b2_{filename}", data_frame=error_tfs_model_b2)
 
 def add_phase_noise(phase_errors, betas, expected_noise):
     #Add noise to generated phase advance deviations as estimated from measurements
@@ -126,9 +140,6 @@ def add_phase_noise(phase_errors, betas, expected_noise):
     betas_fact = (expected_noise * (171**0.5) / (betas**0.5))
     noise_with_beta_fact = np.multiply(noises, betas_fact)
     phase_errors_with_noise = my_phase_errors + noise_with_beta_fact
-    #print("a", noise_with_beta_fact[0])
-    #print("b ", len(my_phase_errors[0]))
-    #print("c ", len(phase_errors_with_noise[0]))
     return phase_errors_with_noise
 
 
@@ -139,3 +150,17 @@ def add_dispersion_noise(disp_errors, noise):
     disp_errors_with_noise = my_disp_errors + noises
     
     return disp_errors_with_noise
+
+def output_example_result_tfs():
+    input_data, output_data = load_data("test_sample", 1e-3)
+    estimator = joblib.load(f'./estimators/estimator_ridge_0.001.pkl') 
+
+    true_error = output_data[:1]
+    pred_error = estimator.predict(input_data[:1])
+
+    save_np_errors_tfs(true_error[0], "true_example.tfs")
+    save_np_errors_tfs(pred_error[0], "pred_example.tfs")
+
+if __name__ == "__main__":
+    main()
+# %%

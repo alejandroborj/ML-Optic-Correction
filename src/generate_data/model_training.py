@@ -14,6 +14,7 @@ from plots import plot_learning_curve
 
 from data_utils import load_data
 from data_utils import merge_data
+from data_utils import save_np_errors_tfs
 
 
 # example of reading the data, training ML model and validate results
@@ -30,7 +31,7 @@ def main():
     # Load data
 
     metrics, n_samples = [], []
-    noises = np.logspace(-5, -2, num=10)
+    noises = [0] #np.logspace(-5, -2, num=10)
     for noise in noises:
 
         if MERGE == True:
@@ -50,7 +51,8 @@ def main():
                 n_samples.append(len(np.vstack(input_data[:i+1])))
                 metrics.append(results)
 
-    plot_noise_vs_metrics(noises, metrics, algorithm)
+
+    #plot_noise_vs_metrics(noises, metrics, algorithm)
 
 def train_model(input_data, output_data, algorithm, noise):
 
@@ -120,7 +122,8 @@ def train_model(input_data, output_data, algorithm, noise):
 
     return r2_train, mae_train, r2_test, mae_test, r2_test_triplet, mae_test_triplet
 
-    
+
+
 if __name__ == "__main__":
     main()
 

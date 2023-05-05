@@ -1,5 +1,6 @@
 Literature/
 src/generate_data/data/
 src/generate_data/data_45cm/
+src/generate_data/data_bb30_(wrong_nominal)
 src/generate_data/estimators/
 

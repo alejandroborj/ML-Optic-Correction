@@ -85,6 +85,7 @@ class madx_ml_op(cpymad.madx.Madx):
         exec, match_tunes(62.31, 60.32, 1);
         
         etable, table="etab_nominal"; ! Saving errors in table
+    
 
         ! Assign errors per magnets family:
         ! the same systematic error in each magnet in one family (B2S)
@@ -215,6 +216,7 @@ class madx_ml_op(cpymad.madx.Madx):
                                                     mux, muy;
         twiss, chrom, sequence=LHCB1, deltap=0.0, file="";
         !./magnet_errors/b1_twiss_%(INDEX)s.tfs
+        ! esave, file="./errors.tfs";
         ''')
 
     def job_magneterrors_b2(self, OPTICS, index, seed):
@@ -336,6 +338,7 @@ class madx_ml_op(cpymad.madx.Madx):
         select, flag=twiss, pattern="^BPM.*B2$", column=name, s, betx, bety, ndx,
                                                     mux, muy;
         twiss, chrom, sequence=LHCB2, deltap=0.0, file="";
+        !esave, file="./errors.tfs";
 
         ''')
 
