@@ -76,23 +76,25 @@ def create_sample(index):
     print("\nDoing index: ", str(index), "\n")
 
     np.random.seed(seed=None)
-    seed = random.randint(0, 999999999)
+    seed = 1#random.randint(0, 999999999)
     mdx = madx_ml_op()
 
     # Run mad-x for b1 and b2
     try:
         # BEAM 1
-        mdx.job_magneterrors_b1(OPTICS_45CM_2023, str(index), seed)
+        mdx.job_magneterrors_b1(OPTICS_30CM_2023, str(index), seed)
         b1_tw_before_match = mdx.table.twiss.dframe() # Twiss before match
 
         mdx.match_tunes_b1()
         b1_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
         #twiss_data_b1 = mdx.table.twiss.dframe() # Relevant to training Twiss data
         common_errors = mdx.table.cetab.dframe() # Errors for both beams, triplet errors
-        b1_errors = mdx.table.etabb1.dframe() # Table error for MQX magnets
+        b1_errors = mdx.table.etabb1.dframe() # Table error for MQ- magnets
         
+        #tfs.writer.write_tfs(tfs_file_path=f"b1_correct_example.tfs", data_frame=b1_errors)
+
         # BEAM 2
-        mdx.job_magneterrors_b2(OPTICS_45CM_2023, str(index), seed)
+        mdx.job_magneterrors_b2(OPTICS_30CM_2023, str(index), seed)
 
         b2_tw_before_match = mdx.table.twiss.dframe() # Twiss before match
 
@@ -101,7 +103,6 @@ def create_sample(index):
         b2_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
         #twiss_data_b2 = mdx.table.twiss.dframe() # Relevant to training Twiss data
         b2_errors= mdx.table.etabb2.dframe() # Table error for MQX magnets
-        print("ERROR tab", b2_errors)
 
         delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1 = get_input_for_beam(b1_tw_after_match,  B1_MONITORS_MDL_TFS, 1)
@@ -121,7 +122,6 @@ def create_sample(index):
 
         # Sometimes matching fails, this is a half measure
         mdx.quit()
-        print("MQT!!!!", mqt_errors_b1, mqt_errors_b2)
         if len(mqt_errors_b1) != 2 or len(mqt_errors_b2) != 2:
             sample = None
     except:
@@ -140,7 +140,6 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
     # replace K1L of MQT in original table (0) with matched - unmatched difference, per knob (2 different values for all MQTs)
     b1_unmatched = b1_tw_before_match.set_index("name", drop=False)
     b1_matched = b1_tw_after_match.set_index("name", drop=False)
-
     
     mqt_names_b1 = [name for name in b1_unmatched.index.values if "mqt." in name]
     
@@ -164,6 +163,9 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
 
     arc_magnets_names_b2 = [name for name in tfs_error_file_b2.index.values if ("mqt." not in name and "mqx" not in name)]
     arc_errors_b2 = tfs_error_file_b2.loc[arc_magnets_names_b2, "k1l"]
+
+    print("ERRORS: ", common_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2)
+    print(np.array(triplet_errors))
 
     return np.array(triplet_errors), np.array(arc_errors_b1), \
         np.array(arc_errors_b2), np.array(mqt_errors_b1), np.array(mqt_errors_b2)
@@ -199,11 +201,11 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
         f.write(f"{mean_bbeat_x}, {mean_bbeat_y}, {max_bbeat_x}, {max_bbeat_y}\n")
 
     #Not taking non realistic small error data
-    print("MAX BETA BEAT: ", max_bbeat_x, " " , max_bbeat_y)
-    if max_bbeat_x < 30 and max_bbeat_y < 30:
-        print(max_bbeat_x, max_bbeat_y)
-        print("Non realistic sample")
-        return None
+    #print("MAX BETA BEAT: ", max_bbeat_x, " " , max_bbeat_y)
+    #if max_bbeat_x < 30 and max_bbeat_y < 30:
+    #    print(max_bbeat_x, max_bbeat_y)
+    #    print("Non realistic sample")
+    #    return None
     
     # phase advance deviations
     phase_adv_x = get_phase_adv(tw_perturbed['MUX'], QX)

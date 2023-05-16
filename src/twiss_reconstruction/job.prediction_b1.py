@@ -11,12 +11,12 @@ def main():
     tw_true = recons_twiss("b1_true_example.tfs", 1, mdx)
     plot_betabeat_reconstruction(tw_true, tw_recons, 1)
     mdx.quit()
-
-    mdx = madx.Madx()
-    tw_recons = recons_twiss("b2_pred_example.tfs", 2, mdx)
+    
+    '''    mdx = madx.Madx()
     tw_true = recons_twiss("b2_true_example.tfs", 2, mdx)
+    tw_recons = recons_twiss("b2_pred_example.tfs", 2, mdx)
     plot_betabeat_reconstruction(tw_true, tw_recons, 2)
-    mdx.quit()
+    mdx.quit()'''
 
 
 def recons_twiss(error_file, beam, mdx):
@@ -41,13 +41,18 @@ def recons_twiss(error_file, beam, mdx):
     #Assigning errors
     mdx.input(f"""readtable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam{beam}/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
                 seterr, table=errtab;
-                !select, flag=error, clear;
+                
                 READMYTABLE, file="/home/alejandro/Desktop/ML-Optic-Correction/src/twiss_reconstruction/{error_file}", table=errtab;
                 SETERR, TABLE=errtab;""")
 
     mdx.twiss(sequence=f"LHCB{beam}", file="") #Chrom deltap=0.0
 
-    #mdx.input(f"match_tunes(62.31, 60.32, {beam});")
+    mdx.input(f"match_tunes(62.31, 60.32, {beam});")
+    mdx.input(f"""etable, table="final_error";""")
+    print("ERROR TABLES")
+    print(list(mdx.table))
+    
+    tfs.writer.write_tfs(tfs_file_path=f"final_errors.tfs", data_frame=mdx.table.twiss.dframe())
             
     mdx.twiss(sequence=f"LHCB{beam}", file="")
     # Generate twiss with columns needed for training data
@@ -84,7 +89,7 @@ def plot_betabeat_reconstruction(tw_true, tw_recons, beam):
 
     fig, axs = plt.subplots(2)
     axs[0].plot(tw_true.S, bbeat_x, label="True")
-    axs[0].plot(tw_recons.S, bbeat_x_recons, label="Rec")
+    #axs[0].plot(tw_recons.S, bbeat_x_recons, label="Rec")
     axs[0].tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
     axs[0].set_ylabel(r"$\Delta \beta _x / \beta _x [\%]$")
     axs[0].set_xticklabels(labels=['IP2', 'IP3', 'IP4', 'IP5', 'IP6', 'IP7', 'IP8', 'IP1'])
@@ -92,7 +97,7 @@ def plot_betabeat_reconstruction(tw_true, tw_recons, beam):
     axs[0].legend()
 
     axs[1].plot(tw_true.S, bbeat_y, label="True")
-    axs[1].plot(tw_recons.S, bbeat_y_recons, label="Rec")
+    #axs[1].plot(tw_recons.S, bbeat_y_recons, label="Rec")
     axs[1].set_ylabel(r"$\Delta \beta _y / \beta _y [\%]$")
     axs[1].set_xlabel(r"Longitudinal location $[m]$")
     axs[1].legend()

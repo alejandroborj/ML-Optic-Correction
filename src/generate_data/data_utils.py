@@ -59,7 +59,7 @@ def merge_data(data_path, noise):
 
 
 def obtain_errors(input_data, output_data, estimator, NORMALIZE=False):
-    # Function that gives the predicted and real values of errors for a numpy array imputs
+    # Function that gives the predicted and real values of errors for a numpy array inputs
     pred_data = estimator.predict(input_data)
     if NORMALIZE==True:
         pred_data = normalize_errors(pred_data)
@@ -115,9 +115,12 @@ def save_np_errors_tfs(np_errors, filename):
         lines = f.readlines()
         names = [name.replace("\n", "") for name in lines]
 
+    print(np_errors)
     recons_df = pd.DataFrame(columns=["NAME","K1L"])
     recons_df.K1L = np_errors
     recons_df.NAME = names
+
+    print(recons_df)
     
     for beam, error_tfs_model in enumerate([error_tfs_model_b1, error_tfs_model_b2]):
         for i in range(len(error_tfs_model)):
@@ -126,9 +129,9 @@ def save_np_errors_tfs(np_errors, filename):
                 error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1]
             #print(error_tfs_model.loc[i, 'NAME'])
             if error_tfs_model.loc[i, 'NAME'] in mqt1:
-                error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.1", 'K1L'].values
+                error_tfs_model.loc[i, 'K1L'] = 0 #recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.1", 'K1L'].values
             if error_tfs_model.loc[i, 'NAME'] in mqt2:
-                error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.2", 'K1L'].values
+                error_tfs_model.loc[i, 'K1L'] = 0 #recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.2", 'K1L'].values
 
     tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b1_{filename}", data_frame=error_tfs_model_b1)
     tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b2_{filename}", data_frame=error_tfs_model_b2)
@@ -152,7 +155,7 @@ def add_dispersion_noise(disp_errors, noise):
     return disp_errors_with_noise
 
 def output_example_result_tfs():
-    input_data, output_data = load_data("test_sample", 1e-3)
+    input_data, output_data = load_data("test", 1e-3)
     estimator = joblib.load(f'./estimators/estimator_ridge_0.001.pkl') 
 
     true_error = output_data[:1]

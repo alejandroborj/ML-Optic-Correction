@@ -83,9 +83,6 @@ class madx_ml_op(cpymad.madx.Madx):
         use, period = LHCB1;
         
         exec, match_tunes(62.31, 60.32, 1);
-        
-        etable, table="etab_nominal"; ! Saving errors in table
-    
 
         ! Assign errors per magnets family:
         ! the same systematic error in each magnet in one family (B2S)
