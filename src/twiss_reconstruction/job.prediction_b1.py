@@ -5,9 +5,10 @@ import numpy as np
 import tfs
 import pandas as pd
 
+
 def main():
     mdx = madx.Madx()
-    tw_recons = recons_twiss("b1_pred_example.tfs", 1, mdx)
+    tw_recons = recons_twiss("b1_correct_example.tfs", 1, mdx)
     tw_true = recons_twiss("b1_true_example.tfs", 1, mdx)
     plot_betabeat_reconstruction(tw_true, tw_recons, 1)
     mdx.quit()
@@ -36,25 +37,25 @@ def recons_twiss(error_file, beam, mdx):
 
     mdx.options(echo=False)
 
-    mdx.input(f"exec, match_tunes(62.31, 60.32, {beam});")
+    #mdx.input(f"exec, match_tunes(62.31, 60.32, {beam});")
+    mdx.twiss(sequence=f"LHCB{beam}", file="") #Chrom deltap=0.0
 
     #Assigning errors
-    mdx.input(f"""readtable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam{beam}/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
+    mdx.input(f"""
+                readtable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam{beam}/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
                 seterr, table=errtab;
-                
                 READMYTABLE, file="/home/alejandro/Desktop/ML-Optic-Correction/src/twiss_reconstruction/{error_file}", table=errtab;
                 SETERR, TABLE=errtab;""")
 
     mdx.twiss(sequence=f"LHCB{beam}", file="") #Chrom deltap=0.0
-
-    mdx.input(f"match_tunes(62.31, 60.32, {beam});")
+    #mdx.input(f"match_tunes(62.31, 60.32, {beam});")
     mdx.input(f"""etable, table="final_error";""")
-    print("ERROR TABLES")
-    print(list(mdx.table))
     
-    tfs.writer.write_tfs(tfs_file_path=f"final_errors.tfs", data_frame=mdx.table.twiss.dframe())
-            
-    mdx.twiss(sequence=f"LHCB{beam}", file="")
+    mdx.twiss(sequence=f"LHCB{beam}", file="")    
+
+    print("Eroror", mdx.table.final_error.dframe())
+    tfs.writer.write_tfs(tfs_file_path=f"final_errors.tfs", data_frame=mdx.table.final_error.dframe())
+
     # Generate twiss with columns needed for training data
     mdx.input(f"""ndx := table(twiss,dx)/sqrt(table(twiss,betx));
                 select, flag=twiss, clear;
@@ -66,9 +67,9 @@ def recons_twiss(error_file, beam, mdx):
 
 def plot_betabeat_reconstruction(tw_true, tw_recons, beam):
     if beam==1:
-        tw_nominal = tfs.read_tfs("../generate_data/nominal_twiss/b1_nominal_monitors_30.dat").set_index("NAME")
+        tw_nominal = tfs.read_tfs("../generate_data/nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
     elif beam==2:
-        tw_nominal = tfs.read_tfs("../generate_data/nominal_twiss/b2_nominal_monitors_30.dat").set_index("NAME")
+        tw_nominal = tfs.read_tfs("../generate_data/nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
     
     tw_true = tw_true.set_index("name") 
     tw_true.index = [(idx.upper()).split(':')[0] for idx in tw_true.index]
@@ -89,7 +90,7 @@ def plot_betabeat_reconstruction(tw_true, tw_recons, beam):
 
     fig, axs = plt.subplots(2)
     axs[0].plot(tw_true.S, bbeat_x, label="True")
-    #axs[0].plot(tw_recons.S, bbeat_x_recons, label="Rec")
+    axs[0].plot(tw_recons.S, bbeat_x_recons, label="Rec")
     axs[0].tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
     axs[0].set_ylabel(r"$\Delta \beta _x / \beta _x [\%]$")
     axs[0].set_xticklabels(labels=['IP2', 'IP3', 'IP4', 'IP5', 'IP6', 'IP7', 'IP8', 'IP1'])
@@ -97,7 +98,7 @@ def plot_betabeat_reconstruction(tw_true, tw_recons, beam):
     axs[0].legend()
 
     axs[1].plot(tw_true.S, bbeat_y, label="True")
-    #axs[1].plot(tw_recons.S, bbeat_y_recons, label="Rec")
+    axs[1].plot(tw_recons.S, bbeat_y_recons, label="Rec")
     axs[1].set_ylabel(r"$\Delta \beta _y / \beta _y [\%]$")
     axs[1].set_xlabel(r"Longitudinal location $[m]$")
     axs[1].legend()

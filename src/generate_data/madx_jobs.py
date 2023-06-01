@@ -27,8 +27,8 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
 
         exec, define_nominal_beams();
-        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
-        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx";
+        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx";
         exec, cycle_sequences();
 
         ! BEAM 1
@@ -75,6 +75,10 @@ class madx_ml_op(cpymad.madx.Madx):
         exec, define_nominal_beams();
         !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         call, file = "%(OPTICS)s";
+        
+        option, echo;
+        !call, file = "global_corrections.madx";
+        option, -echo;
         exec, cycle_sequences();
 
         ! BEAM 1
@@ -157,8 +161,10 @@ class madx_ml_op(cpymad.madx.Madx):
         SetEfcomp_QEL: macro = {
         Efcomp,  radius = Rr, order= 1,
                 dknr:={0,
-                1E-4*(B2sX*ON_B2S  + B2r*ON_B2R * TGAUSS(GCUTR))};
+                1E-5*(B2sX*ON_B2S  + B2r*ON_B2R * TGAUSS(GCUTR))};
                 }
+        ! CHANGED 1E-4 is the usual, used 1E-5
+
         select, flag=error, clear;
         select, flag=error, pattern = "^MQX[AB]\..*";
         exec, SetEfcomp_QEL;
@@ -171,18 +177,6 @@ class madx_ml_op(cpymad.madx.Madx):
         ! save common triplet errors in a file, set in addition to individual errors
         select, flag=error, pattern = "^MQX[AB]\..*";
         etable, table="cetab"; ! Saving errors in table 
-
-        ! Add sextupole misalignments: 
-        ! --> not needed anymore, because MQ arcs B2R is increased by 1 unit.
-        ! select, flag=error, clear;
-        ! SELECT, FLAG = ERROR, PATTERN = "^MS\..*B1$";
-        ! EALIGN, DX := 0.0003*TGAUSS(3);
-
-        ! ! Add logitudinal misalignments to arc quads, 
-        ! TODO for later if MQX misalignment can be predicted well
-        ! select, flag=error, clear;
-        ! select, flag=error, pattern = "^MQ[^I^S^D].*B1$";
-        ! EALIGN, DS := 0.006*TGAUSS(3);
 
         !Assign average dipole errors (best knowldge model)
         readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
@@ -297,22 +291,12 @@ class madx_ml_op(cpymad.madx.Madx):
         !READMYTABLE, file="./magnet_errors/common_errors_%(INDEX)s.tfs", table=errtab;
         SETERR, TABLE=cetab;
 
-        ! Add sextupole misalignments:
-        ! select, flag=error, clear;
-        ! SELECT, FLAG = ERROR, PATTERN = "^MS\..*B2$";
-        ! EALIGN, DX := 0.0003*TGAUSS(3);
-
-        ! Add quads longitudinal misalignments: ALREADY DONE!
-        ! select, flag=error, clear;
-        ! select, flag=error, pattern = "^MQ[^I^S^D].*B2$";
-        ! EALIGN, DS := 0.006*TGAUSS(3);
-
         !Assign average dipole errors (best knowldge model)
         readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam2/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
         seterr, table=errtab;
 
-        select, flag=error, clear;
-        select, flag=error, pattern = "^MQ[^B^I^S^D].*";
+        !select, flag=error, clear;
+        !select, flag=error, pattern = "^MQ[^B^I^S^D].*";
         etable, table="etabb2"; ! Saving errors in table 
 
         !exec, do_twiss_elements(LHCB2, "", 0.0);

@@ -11,23 +11,24 @@ def main():
 
 def load_data(set_name, noise):
     #Function that inputs the .npy file and returns the data in a readable format for the algoritms
-    all_samples = np.load('./data/{}.npy'.format(set_name), allow_pickle=True)
+    all_samples = np.load('./data_mqt/{}.npy'.format(set_name), allow_pickle=True)
     
     delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, \
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
-            delta_muy_b2, n_disp_b1, n_disp_b2, \
-                triplet_errors, arc_errors_b1, arc_errors_b2, \
-                mqt_errors_b1, mqt_errors_b2 = all_samples.T
+            delta_muy_b2, n_disp_b1, n_disp_b2,\
+            beta_bpm_x_b1, beta_bpm_y_b1, beta_bpm_x_b2, beta_bpm_y_b2, \
+            triplet_errors, arc_errors_b1, arc_errors_b2, \
+            mqt_errors_b1, mqt_errors_b2 = all_samples.T
     
     # select features for input
     # Optionally: add noise to simulated optics functions
     n_disp_b1 = [add_dispersion_noise(n_disp, noise) for n_disp in n_disp_b1]  
     n_disp_b1 = [add_dispersion_noise(n_disp, noise) for n_disp in n_disp_b2]  
 
-    delta_mux_b1 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_mux_b1]
-    delta_muy_b1 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_muy_b1]
-    delta_mux_b2 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_mux_b2]
-    delta_muy_b2 = [add_phase_noise(delta_mu, 25, noise) for delta_mu in delta_muy_b2]
+    delta_mux_b1 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_mux_b1, beta_bpm_x_b1)]
+    delta_muy_b1 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_muy_b1, beta_bpm_y_b1)]
+    delta_mux_b2 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_mux_b2, beta_bpm_x_b2)]
+    delta_muy_b2 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_muy_b2, beta_bpm_y_b2)]
 
     input_data = np.concatenate((np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
         np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
@@ -71,8 +72,8 @@ def obtain_errors(input_data, output_data, estimator, NORMALIZE=False):
     pred_arc = np.hstack(pred_data[:,32:1248])
     true_arc = np.hstack(output_data[:,32:1248])
 
-    pred_mqt = np.hstack(pred_data[:,-4:])
-    true_mqt = np.hstack(output_data[:,-4:])
+    pred_mqt = np.hstack(pred_data[:,1248:])
+    true_mqt = np.hstack(output_data[:,1248:])
 
     return pred_triplet, true_triplet, pred_arc, true_arc, pred_mqt, true_mqt
 
@@ -100,39 +101,25 @@ def normalize_errors(data):
 def save_np_errors_tfs(np_errors, filename):
     error_tfs_model_b1 = tfs.read_tfs("./data_analysis/errors_b1.tfs")
     error_tfs_model_b2 = tfs.read_tfs("./data_analysis/errors_b2.tfs")
-    # For mqt values
-    mqt1 = ['MQT.14R2.B1', 'MQT.16R2.B1', 'MQT.18R2.B1', 'MQT.20R2.B1', 'MQT.20L3.B1', 'MQT.18L3.B1', 'MQT.16L3.B1', 'MQT.14L3.B1', 
-     'MQT.15R3.B1', 'MQT.17R3.B1', 'MQT.19R3.B1', 'MQT.21R3.B1', 'MQT.21L4.B1', 'MQT.19L4.B1', 'MQT.17L4.B1', 'MQT.15L4.B1', 
-     'MQT.14R6.B1', 'MQT.16R6.B1', 'MQT.18R6.B1', 'MQT.20R6.B1', 'MQT.20L7.B1', 'MQT.18L7.B1', 'MQT.16L7.B1', 'MQT.14L7.B1', 
-     'MQT.15R7.B1', 'MQT.17R7.B1', 'MQT.19R7.B1', 'MQT.21R7.B1', 'MQT.21L8.B1', 'MQT.19L8.B1', 'MQT.17L8.B1', 'MQT.15L8.B1']
-    mqt2 = ['MQT.15R2.B1', 'MQT.17R2.B1', 'MQT.19R2.B1', 'MQT.21R2.B1', 'MQT.21L3.B1', 'MQT.19L3.B1', 'MQT.17L3.B1', 'MQT.15L3.B1', 
-     'MQT.14R3.B1', 'MQT.16R3.B1', 'MQT.18R3.B1', 'MQT.20R3.B1', 'MQT.20L4.B1', 'MQT.18L4.B1', 'MQT.16L4.B1', 'MQT.14L4.B1', 
-     'MQT.15R6.B1', 'MQT.17R6.B1', 'MQT.19R6.B1', 'MQT.21R6.B1', 'MQT.21L7.B1', 'MQT.19L7.B1', 'MQT.17L7.B1', 'MQT.15L7.B1', 
-     'MQT.14R7.B1', 'MQT.16R7.B1', 'MQT.18R7.B1', 'MQT.20R7.B1', 'MQT.20L8.B1', 'MQT.18L8.B1', 'MQT.16L8.B1', 'MQT.14L8.B1']
 
     #Function that takes np errors and outputs .tfs file with all error values
     with open("./data_analysis/mq_names.txt", "r") as f:
         lines = f.readlines()
         names = [name.replace("\n", "") for name in lines]
 
-    print(np_errors)
     recons_df = pd.DataFrame(columns=["NAME","K1L"])
     recons_df.K1L = np_errors
     recons_df.NAME = names
-
-    print(recons_df)
     
     for beam, error_tfs_model in enumerate([error_tfs_model_b1, error_tfs_model_b2]):
         for i in range(len(error_tfs_model)):
             # check if the name is in recons_df
             if error_tfs_model.loc[i, 'NAME'] in list(recons_df['NAME']):
+                if 'MQT' in error_tfs_model.loc[i, 'NAME']:
+                    print(error_tfs_model.loc[i, 'NAME'])
+                    print(recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1])
                 error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1]
-            #print(error_tfs_model.loc[i, 'NAME'])
-            if error_tfs_model.loc[i, 'NAME'] in mqt1:
-                error_tfs_model.loc[i, 'K1L'] = 0 #recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.1", 'K1L'].values
-            if error_tfs_model.loc[i, 'NAME'] in mqt2:
-                error_tfs_model.loc[i, 'K1L'] = 0 #recons_df.loc[recons_df['NAME']==f"MQTB{beam+1}.2", 'K1L'].values
-
+            
     tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b1_{filename}", data_frame=error_tfs_model_b1)
     tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b2_{filename}", data_frame=error_tfs_model_b2)
 
@@ -159,10 +146,10 @@ def output_example_result_tfs():
     estimator = joblib.load(f'./estimators/estimator_ridge_0.001.pkl') 
 
     true_error = output_data[:1]
-    pred_error = estimator.predict(input_data[:1])
+    #pred_error = estimator.predict(input_data[:1])
 
     save_np_errors_tfs(true_error[0], "true_example.tfs")
-    save_np_errors_tfs(pred_error[0], "pred_example.tfs")
+    #save_np_errors_tfs(pred_error[0], "pred_example.tfs")
 
 if __name__ == "__main__":
     main()

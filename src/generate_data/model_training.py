@@ -41,7 +41,7 @@ def main():
     # Load data
 
     metrics, n_samples = [], []
-    noises = [0] #np.logspace(-5, -2, num=10)
+    noises = [1E-3] #np.logspace(-5, -2, num=10)
     for noise in noises:
 
         if MERGE == True:
@@ -96,14 +96,14 @@ def train_model(input_data, output_data, algorithm, noise):
         estimator.fit(train_inputs, train_outputs)    
         
     elif algorithm == "tree":
-        tree = DecisionTreeRegressor(criterion="absolute_error", max_depth=None, min_samples_leaf=1000)
+        tree = DecisionTreeRegressor(criterion="squared_error", max_depth=100)
         estimator = tree
         estimator.fit(train_inputs, train_outputs)
 
     elif algorithm.split('-')[0] == "nn":
-        train_inputs =scipy.stats.zscore(train_inputs, axis=1)
-        #train_outputs =scipy.stats.zscore(train_outputs, axis=1)
-        test_inputs =scipy.stats.zscore(test_inputs, axis=1)
+        train_inputs =scipy.stats.zscore(train_inputs[:10], axis=0, ddof=0)
+        train_outputs =train_outputs[:10]
+        test_inputs =scipy.stats.zscore(test_inputs, axis=0, ddof=0)
         #test_outputs =scipy.stats.zscore(test_outputs, axis=1)
 
         with tf.device('/GPU:0'):
@@ -118,7 +118,7 @@ def train_model(input_data, output_data, algorithm, noise):
 
             history = estimator.fit(x=train_inputs, y=train_outputs,
                         validation_data=(test_inputs, test_outputs),
-                                    epochs=100, batch_size=16)
+                                    epochs=1500, batch_size=16)
 
             train_loss = history.history['loss']
             val_loss = history.history['val_loss']
@@ -219,7 +219,7 @@ def create_compile_cnn_model(input_shape, output_dim):
         staircase=True)
 
     opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-    estimator.compile(optimizer=opt, loss='mse', metrics=['mae', r2_score])
+    estimator.compile(optimizer=opt, loss='mae', metrics=['mae', r2_score])
 
     return estimator
 
