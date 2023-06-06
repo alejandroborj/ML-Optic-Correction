@@ -1,26 +1,6 @@
 #%%
 # UPDATING SCRIPT AND RUNNING IT ON THE SERVER
 #--------------------------------------------- 
-"""
-rsync -ar /home/alejandro/Desktop/ML-Optic-Correction/src/generate_data /afs/cern.ch/user/a/aborjess/work/public/ML-Optic-Correction/src
-
-rsync -ar /afs/cern.ch/user/a/aborjess/work/public/ML-Optic-Correction/src/generate_data/data /home/alejandro/Desktop/ML-Optic-Correction/src/generate_data
-
-cat generate_data.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python
-
-cd work/public/ML-Optic-Correction/src/generate_data
-for i in {1..40}
-do
-    echo -e "\nInstance $i\n"
-    python generate_data.py &
-done
-wait
-
-cat model_training.py | /afs/cern.ch/user/a/aborjess/work/private/anaconda3/envs/ml-op/bin/python
-
-rsync -ar aborjess@cs-ccr-dev3:work/public/ML-Optic-Correction/src/generate_data/r2.pdf /home/alejandro/Desktop/ML-Optic-Correction/src/generate_data
-
-"""
 
 import numpy as np
 import random
@@ -50,7 +30,7 @@ QY = 60.32
 def main():
 
     start = time.time()
-    set_name = f"10%triplet_b1glob_{np.random.randint(0, 99999)}"
+    set_name = f"10%triplet_100%b2arcs{np.random.randint(0, 99999)}"
     num_sim = 1
     valid_samples = []
     GENERATE_DATA = True
@@ -65,7 +45,7 @@ def main():
             if sample is not None:
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
-        np.save('./data_global_md/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
+        np.save('./data_local_corr_md/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
     
     stop = time.time()
     print('Execution time (s): ', stop-start)
@@ -76,7 +56,7 @@ def create_sample(index):
     print("\nDoing index: ", str(index), "\n")
 
     np.random.seed(seed=None)
-    seed = 3#random.randint(0, 999999999)
+    seed = random.randint(0, 999999999)
     mdx = madx_ml_op()
 
     # Run mad-x for b1 and b2
@@ -91,6 +71,7 @@ def create_sample(index):
         b1_errors = mdx.table.etabb1.dframe() # Table error for MQ- magnets
         
         #tfs.writer.write_tfs(tfs_file_path=f"b1_correct_example.tfs", data_frame=b1_errors)
+        #tfs.writer.write_tfs(tfs_file_path=f"b1_example_twiss.tfs", data_frame=b1_tw_after_match)
 
         # BEAM 2
         mdx.job_magneterrors_b2(OPTICS_30CM_2023, str(index), seed)
@@ -122,36 +103,48 @@ def create_sample(index):
             beta_bpm_x_b1, beta_bpm_y_b1, beta_bpm_x_b2, beta_bpm_y_b2, \
             triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2
 
-        # Sometimes matching fails, this is a half measure
+        # Sometimes matching fails, this is a half measure        
+        if len(mqt_errors_b1) != 2 or len(mqt_errors_b2) != 2:
+            sample = None
+        
         mdx.quit()
 
     except:
         sample = None
         print("TWISS Failed")
+    #print("Shapes")
+    #for data in sample:
+    #    print(data.shape)
 
     return sample
-
 
 # Read all generated error tables (as tfs), return k1l absolute for sample output
 def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,\
                             b1_tw_after_match, b2_tw_before_match, b2_tw_after_match):
     # Triplet errors  
     triplet_errors = common_errors.k1l
+    tfs_error_file_b1 = b1_errors.set_index("name", drop=False) 
+    # replace K1L of MQT in original table (0) with matched - unmatched difference, per knob (2 different values for all MQTs)
+    b1_unmatched = b1_tw_before_match.set_index("name", drop=False)
+    b1_matched = b1_tw_after_match.set_index("name", drop=False)
 
-    # MQT Errors
-    tfs_error_file_b1 = b1_errors.set_index("name", drop=False)
-    tfs_error_file_b2 = b2_errors.set_index("name", drop=False)
+    mqt_names_b1 = [name for name in b1_unmatched.index.values if "mqt." in name]
+
+    mqt_errors_b1 = np.unique(np.array(b1_matched.loc[mqt_names_b1, "k1l"].values - \
+        b1_unmatched.loc[mqt_names_b1, "k1l"].values, dtype=float).round(decimals=8))
+    mqt_errors_b1 = [k for k in mqt_errors_b1 if k != 0]
     
-    mqt_names_b1 = [name for name in tfs_error_file_b1.index.values if "mqt." in name]
-    mqt_errors_b1 = np.array(tfs_error_file_b1.loc[mqt_names_b1, "k1l"].values, dtype=float)
-
-    mqt_names_b2 = [name for name in tfs_error_file_b2.index.values if "mqt." in name]
-    mqt_errors_b2 = np.array(tfs_error_file_b2.loc[mqt_names_b2, "k1l"].values, dtype=float)
-
-    # ARC Magnets
+    # The rest of magnets errors
     arc_magnets_names_b1 = [name for name in tfs_error_file_b1.index.values if ("mqt." not in name and "mqx" not in name)]
     arc_errors_b1 = tfs_error_file_b1.loc[arc_magnets_names_b1, "k1l"]
-
+    tfs_error_file_b2 = b2_errors.set_index("name", drop=False)
+    b2_unmatched = b2_tw_before_match.set_index("name", drop=False)
+    b2_matched = b2_tw_after_match.set_index("name", drop=False)
+    mqt_names_b2 = [name for name in b2_unmatched.index.values if "mqt." in name]
+    mqt_errors_b2 = np.unique(np.array(b2_matched.loc[mqt_names_b2, "k1l"].values - \
+        b2_unmatched.loc[mqt_names_b2, "k1l"].values, dtype=float).round(decimals=8))
+    
+    mqt_errors_b2 = [k for k in mqt_errors_b2 if k != 0]
     arc_magnets_names_b2 = [name for name in tfs_error_file_b2.index.values if ("mqt." not in name and "mqx" not in name)]
     arc_errors_b2 = tfs_error_file_b2.loc[arc_magnets_names_b2, "k1l"]
 
@@ -196,8 +189,7 @@ def get_input_for_beam(twiss_df, meas_mdl, beam):
     beta_bpms_y = np.array(tw_perturbed["BETY"])
     
     #print("Beta Beat", meas_mdl, tw_perturbed)
-
-    plot_example_betabeat(meas_mdl, tw_perturbed, beam)
+    #plot_example_betabeat(meas_mdl, tw_perturbed, beam)
     
     return np.array(delta_beta_star_x), np.array(delta_beta_star_y), \
         np.array(delta_phase_adv_x), np.array(delta_phase_adv_y), np.array(n_disp),\

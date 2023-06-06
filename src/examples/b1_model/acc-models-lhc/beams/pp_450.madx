@@ -1,8 +1,0 @@
-beam, sequence=lhcb1, bv= 1,
-  particle=proton, charge=1, mass=0.938272046,
-  energy= 450,   npart=1.2e11,kbunch=2556,
-  ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
-beam, sequence=lhcb2, bv=-1,
-  particle=proton, charge=1, mass=0.938272046,
-  energy= 450,   npart=1.2e11,kbunch=2556,
-  ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;

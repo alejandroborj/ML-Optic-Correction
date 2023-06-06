@@ -295,8 +295,8 @@ class madx_ml_op(cpymad.madx.Madx):
         readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam2/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
         seterr, table=errtab;
 
-        !select, flag=error, clear;
-        !select, flag=error, pattern = "^MQ[^B^I^S^D].*";
+        select, flag=error, clear;
+        select, flag=error, pattern = "^MQ[^B^I^S^D].*";
         etable, table="etabb2"; ! Saving errors in table 
 
         !exec, do_twiss_elements(LHCB2, "", 0.0);

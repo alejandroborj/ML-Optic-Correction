@@ -1,0 +1,95 @@
+2022-04-28#01-18-41:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L1.B1,BPM.12R1.B1,IP1 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#01-18-57:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#01-25-56:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L1.B1,BPM.12R1.B1,IP1 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#01-26-42:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L1.B1,BPM.12R1.B1,IP1 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#01-39-20:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#01-39-59:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#01-40-21:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-43-55:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-43-55:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-43-55:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-44-57:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-44-57:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-44-57:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-46-56:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#02-47-29:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#03-30-08:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.12L1.B1,BPM.12R1.B1,IP1 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#03-30-27:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L1.B1,BPM.12R1.B1,IP1 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#03-31-09:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.13L1.B1,BPM.12R1.B1,IP1 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+
+2022-04-28#03-39-57:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=BPM.11L5.B1,BPM.12R5.B1,IP5 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=10.0 -a
+

@@ -58,6 +58,10 @@ def plot_example_errors(input_data, output_data, estimator):
 
 def plot_example_betabeat(tw_nominal, tw_errors, beam):
 
+    '''Takes the nominal and perturbed twiss tfs-pandas data and gives the betabeating'''
+
+    print(len(tw_errors.BETX - tw_nominal.BETX))
+    #bbeat_x = 100*(np.array(tw_errors.BETX) - np.array(tw_nominal.BETX))/tw_nominal.BETX
     bbeat_x = 100*(np.array(tw_errors.BETX - tw_nominal.BETX))/tw_nominal.BETX
     bbeat_y = 100*(np.array(tw_errors.BETY - tw_nominal.BETY))/tw_nominal.BETY
 
@@ -128,8 +132,9 @@ def plot_bbeat_hist():
         fig.savefig(f"./figures/bbeat_hist{beam}.pdf")
 
 def plot_learning_curve(samples, metrics, algorithm):
-    metrics = np.array(samples, dtype=object)
-    #MAE                                                                                                                            
+    metrics = np.array(metrics, dtype=object)
+    #MAE
+    print(samples, metrics[:,1])                                                                                                                      
     plt.title("Mean Average Error")
     plt.xlabel("N Samples")
     plt.ylabel("MAE")

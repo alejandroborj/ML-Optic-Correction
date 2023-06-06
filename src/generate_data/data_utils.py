@@ -1,3 +1,4 @@
+
 #%%
 
 import numpy as np
@@ -6,12 +7,16 @@ import tfs
 from pathlib import Path
 import joblib
 
-def main():
-    output_example_result_tfs()
+def main():        
+    set_name = "data_local_corr_md"
+    noise = 10E-3
+    
+    #output_example_result_tfs()
+    input_data, output_data = merge_data(set_name, noise)
 
 def load_data(set_name, noise):
     #Function that inputs the .npy file and returns the data in a readable format for the algoritms
-    all_samples = np.load('./data_mqt/{}.npy'.format(set_name), allow_pickle=True)
+    all_samples = np.load('./data_local_corr_md/{}.npy'.format(set_name), allow_pickle=True)
     
     delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, \
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
@@ -19,6 +24,23 @@ def load_data(set_name, noise):
             beta_bpm_x_b1, beta_bpm_y_b1, beta_bpm_x_b2, beta_bpm_y_b2, \
             triplet_errors, arc_errors_b1, arc_errors_b2, \
             mqt_errors_b1, mqt_errors_b2 = all_samples.T
+    
+    B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
+    B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
+    
+    #tw_perturbed_b1 = pd.DataFrame(columns=["BETX", "BETY"])
+    #tw_perturbed_b1.BETX=beta_bpm_x_b1[0]
+    #tw_perturbed_b1.BETY=beta_bpm_y_b1[0]
+
+    #tw_perturbed_b2 = pd.DataFrame(columns=["BETX", "BETY"])    
+    #tw_perturbed_b2.BETX=beta_bpm_x_b2[0]
+    #tw_perturbed_b2.BETY=beta_bpm_y_b2[0]
+
+    #print(len(B1_MONITORS_MDL_TFS))
+    #print(len(tw_perturbed_b1))
+    
+    #plot_example_betabeat(B1_MONITORS_MDL_TFS, tw_perturbed_b1, 1)
+    #plot_example_betabeat(B2_MONITORS_MDL_TFS, tw_perturbed_b2, 2)
     
     # select features for input
     # Optionally: add noise to simulated optics functions
@@ -30,17 +52,24 @@ def load_data(set_name, noise):
     delta_mux_b2 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_mux_b2, beta_bpm_x_b2)]
     delta_muy_b2 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_muy_b2, beta_bpm_y_b2)]
 
-    input_data = np.concatenate((np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
-        np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
-        np.vstack(delta_mux_b1), np.vstack(delta_muy_b1), \
-        np.vstack(delta_mux_b2), np.vstack(delta_muy_b2), \
-        np.vstack(n_disp_b1), np.vstack(n_disp_b2)
-        ), axis=1)
+    input_data = np.concatenate((np.vstack(delta_mux_b1), np.vstack(delta_muy_b1), \
+        np.vstack(delta_mux_b2), np.vstack(delta_muy_b2)
+        ), axis=1)    
+    #input_data = np.concatenate((np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
+    #    np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
+    #    np.vstack(delta_mux_b1), np.vstack(delta_muy_b1), \
+    #    np.vstack(delta_mux_b2), np.vstack(delta_muy_b2), \
+    #    np.vstack(n_disp_b1), np.vstack(n_disp_b2)
+    #    ), axis=1)
     # select targets for output
     
-    output_data = np.concatenate((np.vstack(triplet_errors), np.vstack(arc_errors_b1),\
+    output_data = np.concatenate(( np.vstack(arc_errors_b1),\
                                    np.vstack(arc_errors_b2), np.vstack(mqt_errors_b1), \
                                     np.vstack(mqt_errors_b2)), axis=1)
+    
+    #output_data = np.concatenate((np.vstack(triplet_errors), np.vstack(arc_errors_b1),\
+    #                            np.vstack(arc_errors_b2), np.vstack(mqt_errors_b1), \
+    #                            np.vstack(mqt_errors_b2)), axis=1)                               
     
     return input_data, output_data
 
@@ -49,7 +78,7 @@ def merge_data(data_path, noise):
     #Takes folder path for all different data files and merges them
     input_data, output_data = [], []
     pathlist = Path(data_path).glob('**/*.npy')
-    file_names = [str(path).split('/')[-1][:-4] for path in pathlist][:1]
+    file_names = [str(path).split('/')[-1][:-4] for path in pathlist]
 
     for file_name in file_names:
         aux_input, aux_output = load_data(file_name, noise)
@@ -99,6 +128,7 @@ def normalize_errors(data):
     return data
 
 def save_np_errors_tfs(np_errors, filename):
+    #This is the tfs format that can be read, this model of file is then copied and filled
     error_tfs_model_b1 = tfs.read_tfs("./data_analysis/errors_b1.tfs")
     error_tfs_model_b2 = tfs.read_tfs("./data_analysis/errors_b2.tfs")
 
@@ -107,6 +137,7 @@ def save_np_errors_tfs(np_errors, filename):
         lines = f.readlines()
         names = [name.replace("\n", "") for name in lines]
 
+    # Recons_df is a dataframe with the correct names and errors but not format
     recons_df = pd.DataFrame(columns=["NAME","K1L"])
     recons_df.K1L = np_errors
     recons_df.NAME = names
@@ -115,9 +146,6 @@ def save_np_errors_tfs(np_errors, filename):
         for i in range(len(error_tfs_model)):
             # check if the name is in recons_df
             if error_tfs_model.loc[i, 'NAME'] in list(recons_df['NAME']):
-                if 'MQT' in error_tfs_model.loc[i, 'NAME']:
-                    print(error_tfs_model.loc[i, 'NAME'])
-                    print(recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1])
                 error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1]
             
     tfs.writer.write_tfs(tfs_file_path=f"./data_analysis/b1_{filename}", data_frame=error_tfs_model_b1)
@@ -150,6 +178,7 @@ def output_example_result_tfs():
 
     save_np_errors_tfs(true_error[0], "true_example.tfs")
     #save_np_errors_tfs(pred_error[0], "pred_example.tfs")
+
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,6 @@
 Literature/
 src/generate_data/data/
 src/generate_data/data_45cm/
-src/generate_data/data_mqt/
-src/generate_data/data_triplet/
-src/generate_data/data_virgin_md/
-src/generate_data/data_global_md/
+src/generate_data/data_local_corr_md/
 src/generate_data/estimators/
-
+afs

@@ -1,9 +1,0 @@
-call, file="acc-models-lhc/lhc.seq";
-
-beam, sequence=lhcb1, bv= 1, particle=proton, charge=1, mass=0.938272046,
-pc= 6800.0,   npart=1.2e11,kbunch=2556, ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
-beam, sequence=lhcb2, bv=-1, particle=proton, charge=1, mass=0.938272046,
-pc= 6800.0,   npart=1.2e11,kbunch=2556, ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
-
-call,file="acc-models-lhc/operation/optics/R2022h_A19_2mC19_2mA19_2mL24m.madx";
-call,file="acc-models-lhc/scenarios/pp_vdm/PHYSICS-6.8TeV-2022-VdM_V1/160/settings.madx";

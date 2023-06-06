@@ -32,10 +32,10 @@ random.seed(1111)
 GEN_TEST_SPLIT = True # If a new test split is needed
 
 def main():
-    set_name = "data"
+    set_name = "data_local_corr_md"
     TRAIN = True
     MERGE = True
-    algorithm = "tree"
+    algorithm = "ridge"
 
     # Train on generated data
     # Load data
@@ -51,7 +51,7 @@ def main():
 
         if TRAIN==True:
 
-            n_splits=1
+            n_splits=10
             input_data = np.array_split(input_data, n_splits, axis=0)
             output_data = np.array_split(output_data, n_splits, axis=0)
 
@@ -60,11 +60,13 @@ def main():
                                         algorithm=algorithm, noise=noise)
                 n_samples.append(len(np.vstack(input_data[:i+1])))
                 metrics.append(results)
-
+            
+            print(metrics)
+            plot_learning_curve(n_samples, metrics, algorithm)
 
     #plot_noise_vs_metrics(noises, metrics, algorithm)
 
-def train_model(input_data, output_data, algorithm, noise):
+def train_model(input_data, output_data, algorithm, noise):  
 
     #Function that loads the data and trains the chosen model with a given noise level
 
@@ -132,9 +134,9 @@ def train_model(input_data, output_data, algorithm, noise):
 
         return 0
 
-    # Optionally: save fitted model or load already trained model                                                                       
-    joblib.dump(estimator, f'./estimators/estimator_{algorithm}_{noise}.pkl')
-
+    # Optionally: save fitted model or load already trained model                                                        
+    joblib.dump(estimator, f'./estimators/b2_arcs_phases_virgin.pkl')                                                                       
+    #joblib.dump(estimator, f'./estimators/estimator_{algorithm}_{noise}.pkl')
 
     # Check scores: explained variance and MAE
     r2_train = estimator.score(train_inputs, train_outputs)
@@ -204,7 +206,7 @@ def create_compile_cnn_model(input_shape, output_dim):
                                                units=output_dim,
                                                activation=None,
                                                use_bias=True,
-                                               kernel_initializer='glorot_uniform',bias_initializer='zeros')
+                                               kernel_initializer='glorot_uniform', bias_initializer='zeros')
                                            ])
 
     initial_learning_rate = 1E-4

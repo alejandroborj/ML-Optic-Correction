@@ -1,0 +1,14 @@
+2022-04-28#01-18-22:
+Name: SegmentBySegment
+Command:
+ssh cs-ccr-optics1 /afs/cern.ch/eng/sl/lintrack/miniconda2/bin/python /afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/SegmentBySegment/SegmentBySegmentMain.py --accel=lhc --lhcmode=lhc_runIII_2022 --beam=1 --start=IP1,IP2,IP5,IP8 --path=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod --twiss=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/models/LHCB1/b1_30cm_forlocal_2022/twiss_elements.dat --save=/user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod/sbs_auto --mad=madx --bbsource=/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src --cuts=1.5 -a
+
+2022-04-28#01-19-11:
+Errors: WARNING:SegmentBySegment.sbs_writers.sbs_special_element_writer:Can not calculate horizontal IP values because of missing beta and/or phase for BPMSW.1L8.B1 or BPMSW.1R8.B1.
+WARNING:SegmentBySegment.sbs_writers.sbs_special_element_writer:Can not calculate vertical IP values because of missing beta and/or phase for BPMSW.1L8.B1 or BPMSW.1R8.B1.
+WARNING:SegmentBySegment.sbs_writers.sbs_special_element_writer:Can not calculate horizontal IP values because of missing beta and/or phase for BPMSW.1L8.B1 or BPMSW.1R8.B1.
+WARNING:SegmentBySegment.sbs_writers.sbs_special_element_writer:Can not calculate vertical IP values because of missing beta and/or phase for BPMSW.1L8.B1 or BPMSW.1R8.B1.
+WARNING:SegmentBySegment.sbs_writers.sbs_special_element_writer:Can not calculate horizontal IP values because of missing beta and/or phase for BPMSW.1L8.B1 or BPMSW.1R8.B1.
+WARNING:SegmentBySegment.sbs_writers.sbs_special_element_writer:Can not calculate vertical IP values because of missing beta and/or phase for BPMSW.1L8.B1 or BPMSW.1R8.B1.
+
+
