@@ -1,0 +1,45 @@
+## BEAM 1 optics parameters
+# MadX expression      LSA name            sequence
+table(summ,q1)         LHCBEAM1/QH_REF     lhcb1
+table(summ,q2)         LHCBEAM1/QV_REF     lhcb1
+table(summ,dq1)        LHCBEAM1/QPH_REF    lhcb1
+table(summ,dq2)        LHCBEAM1/QPV_REF    lhcb1
+table(summ,gammatr)    LHCBEAM1/GAMMATR    lhcb1
+
+table(twiss,ip1,betx)  LHCBEAM1/BX-IR1     lhcb1
+table(twiss,ip1,bety)  LHCBEAM1/BY-IR1     lhcb1
+table(twiss,ip2,betx)  LHCBEAM1/BX-IR2     lhcb1
+table(twiss,ip2,bety)  LHCBEAM1/BY-IR2     lhcb1
+table(twiss,ip5,betx)  LHCBEAM1/BX-IR5     lhcb1
+table(twiss,ip5,bety)  LHCBEAM1/BY-IR5     lhcb1
+table(twiss,ip8,betx)  LHCBEAM1/BX-IR8     lhcb1
+table(twiss,ip8,bety)  LHCBEAM1/BY-IR8     lhcb1
+
+rx_IP1                 LHCBEAM1/RX-IR1     lhcb1
+ry_IP1                 LHCBEAM1/RY-IR1     lhcb1
+rx_IP5                 LHCBEAM1/RX-IR5     lhcb1
+ry_IP5                 LHCBEAM1/RY-IR5     lhcb1
+phase_change.b1	       LHCBEAM1/PHASECHANGE_2023_INJ lhcb1
+
+## BEAM 2 optics parameters
+# MadX expression      LSA name            sequence
+table(summ,q1)         LHCBEAM2/QH_REF     lhcb2
+table(summ,q2)         LHCBEAM2/QV_REF     lhcb2
+table(summ,dq1)        LHCBEAM2/QPH_REF    lhcb2
+table(summ,dq2)        LHCBEAM2/QPV_REF    lhcb2
+table(summ,gammatr)    LHCBEAM2/GAMMATR    lhcb2
+
+table(twiss,ip1,betx)  LHCBEAM2/BX-IR1     lhcb2
+table(twiss,ip1,bety)  LHCBEAM2/BY-IR1     lhcb2
+table(twiss,ip2,betx)  LHCBEAM2/BX-IR2     lhcb2
+table(twiss,ip2,bety)  LHCBEAM2/BY-IR2     lhcb2
+table(twiss,ip5,betx)  LHCBEAM2/BX-IR5     lhcb2
+table(twiss,ip5,bety)  LHCBEAM2/BY-IR5     lhcb2
+table(twiss,ip8,betx)  LHCBEAM2/BX-IR8     lhcb2
+table(twiss,ip8,bety)  LHCBEAM2/BY-IR8     lhcb2
+
+rx_IP1                 LHCBEAM2/RX-IR1     lhcb2
+ry_IP1                 LHCBEAM2/RY-IR1     lhcb2
+rx_IP5                 LHCBEAM2/RX-IR5     lhcb2
+ry_IP5                 LHCBEAM2/RY-IR5     lhcb2
+phase_change.b2        LHCBEAM2/PHASECHANGE_2023_INJ lhcb2

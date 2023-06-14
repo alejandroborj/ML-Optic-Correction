@@ -1,0 +1,1095 @@
+<jmad-model-definition name="LHC 2023">
+  <optics>
+    <optic name="R2023a_A11mC11mA10mL10m_PhaseKnob25ON" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_11m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/set-phasechange-knob-25strength.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A11mC11mA10mL10m_PhaseKnob50ON" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_11m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/set-phasechange-knob-50strength.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A11mC11mA10mL10m_PhaseKnob75ON" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_11m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/set-phasechange-knob-75strength.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A11mC11mA10mL10m_PhaseKnob100ON" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_11m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/set-phasechange-knob-100strength.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A11mC11mA10mL10m" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_11m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A10mC10mA10mL10m" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_10m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A970cmC970cmA10mL970cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_970cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A930cmC930cmA10mL930cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_930cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A880cmC880cmA10mL880cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_880cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A810cmC810cmA10mL810cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_810cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A700cmC700cmA10mL700cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_700cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A600cmC600cmA10mL600cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_600cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A510cmC510cmA10mL510cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_510cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A440cmC440cmA10mL440cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_440cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A370cmC370cmA10mL370cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_370cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A310cmC310cmA10mL310cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_310cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A250cmC250cmA10mL250cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_250cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A200cmC200cmA10mL200cm_1" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_200cm_1.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A200cmC200cmA10mL200cm_0-83" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_200cm_0-83.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A200cmC200cmA10mL200cm_0-72" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_200cm_0-72.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A200cmC200cmA10mL200cm_0-65" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_200cm_0-65.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A200cmC200cmA10mL200cm_0-57" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_200cm_0-57.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A200cmC200cmA10mL200cm_0-5" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_200cm_0-5.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A156cmC156cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_156cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A120cmC120cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_120cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A112cmC112cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_112cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A105cmC105cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_105cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A99cmC99cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_99cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A93cmC93cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_93cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A87cmC87cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_87cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A82cmC82cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_82cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A77cmC77cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_77cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A72cmC72cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_72cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A68cmC68cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_68cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A64cmC64cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_64cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A60cmC60cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_60cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A56cmC56cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_56cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A52cmC52cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_52cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A48cmC48cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_48cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A45cmC45cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_45cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A41cmC41cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_41cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A38cmC38cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_38cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A35cmC35cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_35cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A32cmC32cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_32cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023a_A30cmC30cmA10mL200cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023/ats_30cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-phasechange-knobs.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A11mC11mA10mL10m" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/11_10m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A970cmC970cmA970cmL970cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/970cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A920cmC920cmA920cmL920cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/920cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A850cmC850cmA850cmL850cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/850cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A760cmC760cmA760cmL760cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/760cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A670cmC670cmA670cmL670cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/670cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A590cmC590cmA590cmL590cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/590cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A520cmC520cmA520cmL520cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/520cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A450cmC450cmA450cmL450cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/450cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A400cmC400cmA400cmL400cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/400cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A360cmC360cmA360cmL360cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/360cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A320cmC320cmA320cmL320cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/320cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A290cmC290cmA290cmL290cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/290cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A230cmC230cmA230cmL230cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/230cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A185cmC185cmA185cmL185cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/185cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A135cmC135cmA135cmL150cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/135cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A100cmC100cmA100cmL150cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/100cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A82cmC82cmA82cmL150cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/82cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A68cmC68cmA68cmL150cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/68cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A57cmC57cmA57cmL150cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/57cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023i_A50cmC50cmA50cmL150cm" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_IONS/50cm.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_A24mC24mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/24m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_A36mC36mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/36m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_A52mC52mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/52m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_A75mC75mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/75m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_100mC100mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/100m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_A112mC112mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/112m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+    <optic name="R2023h_A120mC120mA18L18" overlay="false">
+      <init-files>
+        <call-file path="toolkit/zero-strengths.madx" parse="STRENGTHS"/>
+        <call-file path="strengths/ATS_Nominal/2023_HB/120m.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/reset-bump-flags.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/match-lumiknobs.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-tune-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-chroma-knobs-non-ats.madx" parse="STRENGTHS"/>
+        <call-file path="toolkit/generate-op-coupling-knobs-non-ats.madx" parse="STRENGTHS"/>
+      </init-files>
+    </optic>
+  </optics>
+  <default-optic ref-name="R2023a_A11mC11mA10mL10m_PhaseKnob25ON"/>
+  <sequences>
+    <sequence name="lhcb1">
+      <beam>
+        <particle value="PROTON"/>
+        <energy value="450.0"/>
+        <ex value="7.297671095555556E-9"/>
+        <ey value="7.297671095555556E-9"/>
+        <sigt value="0.077"/>
+        <sige value="5.0E-4"/>
+        <npart value="1.1E11"/>
+        <bv value="PLUS"/>
+      </beam>
+      <ranges>
+        <range name="ALL">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lsa-definition">
+            <chrom value="true"/>
+            <closed-orbit value="true"/>
+            <centre value="true"/>
+          </twiss-initial-conditions>
+        </range>
+        <range name="ALL first turn">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lhcb1-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="55.679041"/>
+            <bety value="71.515031"/>
+            <alfx value="2.128241"/>
+            <alfy value="-1.679855"/>
+            <dx value="-0.1103"/>
+            <dy value="0.0"/>
+            <dpx value="0.03792"/>
+            <dpy value="0.0"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+        </range>
+        <range name="Inj. Sector 2-3">
+          <madx-range first="LHCINJ.B1" last="TCLA.7R3.B1"/>
+          <twiss-initial-conditions name="lhcb1-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="55.679041"/>
+            <bety value="71.515031"/>
+            <alfx value="2.128241"/>
+            <alfy value="-1.679855"/>
+            <dx value="-0.1103"/>
+            <dy value="0.0"/>
+            <dpx value="0.03792"/>
+            <dpy value="0.0"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+        </range>
+        <range name="Inj. Sector 2-5">
+          <madx-range first="LHCINJ.B1" last="IP5"/>
+          <twiss-initial-conditions name="lhcb1-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="55.679041"/>
+            <bety value="71.515031"/>
+            <alfx value="2.128241"/>
+            <alfy value="-1.679855"/>
+            <dx value="-0.1103"/>
+            <dy value="0.0"/>
+            <dpx value="0.03792"/>
+            <dpy value="0.0"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+        </range>
+      </ranges>
+      <default-range ref-name="ALL"/>
+    </sequence>
+    <sequence name="lhcb2">
+      <beam>
+        <particle value="PROTON"/>
+        <energy value="450.0"/>
+        <ex value="7.297671095555556E-9"/>
+        <ey value="7.297671095555556E-9"/>
+        <sigt value="0.077"/>
+        <sige value="5.0E-4"/>
+        <npart value="1.1E11"/>
+        <bv value="MINUS"/>
+      </beam>
+      <ranges>
+        <range name="ALL">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lsa-definition">
+            <chrom value="true"/>
+            <closed-orbit value="true"/>
+            <centre value="true"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="ALL first turn">
+          <madx-range first="#s" last="#e"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-7">
+          <madx-range first="TCLA.A7L7.B2" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-6">
+          <madx-range first="TCDQA.A4L6.B2" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-5">
+          <madx-range first="IP5" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-4">
+          <madx-range first="IP4" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+        <range name="Inj. Sectors 8-1">
+          <madx-range first="IP1" last="LHCINJ.B2"/>
+          <twiss-initial-conditions name="lhcb2-twiss">
+            <chrom value="true"/>
+            <closed-orbit value="false"/>
+            <centre value="true"/>
+            <betx value="66.829881"/>
+            <bety value="140.995239"/>
+            <alfx value="-9.0E-6"/>
+            <alfy value="-2.127759"/>
+            <dx value="0.107789"/>
+            <dy value="1.36E-4"/>
+            <dpx value="0.003062"/>
+            <dpy value="3.0E-6"/>
+            <deltap value="0.0"/>
+          </twiss-initial-conditions>
+          <corrector-invert-filters>
+            <regex-filter regex="(?i)^MCBX.*" plane="H"/>
+            <regex-filter regex="(?i)^MCBX.*" plane="V"/>
+          </corrector-invert-filters>
+        </range>
+      </ranges>
+      <default-range ref-name="ALL"/>
+    </sequence>
+  </sequences>
+  <default-sequence ref-name="lhcb1"/>
+  <init-files>
+    <call-file path="toolkit/init-constants.madx"/>
+    <call-file path="lhc.seq"/>
+  </init-files>
+  <path-offsets>
+    <repository-prefix value=".."/>
+    <resource-prefix value="."/>
+  </path-offsets>
+</jmad-model-definition>

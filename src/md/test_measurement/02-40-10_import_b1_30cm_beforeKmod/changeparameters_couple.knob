@@ -1,7 +1,0 @@
-@ APP %le 0
-@ PATH %s /user/slops/data/LHC_DATA/OP_DATA/Betabeat/2022-04-27/LHCB1/Results/b1_30cm_beforeKmod
-@ DATE %s Thu Apr 28 01:18:23 2022
-* NAME DELTA
-$ %s %le
-b1_re_ip7_knob   -0.007976096122855422
-b1_im_ip7_knob   -0.0024335225538493275

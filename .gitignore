@@ -2,5 +2,8 @@ Literature/
 src/generate_data/data/
 src/generate_data/data_45cm/
 src/generate_data/data_local_corr_md/
+src/generate_data/data_global_corr_md/
 src/generate_data/estimators/
-afs
+src/generate_data/data_best_know_md/
+src/md/measurements/
+src/md/md_models/

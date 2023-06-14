@@ -30,8 +30,8 @@ QY = 60.32
 def main():
 
     start = time.time()
-    set_name = f"10%triplet_100%b2arcs{np.random.randint(0, 99999)}"
-    num_sim = 1
+    set_name = f"100%triplet_10%arc_{np.random.randint(0, 99999)}"
+    num_sim = 2000
     valid_samples = []
     GENERATE_DATA = True
 
@@ -45,7 +45,7 @@ def main():
             if sample is not None:
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
-        np.save('./data_local_corr_md/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
+        np.save('./data_global_corr_md/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
     
     stop = time.time()
     print('Execution time (s): ', stop-start)
@@ -117,6 +117,7 @@ def create_sample(index):
     #    print(data.shape)
 
     return sample
+
 
 # Read all generated error tables (as tfs), return k1l absolute for sample output
 def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,\

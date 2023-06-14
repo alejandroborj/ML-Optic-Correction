@@ -32,7 +32,7 @@ random.seed(1111)
 GEN_TEST_SPLIT = True # If a new test split is needed
 
 def main():
-    set_name = "data_local_corr_md"
+    set_name = "data_best_know_md"
     TRAIN = True
     MERGE = True
     algorithm = "ridge"
@@ -41,7 +41,7 @@ def main():
     # Load data
 
     metrics, n_samples = [], []
-    noises = [1E-3] #np.logspace(-5, -2, num=10)
+    noises = [1E-4] #np.logspace(-5, -2, num=10)
     for noise in noises:
 
         if MERGE == True:
@@ -135,7 +135,7 @@ def train_model(input_data, output_data, algorithm, noise):
         return 0
 
     # Optionally: save fitted model or load already trained model                                                        
-    joblib.dump(estimator, f'./estimators/b2_arcs_phases_virgin.pkl')                                                                       
+    joblib.dump(estimator, f'./estimators/best_know_{noise}.pkl')                                                                       
     #joblib.dump(estimator, f'./estimators/estimator_{algorithm}_{noise}.pkl')
 
     # Check scores: explained variance and MAE

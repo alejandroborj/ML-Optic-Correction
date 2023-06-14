@@ -93,7 +93,7 @@ class madx_ml_op(cpymad.madx.Madx):
         ! + random component (B2R)
         ! B2R are estimated from WISE
         eoption, seed = %(SEED)s, add=true;
-        ON_B2R = 1;
+        ON_B2R = 0.1;
         GCUTR = 3; ! Cut for truncated gaussians (sigmas)
 
         ! Arc magnets
@@ -151,9 +151,11 @@ class madx_ml_op(cpymad.madx.Madx):
         select, flag=error, pattern = "^MQX[AB]\..*";
         B2r = 4;
         ON_B2R = 1;
+        !0.1 for residual errors
         ! to make all triplets have a different B2S component
         B2sX = 10-20*RANF();
-        ON_B2S = 1;
+        ON_B2S = 1; 
+        !0.1 for residual errors
         Rr = 0.050;
 
         ! macro to assign systematic errors 
@@ -161,9 +163,8 @@ class madx_ml_op(cpymad.madx.Madx):
         SetEfcomp_QEL: macro = {
         Efcomp,  radius = Rr, order= 1,
                 dknr:={0,
-                1E-5*(B2sX*ON_B2S  + B2r*ON_B2R * TGAUSS(GCUTR))};
+                1E-4*(B2sX*ON_B2S  + B2r*ON_B2R * TGAUSS(GCUTR))};
                 }
-        ! CHANGED 1E-4 is the usual, used 1E-5
 
         select, flag=error, clear;
         select, flag=error, pattern = "^MQX[AB]\..*";
@@ -212,7 +213,7 @@ class madx_ml_op(cpymad.madx.Madx):
 
     def job_magneterrors_b2(self, OPTICS, index, seed):
         self.input('''
-        !@require lhc_runIII_2022.macros.madx        
+        !@require lhc_runIII_2022.macros.madx
 
         option, -echo;
 
@@ -231,7 +232,7 @@ class madx_ml_op(cpymad.madx.Madx):
 
         ! generate individual errors for beam 2
         eoption, seed = %(SEED)s, add=true;
-        ON_B2R = 1;
+        ON_B2R = 0.1;
         GCUTR = 3; ! Cut for truncated gaussians (sigmas)
 
         !!!! Global errors !!!!
