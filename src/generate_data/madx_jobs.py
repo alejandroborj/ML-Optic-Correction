@@ -15,7 +15,7 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII.macros.madx";
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII_ats.macros.madx";
-        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2022.macros.madx";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2023.macros.madx";
         option, echo;
 
         title, "Model creator for java";
@@ -24,11 +24,10 @@ class madx_ml_op(cpymad.madx.Madx):
 
         option, -echo;
 
-        call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
+        call, file = "/afs/cern.ch/eng/acc-models/lhc/2023/lhc.seq";
 
-        exec, define_nominal_beams();
-        call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
-        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx";
+        exec, define_nominal_beams(energy=6500);
+        call, file="/afs/cern.ch/eng/acc-models/lhc/2023/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         exec, cycle_sequences();
 
         ! BEAM 1
@@ -60,7 +59,7 @@ class madx_ml_op(cpymad.madx.Madx):
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc.macros.madx";
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII.macros.madx";
         call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runII_ats.macros.madx";
-        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2022.macros.madx";
+        call, file = "/afs/cern.ch/eng/sl/lintrack/Beta-Beat.src/madx/lib/lhc_runIII_2023.macros.madx";
         call, file = "/afs/cern.ch/eng/lhc/optics/V6.5/errors/Esubroutines.madx"; 
         ! ADDED
 
@@ -70,9 +69,9 @@ class madx_ml_op(cpymad.madx.Madx):
 
         option, -echo;
 
-        call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
+        call, file = "/afs/cern.ch/eng/acc-models/lhc/2023/lhc.seq";
 
-        exec, define_nominal_beams();
+        exec, define_nominal_beams(energy=6500);
         !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         call, file = "%(OPTICS)s";
         
@@ -87,12 +86,13 @@ class madx_ml_op(cpymad.madx.Madx):
         use, period = LHCB1;
         
         exec, match_tunes(62.31, 60.32, 1);
-
+        
         ! Assign errors per magnets family:
         ! the same systematic error in each magnet in one family (B2S)
         ! + random component (B2R)
         ! B2R are estimated from WISE
         eoption, seed = %(SEED)s, add=true;
+
         ON_B2R = 0.1;
         GCUTR = 3; ! Cut for truncated gaussians (sigmas)
 
@@ -150,11 +150,12 @@ class madx_ml_op(cpymad.madx.Madx):
         select, flag=error, clear;
         select, flag=error, pattern = "^MQX[AB]\..*";
         B2r = 4;
-        ON_B2R = 1;
+        ON_B2R = 0.1;
         !0.1 for residual errors
+
         ! to make all triplets have a different B2S component
         B2sX = 10-20*RANF();
-        ON_B2S = 1; 
+        ON_B2S = 0.1;
         !0.1 for residual errors
         Rr = 0.050;
 
@@ -163,7 +164,7 @@ class madx_ml_op(cpymad.madx.Madx):
         SetEfcomp_QEL: macro = {
         Efcomp,  radius = Rr, order= 1,
                 dknr:={0,
-                1E-4*(B2sX*ON_B2S  + B2r*ON_B2R * TGAUSS(GCUTR))};
+                1E-4*(B2sX*ON_B2S + B2r*ON_B2R * TGAUSS(GCUTR))};
                 }
 
         select, flag=error, clear;
@@ -173,15 +174,16 @@ class madx_ml_op(cpymad.madx.Madx):
         ! Longitudinal misalignment of triplet quads (assumed to be 6mm)
         select, flag=error, clear;
         select, flag=error, pattern = "^MQX[AB]\..*";
-        EALIGN, DS := 0.006*TGAUSS(3);
-
+        EALIGN, DS := 0.1*0.006*TGAUSS(3);
+        !0.1 errors
+    
         ! save common triplet errors in a file, set in addition to individual errors
         select, flag=error, pattern = "^MQX[AB]\..*";
         etable, table="cetab"; ! Saving errors in table 
 
         !Assign average dipole errors (best knowldge model)
-        readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
-        seterr, table=errtab;
+        !readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam1/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
+        !seterr, table=errtab;
 
         ! Save all assigned errors in one error table
         select, flag=error, clear;
@@ -217,10 +219,10 @@ class madx_ml_op(cpymad.madx.Madx):
 
         option, -echo;
 
-        call, file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq";
+        call, file = "/afs/cern.ch/eng/acc-models/lhc/2023/lhc.seq";
 
-        exec, define_nominal_beams();
-        !call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+        exec, define_nominal_beams(energy=6500);
+        !call, file="/afs/cern.ch/eng/acc-models/lhc/2023/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
         call, file = "%(OPTICS)s";
         exec, cycle_sequences();
 
@@ -232,10 +234,9 @@ class madx_ml_op(cpymad.madx.Madx):
 
         ! generate individual errors for beam 2
         eoption, seed = %(SEED)s, add=true;
-        ON_B2R = 0.1;
+        ON_B2R = 1;
         GCUTR = 3; ! Cut for truncated gaussians (sigmas)
 
-        !!!! Global errors !!!!
         select, flag=error, clear;
         select, flag=error, pattern = "^MQ\..*B2";
         Rr = 0.017;
@@ -293,8 +294,8 @@ class madx_ml_op(cpymad.madx.Madx):
         SETERR, TABLE=cetab;
 
         !Assign average dipole errors (best knowldge model)
-        readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam2/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
-        seterr, table=errtab;
+        !readmytable, file = "/afs/cern.ch/eng/sl/lintrack/error_tables/Beam2/error_tables_6.5TeV/MBx-0001.errors", table=errtab;
+        !seterr, table=errtab;
 
         select, flag=error, clear;
         select, flag=error, pattern = "^MQ[^B^I^S^D].*";

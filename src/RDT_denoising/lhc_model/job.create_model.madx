@@ -1,0 +1,32 @@
+title, "LHC Model created by omc3";
+! Model directory: /afs/cern.ch/work/a/aborjess/public/ML-Optic-Correction/src/RDT_denoising
+! Natural Tune X         [    62.310]
+! Natural Tune Y         [    60.320]
+! Best Knowledge:        [        NO]
+! Excitation             [        NO]
+
+! ----- Calling Sequence and Optics -----
+call, file = 'macros/general.macros.madx';
+call, file = 'macros/lhc.macros.madx';
+call, file = 'macros/lhc.macros.run3.madx';
+call, file = '/home/alejandro/anaconda3/envs/ml-op/lib/python3.9/site-packages/omc3/model/accelerators/lhc/2022/main.seq';
+
+exec, define_nominal_beams();
+call, file = '/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx'; !@modifier
+
+! ----- Defining Configuration Specifics -----
+exec, cycle_sequences();
+xing_angles = 0;
+if(xing_angles==1){
+    exec, set_crossing_scheme_ON();
+}else{
+    exec, set_default_crossing_scheme();
+}
+use, sequence = LHCB1;
+option, echo;
+
+! ----- Matching Knobs and Output Files -----
+exec, match_tunes(62.31, 60.32, 1);
+exec, coupling_knob(1);
+exec, do_twiss_monitors(LHCB1, 'twiss.dat', None);
+exec, do_twiss_elements(LHCB1, 'twiss_elements.dat', None);

@@ -1,0 +1,33 @@
+option, warn,info;
+!system,"ln -s /afs/cern.ch/eng/acc-models/lhc/2022/ acc-models-lhc";
+
+beam, sequence=lhcb1, bv=1,
+  particle=proton, charge=1, mass=0.938272046,
+  energy= 450,   npart=1.2e11,kbunch=2556,
+  ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
+
+beam, sequence=lhcb2, bv=-1,
+  particle=proton, charge=1, mass=0.938272046,
+  energy= 450,   npart=1.2e11,kbunch=2556,
+  ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
+
+if (0 == 1) {
+Option, -echo, -warn,-info;
+call,file="acc-models-lhc/lhc.seq";
+call,file="acc-models-lhc/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+Option, echo,warn,info;
+set, format='.16e';
+use, sequence=lhcb1;
+use, sequence=lhcb2;
+save, sequence=lhcb1, file='lhcb1_saved.seq';
+save, sequence=lhcb2, file='lhcb2_saved.seq';
+set, format='18.10g';
+}
+
+option, -echo, -warn, -info;
+call, file='lhcb1_saved.seq';
+call, file='lhcb2_saved.seq';
+option, echo, warn;
+
+
+

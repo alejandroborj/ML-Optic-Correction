@@ -1,0 +1,81 @@
+-- ./mad ex-fodo-madx.mad
+
+-- assume fodo.seq in current directory for mode = 'madxload'
+-- example built from Rogelio's MAD-X example, see fodo-madx.madx
+
+local mode = 'compact' ! 'compact' | 'madng' | 'madxenv' | 'madxload'
+
+local seq -- forward declaration
+local sfx
+
+if mode == 'compact' then
+  local sequence, multipole in MAD.element
+  local deferred in MAD.typeid
+  local sin, pi in math
+
+  local ncell, lcell, v = 3, 20
+  v = deferred { f := lcell/sin(pi/4)/4, k := 1/v.f }
+  seq = sequence 'seq' {
+    ncell*sequence { l=lcell,
+      multipole 'qf' { at=0      , knl := {0, v.k} },
+      multipole 'qd' { at=lcell/2, knl := {0,-v.k} }, }}
+  sfx = 'c'
+
+elseif mode == 'madng' then                   -- Manual conversion
+  local sequence, multipole in MAD.element
+  local deferred in MAD.typeid
+  local sin, pi in math
+
+  local circum, lcell, v = 60, 20
+  v = deferred { f := lcell/sin(pi/4)/4, k := 1/v.f }
+  local qf = multipole 'qf' { knl := {0,  v.k} }
+  local qd = multipole 'qd' { knl := {0, -v.k} }
+  seq = sequence 'seq' { refer='centre', l=circum, -- assign to seq in scope!
+      qf { at = 0 },
+      qd { at = 0.5 * lcell },
+      qf { at = 1.0 * lcell },
+      qd { at = 1.5 * lcell },
+      qf { at = 2.0 * lcell },
+      qd { at = 2.5 * lcell },
+    }
+  sfx = 'm'
+
+elseif mode == 'madxenv' then             -- Manual conversion using MADX env
+  MADX:open_env()
+
+  circum=60
+  lcell=20
+  f =\ lcell/sin(pi/4)/4
+  k =\ 1.0/f
+  qf = multipole 'qf' { knl := {0,  k} }
+  qd = multipole 'qd' { knl := {0, -k} }
+  seq = sequence 'seq' { refer=centre, l=circum, -- assign to seq in scope!
+    qf { at = 0 },
+    qd { at = 0.5 * lcell },
+    qf { at = 1.0 * lcell },
+    qd { at = 1.5 * lcell },
+    qf { at = 2.0 * lcell },
+    qd { at = 2.5 * lcell },
+  }
+
+  MADX:close_env()
+  sfx = 'e'
+
+elseif mode == 'madxload' then            -- Automatic conversion using MADX env
+  MADX:load("fodo.seq", "fodo.mad")       -- convert on need
+  seq = MADX.seq
+  sfx = 'x'
+
+else error "invalid mode, 'compact' | 'madng' | 'madxenv' | 'madxload' expected"
+end
+
+!seq:dumpseq() -- dump element position on the terminal (different from survey)
+
+local beam, twiss in MAD
+seq.beam = beam -- use default beam
+
+local cols = {'name', 's', 'beta11', 'beta22', 'mu1', 'mu2', 'alfa11', 'alfa22'}
+local mtbl = twiss {sequence=seq, method=4, chrom=true, nslice=10, implicit=true, save='atbody'}
+
+mtbl:write("twiss_n_"..sfx..".tfs", cols)
+

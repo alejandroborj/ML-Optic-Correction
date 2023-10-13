@@ -1,0 +1,100 @@
+#!/bin/sh
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/$1-emfqcs-$2.tfs ]
+then
+	cp /afs/cern.ch/user/h/hagen/public/MAD/$1-emfqcs-$2.tfs /afs/cern.ch/user/h/hagen/public/MAD/emfqcs$3.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/$1-emfqtun-$2.tfs ]
+then
+	cp /afs/cern.ch/user/h/hagen/public/MAD/$1-emfqtun-$2.tfs /afs/cern.ch/user/h/hagen/public/MAD/emfqtun$3.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/$1-egeo-$2-b2.tfs ]
+then
+	cp /afs/cern.ch/user/h/hagen/public/MAD/$1-egeo-$2-b2.tfs /afs/cern.ch/user/h/hagen/public/MAD/egeo$3-b2.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/$1-egeose-$2-b2.tfs ]
+then
+	cp /afs/cern.ch/user/h/hagen/public/MAD/$1-egeose-$2-b2.tfs /afs/cern.ch/user/h/hagen/public/MAD/egeose$3-b2.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/$1-egeoc-$2-b2.tfs ]
+then
+	cp /afs/cern.ch/user/h/hagen/public/MAD/$1-egeoc-$2-b2.tfs /afs/cern.ch/user/h/hagen/public/MAD/egeoc$3-b2.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/$1-cmfq-$2.madx ]
+then
+	cp /afs/cern.ch/user/h/hagen/public/MAD/$1-cmfq-$2.madx /afs/cern.ch/user/h/hagen/public/MAD/cmfq$3.madx
+fi
+
+/afs/cern.ch/group/si/slap/bin/madx < /afs/cern.ch/user/h/hagen/public/MAD/opticsfile.23-b2.madx
+
+rm -f /afs/cern.ch/user/h/hagen/public/MAD/$1g-$2-b2.txt
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/twissg1$3.txt ]
+then
+	cat /afs/cern.ch/user/h/hagen/public/MAD/twissg1$3.txt >> /afs/cern.ch/user/h/hagen/public/MAD/$1g-$2-b2.txt
+	rm -f /afs/cern.ch/user/h/hagen/public/MAD/twissg1$3.txt
+fi
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/twissg2$3.txt ]
+then
+	cat /afs/cern.ch/user/h/hagen/public/MAD/twissg2$3.txt >> /afs/cern.ch/user/h/hagen/public/MAD/$1g-$2-b2.txt
+	rm -f /afs/cern.ch/user/h/hagen/public/MAD/twissg2$3.txt
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/twissq$3.txt ]
+then
+	mv /afs/cern.ch/user/h/hagen/public/MAD/twissq$3.txt /afs/cern.ch/user/h/hagen/public/MAD/$1q-$2-b2.txt
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/twissm$3.txt ]
+then
+	mv /afs/cern.ch/user/h/hagen/public/MAD/twissm$3.txt /afs/cern.ch/user/h/hagen/public/MAD/$1m-$2-b2.txt
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/twissp$3.txt ]
+then
+	mv /afs/cern.ch/user/h/hagen/public/MAD/twissp$3.txt /afs/cern.ch/user/h/hagen/public/MAD/$1p-$2-b2.txt
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/twissk$3.txt ]
+then
+	mv /afs/cern.ch/user/h/hagen/public/MAD/twissk$3.txt /afs/cern.ch/user/h/hagen/public/MAD/$1k-$2-b2.txt
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/esave$3.txt ]
+then
+	mv /afs/cern.ch/user/h/hagen/public/MAD/esave$3.txt /afs/cern.ch/user/h/hagen/public/MAD/$1-esave-$2-b2.txt
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/emfqcs$3.tfs ]
+then
+	rm /afs/cern.ch/user/h/hagen/public/MAD/emfqcs$3.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/emfqtun$3.tfs ]
+then
+	rm /afs/cern.ch/user/h/hagen/public/MAD/emfqtun$3.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/egeo$3-b2.tfs ]
+then
+	rm /afs/cern.ch/user/h/hagen/public/MAD/egeo$3-b2.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/egeose$3-b2.tfs ]
+then
+	rm /afs/cern.ch/user/h/hagen/public/MAD/egeose$3-b2.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/egeoc$3-b2.tfs ]
+then
+	rm /afs/cern.ch/user/h/hagen/public/MAD/egeoc$3-b2.tfs
+fi
+
+if [ -r /afs/cern.ch/user/h/hagen/public/MAD/cmfq$3.madx ]
+then
+	rm /afs/cern.ch/user/h/hagen/public/MAD/cmfq$3.madx
+fi

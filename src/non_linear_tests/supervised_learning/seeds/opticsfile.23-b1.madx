@@ -1,0 +1,325 @@
+title,      "Simulation of LHC runIII/2021.opticsfile.23 prepared by WISE, thick lens, beam 1, inj optics";
+
+! WISE simulation script to be executed with command :
+! /afs/cern.ch/user/m/mad/bin/madx < JOBNAME.madx
+
+assign, echo="/afs/cern.ch/user/h/hagen/public/MAD/echo871.txt";
+
+! link to LHC optics parent directory
+system,    "ln -fns /afs/cern.ch/eng/lhc/optics do";
+! link to LHC MAD-X support scripts
+system,    "ln -fns /afs/cern.ch/eng/lhc/optics/V6.503/measured_errors dm";
+! link to LHC MAD-X toolkit
+system, "ln -fns /afs/cern.ch/eng/lhc/optics/V6.503/toolkit dt";
+
+! LHC optics layout as function of optics lens model
+option,    -info, -warn, verify, -echo;
+call,      file="do/$LHCVERSEQ$/V6.5.seq";
+
+! LHC optics strength as function of lens model, cycle and beam
+call,      file="do/$LHCVERSTR$/$BEAMSTR$";
+beam,      sequence=lhcb1,particle=proton,energy=6800.000,kbunch=2808,npart=1.15E11;
+use,       sequence=lhcb1; mylhcbeam=1;
+title,      "Simulation of LHC runIII/2021.opticsfile.23 prepared by WISE, thick lens, beam 1, inj optics";
+
+! FiDeL dynamic field model
+! time=0.0 secs after start of flat-top
+! previous cycle was pre-cycle
+! p=6800.000 GeV/c, Barc=8.089493 T
+
+! LHC switches (0 or 1) for experimental IPs
+! Beam crossing angle: ON_Xn where n in 1,2,5,8
+! Beam parallel separation: ON_SEPn where n in 1,2,5,8
+! Compensators for dipole fields in experiments: ON_ALICE, ON_LHCB, ON_ATLAS, ON_CMS
+
+! Scripts tailored for measured errors in LHC
+call,      file="/afs/cern.ch/user/h/hagen/public/MAD/Esubroutines.madx";
+call,      file="/afs/cern.ch/user/h/hagen/public/MAD/Ealign_Subroutines.madx";
+
+option,    -echo, -info, -warn;
+
+! Output option for saving perturbed optics before corrections
+ON_PSAVE=0;
+! Output option for saving internal error table
+ON_ESAVE=0;
+! Output option for saving internal powering strength
+ON_KSAVE=0;
+
+! Global operational corrections required for simulation
+! This script does no correction of coupling between the planes
+ON_CO_CORRECTION=0;
+ON_TUNE_CORRECTION=0;
+ON_CHROM_CORRECTION=0;
+
+! Target tune
+QX0=64.2800;
+QY0=59.3100;
+
+! Tunes for evaluating coupling strength between planes
+QXC=64.2950;
+QYC=59.2950;
+
+! Target chromaticity
+Q1PRIME=4.0000;
+Q2PRIME=4.0000;
+
+! The following macro call is needed for activating multipoles
+! in the macro reading the field quality error table
+exec, ON_SYST;
+
+! Disable dipole errors if no closed orbit correction
+if (ON_CO_CORRECTION == 0) {
+  ON_B1S = 0; ON_A1S = 0;
+}
+
+! WISE error sources (no errors generates reference machine)
+! These switches are initially set by WISE based upon user-choices
+eoption,add=true;
+ON_WISE_MFQ=1; ON_WISE_GEO=0;
+
+! WISE magnet types
+! These switches are initially set by WISE based upon user-choices
+ON_MB=1; 
+ON_MBRB=1; ON_MBRC=1;ON_MBRS=1;
+ON_MBX=1; 
+ON_MBW=1; ON_MBXW=1;
+ON_MQ=1; 
+ON_MQM=1; ON_MQMC=1; ON_MQML=1;
+ON_MQY=1;
+ON_MQS=1; ON_MQT=1; ON_MQTL=1;
+ON_MQX=1; ON_MQSX=1;
+ON_MQW=1; 
+ON_OTHER=1;
+
+! WISE geometry
+if (ON_WISE_GEO == 1) {
+  readtable, file="/afs/cern.ch/user/h/hagen/public/MAD/egeo871-b1.tfs";
+  exec, Ealign_All;
+} elseif (ON_WISE_GEO == 2) {
+  readtable, file="/afs/cern.ch/user/h/hagen/public/MAD/egeose871-b1.tfs";
+  seterr,   table=egeose;
+} elseif (ON_WISE_GEO == 3) {
+  readtable, file="/afs/cern.ch/user/h/hagen/public/MAD/egeoc871-b1.tfs";
+  exec, Ealign_C_All;
+}
+
+! WISE magnetic field quality
+if (ON_WISE_MFQ == 1) {
+  ! Rotations of magnets into tunnel reference frame
+  readtable, file="dm/rotations_Q2_integral.tab";
+  readtable, file="/afs/cern.ch/user/h/hagen/public/MAD/emfqcs871.tfs";
+  if (ON_MB == 1)   { 
+	yrotangle = 0; srotangle = 0;
+	call,      file="dm/Efcomp_MB.madx"; 
+  };
+  if (ON_MBRB == 1) { call,      file="dm/Efcomp_MBRB.madx"; };
+  if (ON_MBRC == 1) { call,      file="dm/Efcomp_MBRC.madx"; };
+  if (ON_MBRS == 1) { call,      file="dm/Efcomp_MBRS.madx"; };
+  if (ON_MBX == 1)  { call,      file="dm/Efcomp_MBX.madx"; };
+  if (ON_MBW == 1)  { call,      file="dm/Efcomp_MBW.madx"; };
+  if (ON_MBXW == 1) { call,      file="dm/Efcomp_MBXW.madx"; };
+  if (ON_MQ == 1)   { 
+	yrotangle = 0; srotangle = 0;
+	call,      file="dm/Efcomp_MQ.madx"; 
+  };
+  if (ON_MQS == 1)  { call,      file="/afs/cern.ch/user/h/hagen/public/MAD/Efcomp_MQS.madx"; };
+  if (ON_MQM == 1)  { call,      file="dm/Efcomp_MQM.madx"; };
+  if (ON_MQMC == 1) { call,      file="dm/Efcomp_MQMC.madx"; };
+  if (ON_MQML == 1) { call,      file="dm/Efcomp_MQML.madx"; };
+  if (ON_MQT == 1)  { call,      file="/afs/cern.ch/user/h/hagen/public/MAD/Efcomp_MQT.madx"; };
+  if (ON_MQTL == 1) { call,      file="dm/Efcomp_MQTL.madx"; };
+  if (ON_MQW == 1)  { call,      file="dm/Efcomp_MQW.madx"; };
+  if (ON_MQX == 1)  { call,      file="dm/Efcomp_MQX.madx"; };
+  if (ON_MQSX == 1) { call,      file="/afs/cern.ch/user/h/hagen/public/MAD/Efcomp_MQSX.madx"; };
+  if (ON_MQY == 1)  { call,      file="dm/Efcomp_MQY.madx"; };
+  if (ON_OTHER == 1)   { 
+	call,      file="dm/Msubroutines_MS_MSS_MO.madx";
+	call,      file="dm/Efcomp_MS.madx"; 
+	call,      file="dm/Efcomp_MSS.madx"; 
+	call,      file="dm/Efcomp_MO.madx"; 
+  };
+} elseif (ON_WISE_MFQ == 2) {
+  readtable, file="/afs/cern.ch/user/h/hagen/public/MAD/emfqtun871.tfs";
+  call,      file="/afs/cern.ch/user/h/hagen/public/MAD/Efcomp_All.madx";
+  exec, Efcomp_All;
+}
+
+if (ON_PSAVE == 1) {
+
+  ! Perturbed optics parameters seen at middle of quadrupoles
+  set,       format="18.12f";
+  select,    flag=twiss, clear;
+  select,    flag=twiss, pattern="^[m][q].*[\.]", column=name,s,betx,bety,x,y,dx,dy;
+  twiss,     sequence=lhcb1, centre, file="/afs/cern.ch/user/h/hagen/public/MAD/twissp871.txt";
+
+  ! Plane coupling strength before corrections
+  old_kqd=kqd;
+  old_kqf=kqf;
+  twiss,     sequence=lhcb1;
+  match,sequence=lhcb1;
+  global, q1=qxc, q2=qyc;
+  vary,   name=kqd, step=1.0E-7;
+  vary,   name=kqf, step=1.0E-7;
+  lmdif,  calls=100, tolerance=1.E-8;
+  endmatch;
+  select,    flag=twiss, clear;
+  select,    flag=twiss, pattern="^IP", column=name,s,betx,bety,x,y,dx,dy;
+  twiss,     sequence=lhcb1, file="/afs/cern.ch/user/h/hagen/public/MAD/twissg1871.txt";
+  kqd=old_kqd;
+  kqf=old_kqf;
+}
+
+! Power correctors based upon measured field errors (arcs and IRs)
+call,      file="/afs/cern.ch/user/h/hagen/public/MAD/cmfq871.madx";
+
+! dump internal error table
+if (ON_ESAVE == 1) {
+  select,    flag=error, clear;
+  select,    flag=error, pattern="^[m].*[\.]";
+  esave,     file="/afs/cern.ch/user/h/hagen/public/MAD/esave871.txt";
+}
+
+! closed orbit
+if (ON_CO_CORRECTION == 1) {
+
+  ! must correct against a simple reference orbit
+  OLD_ALICE = ON_ALICE;
+  OLD_LHCB = ON_LHCB;
+  OLD_ATLAS = ON_ATLAS;
+  OLD_CMS = ON_CMS;
+
+  ON_ALICE=0;
+  ON_LHCB=0;
+  ON_ATLAS=0;
+  ON_CMS=0;
+
+  OLD_X1=ON_X1;
+  OLD_X2=ON_X2;
+  OLD_X5=ON_X5;
+  OLD_X8=ON_X8;
+
+  ON_X1=0;
+  ON_X2=0;
+  ON_X5=0;
+  ON_X8=0;
+
+  OLD_SEP1=ON_SEP1;
+  OLD_SEP2=ON_SEP2;
+  OLD_SEP5=ON_SEP5;
+  OLD_SEP8=ON_SEP8;
+
+  ON_SEP1=0;
+  ON_SEP2=0;
+  ON_SEP5=0;
+  ON_SEP8=0;
+
+  call,      file="dt/orbit_routines.madx";
+  ! select relevant beam monitors and dipole correctors
+  call,   file="dt/SelectLHCMonCor.madx";
+  ! correct worst dipole errors causing unstable optics
+  niter=1; while (niter < 4) {exec,   initial_micado; niter=niter+1;}
+  ! final correction with co error peak <= 3 mm
+  exec, final_micado(0.003);
+
+  ON_ALICE=OLD_ALICE;
+  ON_LHCB=OLD_LHCB;
+  ON_ATLAS = OLD_ATLAS;
+  ON_CMS = OLD_CMS;
+
+  ON_X1=OLD_X1;
+  ON_X2=OLD_X2;
+  ON_X5=OLD_X5;
+  ON_X8=OLD_X8;
+
+  ON_SEP1=OLD_SEP1;
+  ON_SEP2=OLD_SEP2;
+  ON_SEP5=OLD_SEP5;
+  ON_SEP8=OLD_SEP8;
+}
+
+! plane tunes
+if (ON_TUNE_CORRECTION == 1) {
+  twiss,     sequence=lhcb1;
+  match,sequence=lhcb1;
+  global, q1=qx0, q2=qy0;
+  vary,   name=kqd, step=1.0E-7;
+  vary,   name=kqf, step=1.0E-7;
+  lmdif,  calls=50, tolerance=1.E-8;
+  endmatch;
+}
+
+! chromaticity
+if (ON_CHROM_CORRECTION == 1) {
+  twiss,     sequence=lhcb1;
+  match,sequence=lhcb1;
+  global, dq1=q1prime, dq2=q2prime;
+  vary, name=ksf.b1;
+  vary, name=ksd.b1;
+  lmdif,  calls=100, tolerance=1.E-21;
+  endmatch;
+}
+
+! iterations for fine correction
+if (ON_TUNE_CORRECTION == 1 && ON_CHROM_CORRECTION == 1) {
+  twiss,     sequence=lhcb1;
+  match,sequence=lhcb1;
+  global, q1=qx0, q2=qy0;
+  vary,   name=kqd, step=1.0E-9;
+  vary,   name=kqf, step=1.0E-9;
+  lmdif,  calls=500, tolerance=1.E-15;
+  endmatch;
+
+  match,sequence=lhcb1;
+  global, dq1=q1prime, dq2=q2prime;
+  vary, name=ksf.b1;
+  vary, name=ksd.b1;
+  lmdif,  calls=100, tolerance=1.E-21;
+  endmatch;
+
+  twiss,     sequence=lhcb1;
+  match,sequence=lhcb1;
+  global, q1=qx0, q2=qy0;
+  vary,   name=kqd, step=1.0E-9;
+  vary,   name=kqf, step=1.0E-9;
+  lmdif,  calls=500, tolerance=1.E-15;
+  endmatch;
+}
+
+! Optics after final corrections
+option, echo, info, warn; 
+set,       format="18.12f";
+
+! Optics parameters seen at middle of quadrupoles
+select,    flag=twiss, clear;
+select,    flag=twiss, pattern="^[m][q].*[\.]", column=name,s,betx,bety,x,y,dx,dy;
+twiss,     sequence=lhcb1, centre, file="/afs/cern.ch/user/h/hagen/public/MAD/twissq871.txt";
+
+! Optics parameters seen by monitors
+select,    flag=twiss, clear;
+select,    flag=twiss, pattern="^[b][p][m].*[\.]", column=name,s,betx,bety,x,y,dx,dy;
+twiss,     sequence=lhcb1, centre, file="/afs/cern.ch/user/h/hagen/public/MAD/twissm871.txt";
+
+! dump magnet powering strength
+if (ON_KSAVE == 1) {
+  select,    flag=twiss, clear;
+  select,    flag=twiss, pattern="^[m].*[\.]", column=name,s,l,k0l,k0sl,k1l,k1sl,k2l,k2sl,k3l,k3sl,k4l,k4sl,k5l,k5sl;
+  twiss,     sequence=lhcb1, file="/afs/cern.ch/user/h/hagen/public/MAD/twissk871.txt";
+}
+
+! Plane coupling strength after corrections
+if (ON_PSAVE == 1) {
+  option,    -echo, -info, -warn;
+  select,    flag=twiss, clear;
+  twiss,     sequence=lhcb1;
+  match,sequence=lhcb1;
+  global, q1=qxc, q2=qyc;
+  vary,   name=kqd, step=1.0E-7;
+  vary,   name=kqf, step=1.0E-7;
+  lmdif,  calls=100, tolerance=1.E-8;
+  endmatch;
+  select,    flag=twiss, clear;
+  select,    flag=twiss, pattern="^IP", column=name,s,betx,bety,x,y,dx,dy;
+  twiss,     sequence=lhcb1, file="/afs/cern.ch/user/h/hagen/public/MAD/twissg2871.txt";
+}
+
+stop;

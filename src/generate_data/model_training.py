@@ -32,26 +32,25 @@ random.seed(1111)
 GEN_TEST_SPLIT = True # If a new test split is needed
 
 def main():
-    set_name = "data_best_know_md"
+    data_path = "data/data_global_corr_md"
+    set_name = "100%triplet_10%arc_15902"
     TRAIN = True
-    MERGE = True
+    MERGE = False
     algorithm = "ridge"
 
     # Train on generated data
     # Load data
-
     metrics, n_samples = [], []
     noises = [1E-4] #np.logspace(-5, -2, num=10)
     for noise in noises:
 
         if MERGE == True:
-            input_data, output_data = merge_data(set_name, noise)
+            input_data, output_data = merge_data(data_path, noise)
         else:
             input_data, output_data = load_data(set_name, noise)
 
         if TRAIN==True:
-
-            n_splits=10
+            n_splits=1
             input_data = np.array_split(input_data, n_splits, axis=0)
             output_data = np.array_split(output_data, n_splits, axis=0)
 
@@ -61,7 +60,7 @@ def main():
                 n_samples.append(len(np.vstack(input_data[:i+1])))
                 metrics.append(results)
             
-            print(metrics)
+            #print(metrics)
             plot_learning_curve(n_samples, metrics, algorithm)
 
     #plot_noise_vs_metrics(noises, metrics, algorithm)
@@ -69,7 +68,6 @@ def main():
 def train_model(input_data, output_data, algorithm, noise):  
 
     #Function that loads the data and trains the chosen model with a given noise level
-
     indices = np.arange(len(input_data))
 
     # Generating new test split or loading old one
@@ -98,7 +96,7 @@ def train_model(input_data, output_data, algorithm, noise):
         estimator.fit(train_inputs, train_outputs)    
         
     elif algorithm == "tree":
-        tree = DecisionTreeRegressor(criterion="squared_error", max_depth=100)
+        tree = DecisionTreeRegressor(criterion="squared_error", max_depth=10) #5
         estimator = tree
         estimator.fit(train_inputs, train_outputs)
 
@@ -134,33 +132,34 @@ def train_model(input_data, output_data, algorithm, noise):
 
         return 0
 
-    # Optionally: save fitted model or load already trained model                                                        
-    joblib.dump(estimator, f'./estimators/best_know_{noise}.pkl')                                                                       
+    # Optionally: save fitted model or load already trained model        
+    #                                                 
+    #joblib.dump(estimator, f'./estimators/arcb2_best_know_{noise}.pkl')                                         
+    joblib.dump(estimator, f'./estimators/triplet_phases_only_{algorithm}_{noise}.pkl')                                                        
+    #joblib.dump(estimator, f'./estimators/triplets_phases_b1_corr_b2_corr_{noise}.pkl')                                
+    #joblib.dump(estimator, f'./estimators/b2_arcs_phases_virgin_{noise}.pkl')                                                              
     #joblib.dump(estimator, f'./estimators/estimator_{algorithm}_{noise}.pkl')
 
     # Check scores: explained variance and MAE
-    r2_train = estimator.score(train_inputs, train_outputs)
-    r2_test = estimator.score(test_inputs, test_outputs)
 
-    r2_train_triplet = estimator.score(train_inputs[:32], train_outputs[:32])
-    r2_test_triplet = estimator.score(test_inputs[:32], test_outputs[:32])
-    
-    prediction_train = estimator.predict(train_inputs)
-    mae_train = mean_absolute_error(train_outputs, prediction_train)
+    y_true_train, y_pred_train = train_outputs, estimator.predict(train_inputs) 
+    y_true_test, y_pred_test = test_outputs, estimator.predict(test_inputs) 
 
-    prediction_test = estimator.predict(test_inputs)
-    mae_test = mean_absolute_error(test_outputs, prediction_test)
+    r2_train = r2_score(y_true_train, y_pred_train)
+    r2_test = r2_score(y_true_test, y_pred_test)
 
-    prediction_train = estimator.predict(train_inputs[:32])
-    mae_train_triplet = mean_absolute_error(train_outputs[:32], prediction_train)
+    mae_train = mean_absolute_error(y_true_train, y_pred_train)
+    mae_test = mean_absolute_error(y_true_test, y_pred_test)
 
-    prediction_test = estimator.predict(test_inputs[:32])
-    mae_test_triplet = mean_absolute_error(test_outputs[:32], prediction_test)
+    r2_train_triplet = r2_score(y_true_train[:,:32], y_pred_train[:,:32])
+    r2_test_triplet = r2_score(y_true_test[:,:32], y_pred_test[:,:32])
+
+    mae_train_triplet = mean_absolute_error(y_true_train[:,:32], y_pred_train[:,:32])
+    mae_test_triplet = mean_absolute_error(y_true_test[:,:32], y_pred_test[:,:32])
 
     print("Train Triplet: R2 = {0}, MAE = {1}".format(r2_train_triplet, mae_train_triplet))
     print("Test Triplet: R2 = {0}, MAE = {1}".format(r2_test_triplet, mae_test_triplet))
 
-        
     print("Train: R2 = {0}, MAE = {1}".format(r2_train, mae_train))
     print("Test: R2 = {0}, MAE = {1}".format(r2_test, mae_test))
 

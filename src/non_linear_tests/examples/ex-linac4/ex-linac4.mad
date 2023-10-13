@@ -1,0 +1,151 @@
+local verbose_load  = true -- print loaded sequence
+local forcecv_load  = true -- force conversion
+local conf_use_ring = true
+
+--------------------------------------------------------------------------------
+-- Loader
+--------------------------------------------------------------------------------
+
+local function L4_load ()
+  local is_sequence in MAD.typeid
+
+  -- avoid multiple reload
+  if is_sequence(MADX:var_get'l4t') then return end
+
+  -- cleaner than disabling warnings, handmade from warnings
+  MADX:load('input/linac4_unset_vars.mad')
+
+  -- load sequences following order in script all.seqx
+  if conf_use_ring then
+    if verbose_load then print("loading linac.seq...") end
+    MADX:load('input/linac.seq', 'input/linac.mad', forcecv_load)
+  end
+
+  if verbose_load then print("loading l4t.seq...") end
+  MADX:load('input/l4t.seq'  , 'input/l4t.mad'  , forcecv_load)
+
+  if verbose_load then print("loading l4z.seq...") end
+  MADX:load('input/l4z.seq'  , 'input/l4z.mad'  , forcecv_load)
+
+  if verbose_load then print("loading lt.seq...") end
+  MADX:load('input/lt.seq'   , 'input/lt.mad'   , forcecv_load)
+
+  if verbose_load then print("loading ltb.seq...") end
+  MADX:load('input/ltb.seq'  , 'input/ltb.mad'  , forcecv_load)
+
+  if verbose_load then print("loading bi.seq...") end
+  MADX:load('input/bi.seq'   , 'input/bi.mad'   , forcecv_load)
+
+  if verbose_load then print("loading lbe.seq...") end
+  MADX:load('input/lbe.seq'  , 'input/lbe.mad'  , forcecv_load)
+
+  if verbose_load then print("loading stitched.seq...") end
+  MADX:load('input/stitched.seq', 'input/stitched.mad', forcecv_load)
+
+  local beam, beta0, option in MAD
+  local linac4, l4t in MADX
+
+  if linac4 then
+    -- attach beam to the sequence
+    option.nocharge = true
+    linac4.beam = beam {
+      particle = "H-", -- ? antiproton
+      mass = 0.939293, -- ? 0.93827208816
+      charge = -1,
+      energy = MADX.linac_mebt_energy, ! gamma = 1.0031938915759,
+      exn = 0.4e-6,
+      eyn = 0.4e-6,
+      sigt = 1,
+      sige = 1, -- sure?
+    }
+    option.nocharge = false
+
+    -- attach initial conditions to the sequence
+    linac4.initbeta0 = beta0 {
+      beta11 := MADX.linac_betx0,
+      alfa11 := MADX.linac_alfx0,
+      beta22 := MADX.linac_bety0,
+      alfa22 := MADX.linac_alfy0,
+      mu1    := MADX.linac_mux0 ,
+      mu2    := MADX.linac_muy0 ,
+      x      := MADX.linac_x0   ,
+      px     := MADX.linac_px0  ,
+      y      := MADX.linac_y0   ,
+      py     := MADX.linac_py0  ,
+      t      := MADX.linac_t0   ,
+      pt     := MADX.linac_pt0  ,
+      dx     := MADX.linac_dx0  ,
+      dpx    := MADX.linac_dpx0 ,
+      dy     := MADX.linac_dy0
+    }
+  end
+
+  if l4t then
+    -- attach initial conditions to the sequence
+    l4t.initbeta0 = beta0 {
+      beta11 := MADX.l4t_betx0,
+      alfa11 := MADX.l4t_alfx0,
+      beta22 := MADX.l4t_bety0,
+      alfa22 := MADX.l4t_alfy0,
+      mux    := MADX.l4t_mux0,
+      muy    := MADX.l4t_muy0,
+      x      := MADX.l4t_x0,
+      px     := MADX.l4t_px0,
+      y      := MADX.l4t_y0,
+      py     := MADX.l4t_py0,
+      t      := MADX.l4t_t0,
+      pt     := MADX.l4t_pt0,
+      dx     := MADX.l4t_dx0,
+      dpx    := MADX.l4t_dpx0,
+      dy     := MADX.l4t_dy0,
+      dpy    := MADX.l4t_dpy0,
+    }
+  end
+end
+
+--------------------------------------------------------------------------------
+-- Optics setup
+--------------------------------------------------------------------------------
+
+local function L4_load_str ()
+  if verbose_load then print("loading nominal_minus750kV.str...") end
+  MADX:load('input/nominal_minus750kV.str', 'input/nominal_minus750kV.mad', forcecv_load)
+
+  if verbose_load then print("loading bi450kev.str...") end
+  MADX:load('input/bi450kev.str', 'input/bi450kev.mad', forcecv_load)
+end
+
+--------------------------------------------------------------------------------
+-- Twiss
+--------------------------------------------------------------------------------
+
+local beam, twiss, option in MAD
+
+local twcols = {
+    'name', 's', 'l', 'angle',
+    'k1L','k2L','k3L','beta11','beta22','dx','dpx',
+    'x','y','alfa11','alfa22','mu1','mu2','dy','dpy','px','py','re56'
+  }
+
+option.nocharge = true
+local b4 = beam { -- Note: MAD-NG is sensitive to charge so we need to ignore it
+  particle='Hminus', mass=0.9392943081, charge=-1, pc=0.572477214
+}                                                ! energy=1.09929
+option.nocharge = false
+
+local function doRing(n)
+  local twiss in MAD
+  local seq = MADX['l4tltltbbi'..n]
+  local ini = MADX.l4t.initbeta0 ; ini.beta33 = 0.1 ; show(ini)
+  return twiss { sequence=seq, beam=b4, method=6, mapdef={xy=3}, X0=ini }
+end
+
+--------------------------------------------------------------------------------
+-- Program
+--------------------------------------------------------------------------------
+
+L4_load_str()
+L4_load()
+doRing(1) :write "twiss_n"
+
+

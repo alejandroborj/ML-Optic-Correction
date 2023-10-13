@@ -8,26 +8,25 @@ from pathlib import Path
 import joblib
 
 def main():        
-    set_name = "data_best_know_md"
-    
-    noise = 1E-4
+    data_path = "data/data_only_triplets"
+    noise = 1E-3
     
     #output_example_result_tfs()
-    input_data, output_data = merge_data(set_name, noise)
+    input_data, output_data = merge_data(data_path, noise)
 
 def load_data(set_name, noise):
-    #Function that inputs the .npy file and returns the data in a readable format for the algoritms
-    all_samples = np.load('./data_best_know_md/{}.npy'.format(set_name), allow_pickle=True)
+    
+    all_samples = np.load('./data/data_global_corr_md/{}.npy'.format(set_name), allow_pickle=True)
     
     delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, \
         delta_beta_star_y_b2, delta_mux_b1, delta_muy_b1, delta_mux_b2, \
             delta_muy_b2, n_disp_b1, n_disp_b2,\
             beta_bpm_x_b1, beta_bpm_y_b1, beta_bpm_x_b2, beta_bpm_y_b2, \
             triplet_errors, arc_errors_b1, arc_errors_b2, \
-            mqt_errors_b1, mqt_errors_b2, misalign_errors = all_samples.T        
+            mqt_errors_b1, mqt_errors_b2, mqt_knob_errors_b1, mqt_knob_errors_b2, misalign_errors = all_samples.T        
     
-    B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
-    B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
+    #B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
+    #B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
     
     #tw_perturbed_b1 = pd.DataFrame(columns=["BETX", "BETY"])
     #tw_perturbed_b1.BETX=beta_bpm_x_b1[0]
@@ -53,23 +52,33 @@ def load_data(set_name, noise):
     delta_mux_b2 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_mux_b2, beta_bpm_x_b2)]
     delta_muy_b2 = [add_phase_noise(delta_mu, beta_bpm, noise) for delta_mu, beta_bpm in zip(delta_muy_b2, beta_bpm_y_b2)]
 
-    input_data = np.concatenate((np.vstack(delta_mux_b1), np.vstack(delta_muy_b1) ,np.vstack(delta_mux_b2), np.vstack(delta_muy_b2)
-        ), axis=1)
-
-    print(misalign_errors[0])
+    input_data = np.concatenate( (np.vstack(delta_mux_b1), np.vstack(delta_muy_b1), \
+        np.vstack(delta_mux_b2), np.vstack(delta_muy_b2)), axis=1)    
+    
     #input_data = np.concatenate((np.vstack(delta_beta_star_x_b1), np.vstack(delta_beta_star_y_b1), \
     #    np.vstack(delta_beta_star_x_b2), np.vstack(delta_beta_star_y_b2), \
     #    np.vstack(delta_mux_b1), np.vstack(delta_muy_b1), \
     #    np.vstack(delta_mux_b2), np.vstack(delta_muy_b2), \
     #    np.vstack(n_disp_b1), np.vstack(n_disp_b2)
     #    ), axis=1)
+
     # select targets for output
- 
     
-    output_data = np.concatenate((np.vstack(triplet_errors), np.vstack(arc_errors_b1),\
-                                np.vstack(arc_errors_b2), np.vstack(mqt_errors_b1), \
-                                np.vstack(mqt_errors_b2), np.vstack(misalign_errors)), axis=1)                               
+    output_data = np.vstack(triplet_errors)
     
+    #output_data = np.concatenate((np.vstack(triplet_errors), np.vstack(arc_errors_b1),\
+    #                            np.vstack(arc_errors_b2), np.vstack(mqt_knob_errors_b1), \
+    #                            np.vstack(mqt_knob_errors_b2), np.vstack(misalign_errors)), axis=1)                         
+
+    #indexes=[]
+    #for idx, sample in enumerate(all_samples):
+    #    if len(sample[-2]) != 2 or len(sample[-3]) != 2:
+    #        print(idx)
+    #        indexes.append(idx)
+    
+    #all_samples = np.delete(all_samples, indexes, axis=0)
+    #np.save('./data/data_only_triplets/{}.npy'.format(set_name), all_samples, allow_pickle=True)
+
     return input_data, output_data
 
 

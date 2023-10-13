@@ -18,7 +18,9 @@ def main():
     #measurement_path_b1 = "./measurements/02-40-10_import_b1_30cm_beforeKmod"
 
     #measurement_path_b2 = "./measurements/b2_30cm_newvirginmeasurements/"
-    measurement_path_b2 = "./measurements/19-06-04_import_b2_30cm_nocorrinarcs/" 
+    measurement_path_b2 = "./measurements/19-06-04_import_b2_30cm_nocorrinarcs/"
+    
+    estimator = joblib.load("./md_models/arcb2_best_know_0.0001.pkl") 
     
     twiss_b2 = tfs.read_tfs("./data_analysis/b2_nominal_monitors.dat").set_index("NAME")
     twiss_b1 = tfs.read_tfs("./data_analysis/b1_nominal_monitors.dat").set_index("NAME")
@@ -53,18 +55,19 @@ def main():
 
     np.save(f'./measurements/meas_input_{measurement_name}.npy', np.array(sample, dtype=object))
     delta_meas_mux_b1, delta_meas_muy_b1, delta_meas_mux_b2, delta_meas_muy_b2 = np.load(f'./measurements/meas_input_{measurement_name}.npy', allow_pickle=True)
-    meas_input = np.concatenate([delta_meas_mux_b1, delta_meas_muy_b1, delta_meas_mux_b2, delta_meas_muy_b2])
+    meas_input = np.concatenate([delta_meas_mux_b2, delta_meas_muy_b2])
+    
+    #delta_meas_mux_b1, delta_meas_muy_b1, 
  
-    estimator = joblib.load("./md_models/best_know_0.0001.pkl")
     
     pred_output = estimator.predict([meas_input])[0]
 
     error_tfs = save_np_errors_tfs(pred_output, "pred_best_know_err.tfs") #Savin errors in tfs file
 
-    mdx = madx.Madx()
-    tw_recons = recons_twiss("b1_pred_best_know_err.tfs", 1, mdx)
-    plot_betabeat_reconstruction(meas_betabeat_b1, tw_recons, 1)
-    mdx.quit()
+    #mdx = madx.Madx()
+    #tw_recons = recons_twiss("b1_pred_best_know_err.tfs", 1, mdx)
+    #plot_betabeat_reconstruction(meas_betabeat_b1, tw_recons, 1)
+    #mdx.quit()
     
     mdx = madx.Madx()
     tw_recons = recons_twiss("b2_pred_best_know_err.tfs", 2, mdx)
@@ -81,7 +84,7 @@ def recons_twiss(error_file, beam, mdx):
     mdx.call(file = "/afs/cern.ch/eng/acc-models/lhc/2022/lhc.seq")
     mdx.options(echo=True)
 
-    mdx.input("exec, define_nominal_beams();")
+    mdx.input("exec, define_nominal_beams(energy=6500);")
     mdx.call(file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx")
     mdx.input("exec, cycle_sequences();")
 
@@ -89,7 +92,7 @@ def recons_twiss(error_file, beam, mdx):
 
     mdx.options(echo=False)
 
-    #mdx.input(f"exec, match_tunes(62.31, 60.32, {beam});")
+    mdx.input(f"exec, match_tunes(62.31, 60.32, {beam});")
     mdx.twiss(sequence=f"LHCB{beam}", file="") #Chrom deltap=0.0
 
     #Assigning errors

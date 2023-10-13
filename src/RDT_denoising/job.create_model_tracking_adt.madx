@@ -1,0 +1,75 @@
+! ----- Calling Sequence and Optics -----
+call, file = 'macros/general.macros.madx';
+call, file = 'macros/lhc.macros.madx';
+call, file = 'macros/lhc.macros.run3.madx';
+call, file = '/afs/cern.ch/eng/sl/lintrack/omc_python3/lib/python3.9/site-packages/omc3/model/accelerators/lhc/2022/main.seq';
+
+exec, define_nominal_beams();
+call, file="/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2022a_A11mC11mA10mL10m.madx";
+
+! ----- Defining Configuration Specifics -----
+exec, cycle_sequences();
+xing_angles = 0;
+if(xing_angles==1){
+    exec, set_crossing_scheme_ON();
+}else{
+    exec, set_default_crossing_scheme();
+}
+use, sequence = LHCB1;
+option, echo;
+
+! natural tunes
+ Qx = 0.275;
+ Qy = 0.293;
+ 
+! ----- Matching Knobs
+ EXEC, match_tunes(Qx, Qy, 1);
+
+! ----- Output optics of lattice -----
+exec, do_twiss_monitors(LHCB1, 'twiss.dat', 0.0);
+exec, do_twiss_elements(LHCB1, 'twiss_elements.dat', 0.0);
+ 
+ CALL, file = 'acc-models-lhc/toolkit/slice.madx'; !@modifier
+ EXEC, match_tunes(Qx, Qy, 1);
+ 
+ 
+ !!!!! Define ADT tracking parameters !!!!!!!!!
+ Qx0=table(summ,Q1);
+ Qy0=table(summ,Q2);
+ Qx = Qx0 - 62;
+ Qy = Qy0 - 60;
+ Qxd = Qx - 0.01;
+ Qyd = Qy + 0.015;
+ ramp1 = 0;
+ ramp2 = 2000;
+ ramp3 = RAMP2 + 10000; ! length of plateau
+ ramp4 = RAMP3 + 2000;
+ ampx=0.5;    !-- unit: [mm]
+ ampy=0.5;    !-- unit: [mm]
+ 
+ !!!!! Install ADT for tracking !!!!!!!!!
+     USE, sequence=LHCB1;
+      TWISS;
+ 
+      pbeam = beam%lhcb1->pc;
+      betxac=table(twiss,ADTKH.B5L4.B1,betx);
+      betyac=table(twiss,ADTKV.B5R4.B1,bety);
+ 
+      ADTHor.C5L4.B1: hacdipole, l=0, freq=Qxd, lag=0, volt=0.042*pbeam*abs(Qxd-Qx)/sqrt(180.0*betxac)*ampx, ramp1=ramp1, ramp2=ramp2, ramp3=ramp3, ramp4=ramp4;
+      ADTVert.C5R4.B1: vacdipole, l=0, freq=Qyd, lag=0, volt=0.042*pbeam*abs(Qyd-Qy)/sqrt(177.0*betyac)*ampy, ramp1=ramp1, ramp2=ramp2, ramp3=ramp3, ramp4=ramp4;
+ 
+      SEQEDIT, sequence=lhcB1; FLATTEN;
+        INSTALL, element=ADTHor.C5L4.B1,  at=0, from=ADTKH.B5L4.B1;
+        INSTALL, element=ADTVert.C5R4.B1, at=0, from=ADTKV.B5R4.B1;
+      ENDEDIT;
+ 
+      USE, sequence=lhcb1;
+
+ Cmrs.b1_op = 0.001;
+ Cmis.b1_op = 0.001; 
+
+ TRACK, deltap=0.0, onetable, dump, file="trackone";
+     START, x=0, px=0.0, y=0, py=0.0;
+     call, file="madxobserveLIST_B1.madx";
+     RUN, turns = RAMP4;
+ ENDTRACK;

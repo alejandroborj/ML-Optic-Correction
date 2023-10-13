@@ -1,0 +1,12 @@
+@ Measure_optics:version %s              "0.7.1"
+@ Command              %s "/home/alejandro/anaconda3/envs/ml-op/bin/python /home/alejandro/anaconda3/envs/ml-op/lib/python3.9/site-packages/ipykernel_launcher.py --ip=127.0.0.1 --stdin=9011 --control=9009 --hb=9008 --Session.signature_scheme="hmac-sha256" --Session.key=b"43137376-6b74-44bd-9225-5615ad903d75" --shell=9010 --transport="tcp" --iopub=9012 --f=/home/alejandro/.local/share/jupyter/runtime/kernel-v2-2175617FbE8iFnZaGZM.json"
+@ CWD                  %s "/afs/cern.ch/work/a/aborjess/public/ML-Optic-Correction/src/RDT_denoising"
+@ Date                 %s "11. October 2023, 12:13:59"
+@ Model_directory      %s          "lhc_model"
+@ Compensation         %s               "None"
+@ Q1                   %le  0.30472469329833984
+@ Q2                   %le  0.31470346450805664
+*                   IP             BETASTAR          ERRBETASTAR             PHASEADV          ERRPHASEADV           PHASEDVMDL                LSTAR
+$                   %s                   %s                   %s                   %s                   %s                   %s                   %s
+
+

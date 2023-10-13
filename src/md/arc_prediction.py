@@ -47,13 +47,19 @@ def main():
     
     pred_output = estimator.predict([meas_input])[0]
 
-    plot_example_errors(pred_output)
     error_tfs = save_np_errors_tfs(pred_output, "pred_q4_err.tfs")
+    
+    plot_example_errors(pred_output)
     tfs_to_corr(error_tfs, "./corrections/q4_corrections.madx")
 
 
 def plot_example_errors(pred_output):
+    with open("./data_analysis/mq_names.txt", "r") as f:
+        lines = f.readlines()
+        names = [name.replace("\n", "") for name in lines]
+        
     pred_arc, pred_mqt = np.hstack(pred_output[:-2]), np.hstack(pred_output[-2:])
+    mq4 = [error if "MQY.4" in name else 0 for error, name in zip(pred_arc, names[:-2]) ]  
     
     errors = (("Arc Errors", pred_arc), 
             ("MQT Knob", pred_mqt))
@@ -62,6 +68,8 @@ def plot_example_errors(pred_output):
         x = [idx for idx, error in enumerate(pred_error)]
 
         plt.bar(x, pred_error, label="Pred")
+        if name == "Arc Errors":
+            plt.bar(x, mq4, label="Pred MQY.4")
 
         plt.title(f"{name}")
         plt.xlabel(r"MQ [#]")
@@ -102,7 +110,7 @@ def tfs_to_corr(tfs_error, corr_filename):
             name = error[1]["NAME"]
             k1l = error[1]["K1L"]
             if "MQY.4" in name: # Only tanking mq4
-                r.write(f"{name}->K1 = {name}->K1 + ({-1*k1l});\n") #Changing the sign
+                r.write(f"{name}->K1L = {name}->K1L + ({-1*k1l});\n") #Changing the sign, is it good with K1L or should it be K1??
 
 if __name__ == "__main__":
     main()

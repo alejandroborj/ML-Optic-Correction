@@ -1,0 +1,16 @@
+@ name               %05s     "LHCB1"
+@ type               %05s     "track"
+@ title              %08s     "no-title"
+@ origin             %18s     "MAD 0.9.6 Linux 64"
+@ date               %08s     "28/06/23"
+@ time               %08s     "14:50:39"
+@ refcol             %04s     "name"
+@ direction          %le       1
+@ observe            %le       1
+@ implicit           %b       false
+@ misalign           %b       false
+@ radiate            %b       false
+@ deltap             %n       nil
+@ lost               %le       64
+* name               kind               s                  l                  id                 x                  px                 y                  py                 t                  pt                 pc                 slc                turn               tdir               eidx               status
+$ %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?                 %?

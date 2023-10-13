@@ -1,0 +1,109 @@
+-- time ../mad -Oloopunroll=500 -Oinstunroll=100 -jp=vl ex-lhc-rdt-ip.mad
+local beam, track, twiss, mtable, option, damap in MAD
+local assertf, printf, tblcat in MAD.utility
+
+local swap in MAD.gfunc
+local normal in MAD.gphys
+local abs in MAD.gmath
+local printf in MAD.utility
+
+local run_twiss = true
+local run_rdt   = true
+
+if run_twiss or run_rdt then
+  MADX:load("lhcb1_saved.seq", "lhcb1.mad") !-- convert and save on need
+  !MADX:load('lhc_vars0.mad') -- handmade, cleaner than disabling warnings...
+
+  local lhcb1 in MADX
+  lhcb1.beam = beam { particle="proton", energy= 6500 } !-- mass=0.938272046 }
+  assertf(#lhcb1 == 6732, "invalid number of elements %d in LHCB1 (6732 expected)", #lhcb1)
+
+  -- error setup
+  MADX:open_env()
+
+  MADX:close_env()
+end
+
+if run_twiss then
+  local lhcb1 in MADX
+  local mtbl = twiss {sequence=lhcb1, method=4, chrom=true}
+  local cols = {"name","s","beta11","beta22","mu1","mu2","dx","dy","x","y"}
+  bpm_names = {}
+  
+  !Finding the BPM names for rdt tracking, done 
+  for i,name in ipairs(mtbl:getcol'name') do
+    if string.find(name, "BPM")~=nil then
+      table.insert(bpm_names, name)
+    end
+  end
+
+  mtbl:write("twiss_b1_ng.tfs", cols)
+end
+
+if run_rdt then
+
+  local lhcb1 in MADX
+  local observed in MAD.element.flags
+  ! List of all elements saved
+  local obs_points = bpm_names ! {'IP2','IP5'} !{pattern = 'BPM'} !'IP2','IP5','$end', 
+  
+  !Selecting all BPMs as observation points
+  lhcb1:select(observed, {pattern="BPM"})
+  
+  ! Tracking
+
+  mtbl, mflw = track {sequence=lhcb1, method=6, nslice=3, mapdef=4, savemap=true, nturn=1}
+  !mtbl:write"trk.tfs"
+  for i,obs_point in ipairs(obs_points) do
+    !RDTS
+    !mtbl[obs_point]    .__map:write(string.format("otm_at_%s", obs_point), obs_point)
+    !Orbits
+    !mtbl[obs_point]    .__map:get0():print(string.format("Orbit %s", obs_point), 'line')
+  end
+  local nf = normal(mflw[1])
+  ! Analysing the first track data, the nf.a:real() values of the one turn data are used as the initial values for the next track
+  !Tracking RDTS! 
+  mtbl, mflw = track {sequence=lhcb1, method=6, X0=nf.a:real(), nslice=3, mapdef=4, savemap=true, nturn=1}
+
+  MAD.option.numfmt = "%12.4f"
+
+  !-- ORBITS
+  do !-- CHROMA
+    !local da = mtbl["$end"].__map
+    !local nf = normal(da):analyse()
+
+    !local m = "100001"
+    !printf("ANH[%s]= %s, %12.4f (Q1)\n"   , m, tostring(nf.anh[m]), abs(nf.anh[m]))
+    !local m = "001001"
+    !printf("ANH[%s]= %s, %12.4f (Q2)\n"   , m, tostring(nf.anh[m]), abs(nf.anh[m]))
+  end
+  
+  do !-- RDTs
+    local f = assert(io.open("RDT_BPMS.csv", "w"))
+    local m = {"030000","400000"}
+
+    f:write("NAME\t")
+    !Writing column names
+    for j, rdt in ipairs(m) do
+      f:write(string.format("RE_%s\tIM_%s\t", rdt, rdt))
+    end
+    f:write("\n")
+
+    for i, obs_point in ipairs(obs_points) do
+      local da = mtbl[obs_point].__map
+      local nf = normal(da):analyse()
+      !Writting row
+      f:write(string.format("%s\t", obs_point))
+      for j, rdt in ipairs(m) do
+        f:write(string.format("%12.4f\t%12.4f\t", nf.gnf[rdt][0], nf.gnf[rdt][1])) ! Real and Imaginary part
+        !printf("GNF[%s]= %s, %12.4f, %12.4f\n", rdt, tostring(nf.gnf[rdt]), abs(nf.gnf[rdt]), abs(nf.gnf[rdt])/6)
+      end
+      !End of row
+      f:write("\n")
+    end
+    f:close()
+  end
+end
+
+!py:send("Finish")
+

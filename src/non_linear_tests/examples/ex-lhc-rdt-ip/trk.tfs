@@ -1,0 +1,18 @@
+@ name               %05s     "LHCB1"
+@ type               %05s     "track"
+@ title              %08s     "no-title"
+@ origin             %18s     "MAD 0.9.6 Linux 64"
+@ date               %08s     "03/07/23"
+@ time               %08s     "11:12:36"
+@ refcol             %04s     "name"
+@ direction          %le       1
+@ observe            %le       1
+@ implicit           %b       false
+@ misalign           %b       false
+@ radiate            %b       false
+@ deltap             %n       nil
+@ lost               %le       0
+* name               kind               s                  l                  id                 x                  px                 y                  py                 t                  pt                 pc                 slc                turn               tdir               eidx               status
+$ %s                 %s                 %le                %le                %le                %le                %le                %le                %le                %le                %le                %le                %le                %le                %le                %le                %s
+  "IP2"              "marker"            3332.436584        0                  1                  0                  0                  0                  0                  4.112266083e-13    0                  449.9990218       -2                  1                  1                  870               "Xset"
+  "$end"             "marker"            26658.8832         0                  1                  0                  0                  0                  0                  3.250733016e-12    0                  449.9990218       -2                  1                  1                  6732              "Xset"

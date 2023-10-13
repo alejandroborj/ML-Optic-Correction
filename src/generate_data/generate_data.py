@@ -13,8 +13,8 @@ from madx_jobs import madx_ml_op
 from plots import plot_example_betabeat
 
 # mad-x scripts and model files
-OPTICS_30CM_2023 = '/afs/cern.ch/user/a/aborjess/work/private/models/LHCB1/B1_30cm_flat/modifiers.madx'
-OPTICS_45CM_2023 =  '/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx'
+OPTICS_30CM_2023 = '/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx'
+OPTICS_45CM_2023 = '/afs/cern.ch/eng/acc-models/lhc/2022/operation/optics/R2023a_A45cmC45cmA10mL200cm.madx'
 
 B1_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b1_nominal_monitors.dat").set_index("NAME")
 B2_MONITORS_MDL_TFS = tfs.read_tfs("./nominal_twiss/b2_nominal_monitors.dat").set_index("NAME")
@@ -30,8 +30,8 @@ QY = 60.32
 def main():
 
     start = time.time()
-    set_name = f"100%triplet_10%arc_{np.random.randint(0, 99999)}"
-    num_sim = 2000
+    set_name = f"10%triplet_100%b2arc_{np.random.randint(0, 99999)}"
+    num_sim = 500
     valid_samples = []
     GENERATE_DATA = True
 
@@ -45,7 +45,7 @@ def main():
             if sample is not None:
                 valid_samples.append(sample)
         print("Number of generated samples: {}".format(len(valid_samples)))
-        np.save('./data_global_corr_md/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
+        np.save('./data/data_local_corr_md/{}.npy'.format(set_name), np.array(valid_samples, dtype=object))
     
     stop = time.time()
     print('Execution time (s): ', stop-start)
@@ -71,6 +71,7 @@ def create_sample(index):
         b1_errors = mdx.table.etabb1.dframe() # Table error for MQ- magnets
         
         #tfs.writer.write_tfs(tfs_file_path=f"b1_correct_example.tfs", data_frame=b1_errors)
+        #tfs.writer.write_tfs(tfs_file_path=f"b1_common_errors.tfs", data_frame=common_errors)
         #tfs.writer.write_tfs(tfs_file_path=f"b1_example_twiss.tfs", data_frame=b1_tw_after_match)
 
         # BEAM 2
@@ -83,7 +84,7 @@ def create_sample(index):
         b2_tw_after_match = mdx.table.twiss.dframe()# Twiss after match
         #twiss_data_b2 = mdx.table.twiss.dframe() # Relevant to training Twiss data
         b2_errors= mdx.table.etabb2.dframe() # Table error for MQX magnets
-
+        
         delta_beta_star_x_b1, delta_beta_star_y_b1, \
         delta_mux_b1, delta_muy_b1, n_disp_b1, \
             beta_bpm_x_b1, beta_bpm_y_b1 = get_input_for_beam(b1_tw_after_match,  B1_MONITORS_MDL_TFS, 1)
@@ -93,7 +94,8 @@ def create_sample(index):
             beta_bpm_x_b2, beta_bpm_y_b2  = get_input_for_beam(b2_tw_after_match , B2_MONITORS_MDL_TFS, 2)
 
         # Reading errors from MADX tables
-        triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2 = \
+        triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2,\
+        mqt_knob_errors_b1, mqt_knob_errors_b2, misalign_errors= \
         get_errors_from_sim(common_errors, b1_errors, b2_errors, \
                 b1_tw_before_match, b1_tw_after_match, b2_tw_before_match, b2_tw_after_match)
         
@@ -101,10 +103,12 @@ def create_sample(index):
         sample = delta_beta_star_x_b1, delta_beta_star_y_b1, delta_beta_star_x_b2, delta_beta_star_y_b2, \
             delta_mux_b1, delta_muy_b1, delta_mux_b2, delta_muy_b2, n_disp_b1, n_disp_b2, \
             beta_bpm_x_b1, beta_bpm_y_b1, beta_bpm_x_b2, beta_bpm_y_b2, \
-            triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1, mqt_errors_b2
+            triplet_errors, arc_errors_b1, arc_errors_b2, mqt_errors_b1,\
+            mqt_errors_b2, mqt_knob_errors_b1, mqt_knob_errors_b2, misalign_errors
 
         # Sometimes matching fails, this is a half measure        
-        if len(mqt_errors_b1) != 2 or len(mqt_errors_b2) != 2:
+        if len(mqt_knob_errors_b1) != 2 or len(mqt_knob_errors_b2) != 2:
+            print("TWISS Failed")
             sample = None
         
         mdx.quit()
@@ -124,6 +128,8 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
                             b1_tw_after_match, b2_tw_before_match, b2_tw_after_match):
     # Triplet errors  
     triplet_errors = common_errors.k1l
+    misalign_errors = common_errors.ds
+
     tfs_error_file_b1 = b1_errors.set_index("name", drop=False) 
     # replace K1L of MQT in original table (0) with matched - unmatched difference, per knob (2 different values for all MQTs)
     b1_unmatched = b1_tw_before_match.set_index("name", drop=False)
@@ -131,9 +137,9 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
 
     mqt_names_b1 = [name for name in b1_unmatched.index.values if "mqt." in name]
 
-    mqt_errors_b1 = np.unique(np.array(b1_matched.loc[mqt_names_b1, "k1l"].values - \
+    mqt_knob_errors_b1 = np.unique(np.array(b1_matched.loc[mqt_names_b1, "k1l"].values - \
         b1_unmatched.loc[mqt_names_b1, "k1l"].values, dtype=float).round(decimals=8))
-    mqt_errors_b1 = [k for k in mqt_errors_b1 if k != 0]
+    mqt_knob_errors_b1 = [k for k in mqt_knob_errors_b1 if k != 0]
     
     # The rest of magnets errors
     arc_magnets_names_b1 = [name for name in tfs_error_file_b1.index.values if ("mqt." not in name and "mqx" not in name)]
@@ -142,15 +148,19 @@ def get_errors_from_sim(common_errors, b1_errors, b2_errors, b1_tw_before_match,
     b2_unmatched = b2_tw_before_match.set_index("name", drop=False)
     b2_matched = b2_tw_after_match.set_index("name", drop=False)
     mqt_names_b2 = [name for name in b2_unmatched.index.values if "mqt." in name]
-    mqt_errors_b2 = np.unique(np.array(b2_matched.loc[mqt_names_b2, "k1l"].values - \
+    mqt_knob_errors_b2 = np.unique(np.array(b2_matched.loc[mqt_names_b2, "k1l"].values - \
         b2_unmatched.loc[mqt_names_b2, "k1l"].values, dtype=float).round(decimals=8))
     
-    mqt_errors_b2 = [k for k in mqt_errors_b2 if k != 0]
+    mqt_knob_errors_b2 = [k for k in mqt_knob_errors_b2 if k != 0]
     arc_magnets_names_b2 = [name for name in tfs_error_file_b2.index.values if ("mqt." not in name and "mqx" not in name)]
     arc_errors_b2 = tfs_error_file_b2.loc[arc_magnets_names_b2, "k1l"]
 
+    mqt_errors_b1 = np.array(tfs_error_file_b1.loc[mqt_names_b1, "k1l"].values, dtype=float)
+    mqt_errors_b2 = np.array(tfs_error_file_b2.loc[mqt_names_b2, "k1l"].values, dtype=float)
+
     return np.array(triplet_errors), np.array(arc_errors_b1), \
-        np.array(arc_errors_b2), np.array(mqt_errors_b1), np.array(mqt_errors_b2)
+        np.array(arc_errors_b2), np.array(mqt_errors_b1), np.array(mqt_errors_b2),\
+        np.array(mqt_knob_errors_b1), np.array(mqt_knob_errors_b2), np.array(misalign_errors)
 
 
 # Extract input data from generated twiss
@@ -212,4 +222,5 @@ def get_tot_phase(phase_from_twiss):
 if __name__ == "__main__":
     main()
 
- # %%
+
+# %%
