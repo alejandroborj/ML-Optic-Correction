@@ -1,0 +1,27 @@
+beam,  bv= 1,
+ particle=proton, !charge=1, mass=0.938272046,
+ energy= 450,   npart=1.2e11,kbunch=2556,
+ ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
+
+Option, -echo, -warn,-info;
+call,file="./acc-models-lhc/lhc.seq";!./acc-models-lhc/
+call,file="./acc-models-lhc/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
+
+!use, sequence=lhcb1;
+
+!! --- xing       --------------------
+!on_x1_v := -135.0;
+!on_x1_h := 0.0;
+!on_x5_v := 0.0;
+!on_x5_h := 135.0;
+!on_x2v := 200.0;
+! on_x2h : No Value extracted
+!on_x8v := 200.0;
+!on_x8h := 0.0;
+
+
+use, sequence=lhcb1;
+
+Option, echo,warn,info;
+
+save, sequence=lhcb1, file="./lhc_data/lhcb1_saved.seq";

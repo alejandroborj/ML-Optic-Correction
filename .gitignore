@@ -13,11 +13,9 @@ src/generate_data/estimators_pre_quench/
 src/md/measurements/
 src/md/md_models/
 
-src/non_linear_tests/supervised_learning/htcondor_dataset
-src/non_linear_tests/supervised_learning/optics_dataset
-src/non_linear_tests/supervised_learning/HTCondor_submit/Job*
-
-
 src/twiss_reconstruction/models/
 
 afs/
+
+src/supervised_learning/models
+src/supervised_learning/datasets
