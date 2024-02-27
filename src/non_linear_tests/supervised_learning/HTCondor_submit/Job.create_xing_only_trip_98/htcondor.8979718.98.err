@@ -1,0 +1,5 @@
+mkdir: cannot create directory ‘/afs/cern.ch/user/a/aborjess/work/public/ML-Optic-Correction/src/non_linear_tests/supervised_learning/datasets/xing_dataset’: No such file or directory
+Traceback (most recent call last):
+  File "/afs/cern.ch/user/a/aborjess/work/public/ML-Optic-Correction/src/non_linear_tests/supervised_learning/HTCondor_submit/Job.create_xing_only_trip_98/exec_create_dataset.py", line 9, in <module>
+    os.mkdir(f"./datasets/xing_dataset/job_2_{instance}")
+FileExistsError: [Errno 17] File exists: './datasets/xing_dataset/job_2_98'

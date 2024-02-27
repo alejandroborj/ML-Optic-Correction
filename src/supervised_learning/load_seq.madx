@@ -1,13 +1,20 @@
-beam,  bv= 1,
+! MADX Script to generate the lattices for MADNG, here a sequence and optics are loaded, manipulated and exported to MADNG
+
+!beam,  bv= 1,
+! particle=proton, !charge=1, mass=0.938272046,
+! energy= 6800,   npart=1.2e11, kbunch=2556,
+! ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
+
+beam,  bv= -1,
  particle=proton, !charge=1, mass=0.938272046,
- energy= 450,   npart=1.2e11,kbunch=2556,
+ energy= 6800,   npart=1.2e11, kbunch=2556,
  ex=5.2126224777777785e-09,ey=5.2126224777777785e-09;
 
 Option, -echo, -warn,-info;
 call,file="./acc-models-lhc/lhc.seq";!./acc-models-lhc/
 call,file="./acc-models-lhc/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
 
-!use, sequence=lhcb1;
+use, sequence=lhcb2;
 
 !! --- xing       --------------------
 !on_x1_v := -135.0;
@@ -15,13 +22,63 @@ call,file="./acc-models-lhc/operation/optics/R2023a_A30cmC30cmA10mL200cm.madx";
 !on_x5_v := 0.0;
 !on_x5_h := 135.0;
 !on_x2v := 200.0;
-! on_x2h : No Value extracted
+!on_x2h : No Value extracted
 !on_x8v := 200.0;
 !on_x8h := 0.0;
 
+!! --- Turning off sextupoles --------
 
-use, sequence=lhcb1;
+!select, flag=seqedit, class=MS;
+ksf1.a12b2:=0;
+ksf2.a12b2:=0;
+
+ksf1.a23b2:=0;
+ksf2.a23b2:=0;
+
+ksf1.a34b2:=0;
+ksf2.a34b2:=0;
+
+ksf2.a45b2:=0;
+ksf1.a45b2:=0;
+
+ksf1.a56b2:=0;
+ksf2.a56b2:=0;
+
+ksf1.a67b2:=0;
+ksf2.a67b2:=0;
+
+ksf1.a78b2:=0;
+ksf2.a78b2:=0;
+
+ksf1.a81b2:=0;
+ksf2.a81b2:=0;
+
+ksd1.a12b2:=0;
+ksd2.a12b2:=0;
+
+ksd1.a23b2:=0;
+ksd2.a23b2:=0;
+
+ksd1.a34b2:=0;
+ksd2.a34b2:=0;
+
+ksd2.a45b2:=0;
+ksd1.a45b2:=0;
+
+ksd1.a56b2:=0;
+ksd2.a56b2:=0;
+
+ksd1.a67b2:=0;
+ksd2.a67b2:=0;
+
+ksd1.a78b2:=0;
+ksd2.a78b2:=0;
+
+ksd1.a81b2:=0;
+ksd2.a81b2:=0;
+
+use, sequence=lhcb2;
 
 Option, echo,warn,info;
 
-save, sequence=lhcb1, file="./lhc_data/lhcb1_saved.seq";
+save, sequence=lhcb2, file="./lhc_data/lhcb2_no_sext_saved.seq";

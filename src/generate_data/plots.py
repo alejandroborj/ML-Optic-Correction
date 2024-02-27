@@ -96,7 +96,7 @@ def plot_example_hist(input_data, output_data, estimator):
         fig, ax = plt.subplots()
 
         ax.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
-        _, bins, _ = ax.hist(true_error, bins=200, alpha = 0.5,label="True")
+        _, bins, _ = ax.hist(true_error, bins=200, alpha = 0.5, label="True")
         ax.hist(pred_error, bins=bins, alpha=0.5, label="Predicted")
         ax.hist(pred_error-true_error, bins=bins, alpha=0.5, label="Residuals")
 

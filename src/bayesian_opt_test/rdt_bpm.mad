@@ -1,0 +1,272 @@
+-- time ../mad ex-lhc-f2002.mad > ex-lhc-f2002.out 2>&1
+
+local beam, track, twiss, match, damap, option in MAD
+local normal                                   in MAD.gphys
+local abs, real, imag                          in MAD.gmath
+local printf, tblcat                           in MAD.utility
+local observed                                 in MAD.element.flags
+
+-- track and twiss columns
+local tkcols = {'name','s','l','x','px','y','py'}
+local twcols = {'name','s','beta11','beta22','mu1','mu2','dx','dy','x','y'}
+
+-- flag to run twiss checks
+local twiss_check = 0 -- 1 do checks, -1 do checks and quit (no matching)
+
+local corr = 0!...
+local err = 0.5
+
+-------------------------------------------------------------------------------o
+-- load LHCB1 and LHCB2                                                      --o
+-------------------------------------------------------------------------------o
+
+MADX:load("./lhc_data/lhcb1_saved.seq", "./lhc_data/lhcb1_saved.mad") -- convert on need
+!MADX:load("./lhc_data/lhcb2_saved.seq", "./lhc_data/lhcb2_saved.mad") -- convert on need
+MADX:load("lhc_vars0.mad")                      -- avoid warnings
+
+local lhcb1 in MADX !, lhcb2
+
+!lhcb2.dir  = -1 -- lhcb2 is reversed, i.e. bv_flag = -1
+
+-------------------------------------------------------------------------------o
+-- preliminaries                                                             --o
+-------------------------------------------------------------------------------o
+
+-- need to create a "new" proton for MAD-X compatibility (old pmass?)
+local lhc_beam = beam {particle="xproton", charge=1, mass=0.938272046, energy=450}
+
+for _,lhc in ipairs{lhcb1} do!,lhcb2
+  -- attach beam to sequence
+  lhc.beam = lhc_beam
+
+  -- select observed elements for twiss
+  lhc:deselect(observed)
+  lhc:  select(observed, {pattern="BPM"})
+  lhc:  select(observed, {pattern="IP" })
+  lhc:  select(observed, {pattern="MO" })
+end
+
+-------------------------------------------------------------------------------o
+-- twiss checks (optional)                                                   --o
+-------------------------------------------------------------------------------o
+
+local function prt_qs (seq, tw)
+  printf("% 5s:  q1 = % -.6f,  q2 = % -.6f\n", seq.name, tw. q1, tw. q2)
+  printf("      dq1 = % -.6f, dq2 = % -.6f\n",           tw.dq1, tw.dq2)
+end
+
+if twiss_check ~= 0 then
+
+  local tw1 = twiss {sequence=lhcb1, method=4, observe=1, chrom=true}
+  !local tw2 = twiss {sequence=lhcb2, method=4, observe=1, chrom=true}
+
+
+  prt_qs(lhcb1, tw1) ; tw1:write("twiss_b1_n.tfs", twcols)
+  !prt_qs(lhcb2, tw2) ; tw2:write("twiss_b2_n.tfs", twcols)
+
+  -- if twiss_check < 0 then os.exit() end
+end
+
+-------------------------------------------------------------------------------o
+-- set variables in MADX env                                                 --o
+-------------------------------------------------------------------------------o
+!local lhc = MADX['lhc'..'b1'] -- current sequence
+
+!lhc:dumpseq()
+!lhc:foreach{act, list={"MQT.14L8.B1"}}!class=quadrupole}
+
+
+lhc = MADX['lhc'..'b1']
+local function set_error (element)
+         
+  print(element.name)
+  ! Making absolute errors
+  local k_ref = element.k1
+  local k2_err = 2*k2_err*k_ref/0.017
+
+  element.dknl={{0, 0, {k2_err}, {k3_err}}}
+  element.dksl={{0, 0, {k2s_err}, {k3s_err}}}
+
+  if element.name == "MQXA.3L2" then
+  py:send(table.concat(element.dknl, ", "))
+  end
+
+  !print(table.concat(element.dknl, ", "))
+end
+
+local act = \e -> set_error(e)
+
+lhc:foreach{{action=act, pattern="{magnet_row['NAME']}"}}
+
+MADX:open_env()
+
+! Change knob
+!ksd1_a23b1 = ksd1_a23b1+err+corr;
+
+MADX:close_env()
+-------------------------------------------------------------------------------o
+-- twiss checks (optional)                                                   --o
+-------------------------------------------------------------------------------o
+
+if twiss_check ~= 0 then
+
+  local tw1 = twiss {sequence=lhcb1, method=4, observe=1, chrom=true}
+  !local tw2 = twiss {sequence=lhcb2, method=4, observe=1, chrom=true}
+
+  prt_qs(lhcb1, tw1) ; tw1:write("twiss_phase_b1_n.tfs", twcols)
+  !prt_qs(lhcb2, tw2) ; tw2:write("twiss_phase_b2_n.tfs", twcols)
+
+  if twiss_check < 0 then os.exit() end
+end
+
+--[[ ref values
+LHCB1
+q1  = 62.27504896
+q2  = 60.29512787
+dq1 = 15.1778898
+dq2 = 15.21652238
+
+LHCB2
+q1  = 62.27115164
+q2  = 60.29725754
+dq1 = 15.15613102
+dq2 = 15.23680003
+--]]
+
+-------------------------------------------------------------------------------o
+-- match                                                                     --o
+-------------------------------------------------------------------------------o
+
+
+-- knobs families and sectors names
+local knam = {'ksd1'}
+local snam = {'a23'}
+local gfs = {'400000','004000', '300000', '003000'}
+
+-- index of (IP,GNF)
+local idx_n = #gfs
+local idx_f = \i,j -> 2*((i-1)*idx_n+(j-1))
+
+-- loop over lhcb1 and lhcb2 ----------------
+for _,bn in ipairs{'b1'} do !,'b2'} do --
+
+local lhc = MADX['lhc'..bn] -- current sequence
+
+io.write("*** Running ", lhc.name, " ***\n")
+
+-- BPM Names
+
+local bpm_names = {}
+
+for i,element in pairs(lhc.__dat) do !ipairs(tw1:getcol'name') do
+  local name = element["name"]
+  !print(type(name)==string)
+  local typ = tostring(type(name))
+  if typ~="nil" then
+    if string.find(name, "BPM")~=nil then
+      table.insert(bpm_names, name)
+    end
+  end
+end
+
+-- list of IPs and GNFs
+local obs_points = bpm_names
+
+obs_points[1] = 'IP1'
+
+! First we need to cycle, for that we need a marker such as IP1, afterwards we track
+
+-- list of all knobs
+local kn = {}
+for _,ks in ipairs(knam) do
+for _,ss in ipairs(snam) do
+  kn[#kn+1] = ks .. '_' .. ss .. bn -- knob names
+end end
+
+-- create phase space damap
+local X0 = damap{nv=6, np=#kn, mo=5, po=1,
+                 vn=tblcat({'x','px','y','py','t','pt'}, kn)}
+
+local function prt_rdt (nf, kind)
+  local a = assert(nf[kind], "invalid kind '"..kind.."'")
+  for i,k in ipairs(a) do
+    local v = nf[kind][k]
+    printf("%4d: %s[%s] A=% .6e, C=% .6e, S=% .6e\n",i,kind,k,abs(v),real(v),imag(v))
+  end
+end
+
+-- compute RDTs
+local mthd = "trkrdt" -- trkrdt needs new release of MAD-NG
+local function get_nf(mthd)
+  local nf, mth = {}, mthd or "trkrdt"
+
+  if mth == "cycle" then       -- 1st method
+    for i,obs_point in ipairs(obs_points) do
+      io.write("** Tracking ", obs_point, "\n")
+      lhc:cycle('$start')
+      ! Cycling can only be done in marker points, not elements, such as IPs,
+      ! end or arc markers (CHECK WHERE IS SHOULD CYCLE AND IF IT AFFECTS THE WHOLE LHC)
+      local _, mflw = track{sequence=lhc, method=4, save=false, X0=X0}
+      nf[i] = normal(mflw[1]):analyse();
+      !nf[i].a:write("A_"..obs_point.."_cycle")
+    end
+
+  elseif mth == "trkrdt" then  -- 2nd method
+    io.write("** Tracking ", obs_points[1], "\n") !obs_points[1] must be a marker
+    lhc:cycle(obs_points[1])
+
+    local _, mflw = track{sequence=lhc, method=4, save=false, X0=X0}
+    local nf1 = normal(mflw[1]):analyse()
+
+    io.write("** Tracking RDT\n")
+    local X1 = nf1.a:real():set0(nf1.x0) ; X1.status = 'Aset'
+    local mtbl, mflw = track{sequence=lhc, method=4, savemap=true, X0=X1,
+                            range=obs_points[1].."/"..obs_points[#obs_points]}
+    for i,obs_point in ipairs(obs_points) do
+      nf[i] = nf1:analyse('gnf', mtbl[obs_point].__map)
+      !nf[i].a:write("A_"..ip.."_trkrdt")
+    end
+  end
+
+  return nf
+end
+
+-- run once for reference values
+local nf = get_nf(mthd)
+
+ -- monomial strings for all knobs
+local ks, ki = {}, #kn
+for i=0,ki do ks[i] = nf[1]:getks(i) end
+
+-- print reference some values
+
+local f = assert(io.open(string.format("RDT_BPMS_%s.csv", bn), "w")) !Different csv for each beam
+
+!Writing column names
+f:write("NAME\t")    
+for j, rdt in ipairs(gfs) do
+  f:write(string.format("RE_%s\tIM_%s\t", rdt, rdt))
+end
+f:write("\n")
+
+for i,obs_point in ipairs(obs_points) do
+  f:write(string.format("%s\t", obs_point))
+  !printf("%s: q1       = % -.6e\n", obs_point, nf[i]:q1{1}    )                      -- nf[i].q1                  )
+  !printf("%s: q1j1     = % -.6e\n", obs_point, nf[i]:anhx{1,0})                      -- nf[i].anh["2100"..knbs[0]])
+  !printf("%s: q2       = % -.6e\n", obs_point, nf[i]:q2{1}    )                      -- nf[i].q2                  )
+  !printf("%s: q2j2     = % -.6e\n", obs_point, nf[i]:anhy{0,1})                      -- nf[i].anh["0021"..knbs[0]])
+  for _,gf in ipairs(gfs) do
+    local v = nf[i].gnf[gf..ks[0]]
+    printf("%s: f%sr = % -.6e\n", obs_point, gf, real(v))                            -- real(nf[i].gnf[gf..knbs[0]]))
+    printf("%s: f%si = % -.6e\n", obs_point, gf, imag(v))                            -- imag(nf[i].gnf[gf..knbs[0]]))
+    f:write(string.format("%12.4f\t%12.4f\t", real(v), imag(v)))
+  end
+  !End of row
+  f:write("\n")
+end
+f:close()
+
+-- run once and quit
+-- os.exit()
+
+end -- loop over lhcb1 and lhcb2

@@ -7,8 +7,10 @@ from tqdm import tqdm
 
 import matplotlib.pyplot as plt
 
+from create_dataset import check_distance_from_ip
+
 def main():
-  df_input, df_output = load_mean_dataset("./xing_dataset", 1)
+  df_input, df_output = load_mean_dataset("./datasets/no_xing_dataset", 1000)
 
   norm_sex_rdts = ["RE_011100","RE_012000","RE_100200","RE_101100","RE_102000",'IM_102000',"RE_210000",'IM_210000',"RE_300000",'IM_300000']
 
@@ -39,7 +41,7 @@ def main():
   ERRvRDT = ERRvRDT.filter(regex="R1|L1|5", axis=0)
   #ERRvRDT = ERRvRDT.filter(regex="^M", axis=0)
 
-  print(ERRvRDT.applymap(abs).max().to_string())
+  #print(ERRvRDT.applymap(abs).max().to_string())
 
   #Variances of average RDT across the ring
   std_df=df_input.std()
@@ -66,11 +68,13 @@ def main():
 
   for rdt in [norm_sex_rdts, norm_oct_rdts, skew_sex_rdts, skew_oct_rdts]:
     mean_df_ = mean_df.loc[rdt]
-    f = plt.figure(figsize=(19, 15))
+    mean_df_ = calculate_amplitude_from_series(mean_df_)
+    print(mean_df_)
+    f = plt.figure(figsize=(10, 7))
     plt.xticks(range(mean_df_.shape[0]), mean_df_.index, fontsize=14, rotation=45, ha='right')
     plt.bar(mean_df_.index, mean_df_)
-    plt.title(r'RMS Espectral line strenght in horizontal: $h_{x,-} \propto j f_{jklm}$', fontsize=16)
-    #plt.title(r'RMS Espectral line strenght in vertical: $h_{y,-}l f_{jklm}$', fontsize=16)
+    #plt.title(r'RMS Espectral line strenght in horizontal: $h_{x,-} \propto j f_{jklm}$', fontsize=16)
+    plt.title(r'RMS Espectral line strenght in vertical: $h_{y,-} \propto l f_{jklm}$', fontsize=16)
     plt.show()
 
   f = plt.figure(figsize=(19, 15))
@@ -132,26 +136,25 @@ def load_mean_dataset(dataset_path, n_samples):
 
       #Check for missing values
       if len(X_df["RE_300000"])==563 and len(y_df["K2L"])==32:
-        """
+        
         # For spectral line strength
-        X_df.index = X_df['NAME']
-        X_df = X_df.drop(columns=['NAME', 'Unnamed: 81'])
-        X_df = X_df.apply(pd.to_numeric, errors='coerce')
-        j_list = np.array([int(rdt_name[3]) for rdt_name in X_df.columns])
-        mean_df = j_list*(np.sqrt(((X_df)**2).mean())).T
-        df_input = df_input.append(mean_df, ignore_index=True)
+        #X_df.index = X_df['NAME']
+        #X_df = X_df.drop(columns=['NAME', 'Unnamed: 81'])
+        #X_df = X_df.apply(pd.to_numeric, errors='coerce')
+        #j_list = np.array([int(rdt_name[5]) for rdt_name in X_df.columns])
+        #mean_df = j_list*(np.sqrt(((X_df)**2).mean())).T
+        #df_input = df_input.append(mean_df, ignore_index=True)
 
-        """
-        X_df["PART_OF_MEAS"] = X_df["NAME"].apply(check_distance_from_ip)
+        #X_df["PART_OF_MEAS"] = X_df["NAME"].apply(check_distance_from_ip)
 
-        X_df["RE_121000"] = np.where(X_df["PART_OF_MEAS"] == False, np.nan, X_df["RE_121000"])
-        X_df["IM_121000"] = np.where(X_df["PART_OF_MEAS"] == False, np.nan, X_df["IM_121000"])
+        #X_df["RE_121000"] = np.where(X_df["PART_OF_MEAS"] == False, np.nan, X_df["RE_121000"])
+        #X_df["IM_121000"] = np.where(X_df["PART_OF_MEAS"] == False, np.nan, X_df["IM_121000"])
 
-        plt.plot(range(len(X_df["RE_121000"])), np.sqrt(X_df["RE_121000"]**2+X_df["IM_121000"]**2))
-        plt.plot(range(len(X_df["RE_121000"])), X_df["IM_121000"])
-        plt.plot(range(len(X_df["RE_121000"])), X_df["RE_121000"])
+        #plt.plot(range(len(X_df["RE_121000"])), np.sqrt(X_df["RE_121000"]**2 + X_df["IM_121000"]**2))
+        #plt.plot(range(len(X_df["RE_121000"])), X_df["IM_121000"])
+        #plt.plot(range(len(X_df["RE_121000"])), X_df["RE_121000"])
 
-        print(np.sqrt(X_df["RE_300000"]**2+X_df["IM_300000"]**2).to_string())
+        #print(np.sqrt(X_df["RE_300000"]**2+X_df["IM_300000"]**2).to_string())
 
         X_df = X_df.apply(pd.to_numeric, errors='coerce')
         mean_df = (X_df-nominal_df).mean().T
@@ -173,23 +176,38 @@ def load_mean_dataset(dataset_path, n_samples):
     
   return df_input, df_output
 
-def check_distance_from_ip(name):
-    if name == "IP1":
-      return False
-    else:
-      position = name.split('.')[1]
-      position = position.split('R')[0]
-      position = position.split('L')[0]
-      distance = ''
-      for char in position:
-        if char.isdigit():
-          distance += char
-      if int(distance) <= 10:
-        return False
-      else:
-        return True
+def calculate_amplitude_from_series(data_series):
+    """
+    Calculate amplitude from a single Series with real and imaginary data.
+
+    Parameters:
+    - data_series: Series containing real and imaginary parts.
+
+    Returns:
+    - Series with amplitudes, named 'AM_identifier'.
+    """
+    amplitude_series = pd.Series(index=data_series.index)
+
+    # Iterate over the index of the input Series
+    for idx in data_series.index:
+        if idx.startswith('RE_'):
+            identifier = idx[3:]
+            imag_key = f'IM_{identifier}'
+
+            # Check if the corresponding imaginary key exists
+            if imag_key in data_series.index:
+                # Calculate amplitude and assign to the new Series
+                amplitude_series[f'f_{identifier}'] = (data_series[idx]**2 + data_series[imag_key]**2)**0.5
+
+    # Remove rows with NaN values
+    amplitude_series = amplitude_series.dropna()
+
+    return amplitude_series
 
 if __name__=="__main__":
   main()
 
   #%%
+import pandas as pd
+
+
