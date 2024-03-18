@@ -1,0 +1,25 @@
+KQX.R1      =             KQX.R1   ;
+KTQX1.R1    =             KTQX1.R1 ;
+KTQX2.R1    =             KTQX2.R1 ;
+KQX.R2      =             KQX.R2   ;
+KTQX1.R2    =             KTQX1.R2 ;
+KTQX2.R2    =             KTQX2.R2 ;
+KQX.R5      =             KQX.R5   ;
+KTQX1.R5    =             KTQX1.R5 ;
+KTQX2.R5    =             KTQX2.R5 ;
+KQX.R8      =             KQX.R8   ;
+KTQX1.R8    =             KTQX1.R8 ;
+KTQX2.R8    =             KTQX2.R8 ;
+
+
+MQXA.1L2->K1 = MQXA.1L2->K1 + (-3.60e-07);
+MQXA.1R2->K1 = MQXA.1R2->K1 + (1.62e-07);
+
+MQXA.3L2->K1 = MQXA.3L2->K1 + (-3.77e-07);
+MQXA.3R2->K1 = MQXA.3R2->K1 + (3.22e-07);
+
+MQXB.A2L2->K1 = MQXB.A2L2->K1 + (4.05e-07); 
+MQXB.A2R2->K1 = MQXB.A2R2->K1 + (-6.71e-07); 
+
+MQXB.B2L2->K1 = MQXB.B2L2->K1 + (4.05e-07);
+MQXB.B2R2->K1 = MQXB.B2R2->K1 + (-6.71e-07);

@@ -23,7 +23,7 @@ def main():
     twiss_b2 = tfs.read_tfs("./data_analysis/b2_nominal_monitors.dat").set_index("NAME")
     twiss_b1 = tfs.read_tfs("./data_analysis/b1_nominal_monitors.dat").set_index("NAME")
 
-    estimator = joblib.load("./md_models/triplets_phases_b1_corr_b2_corr_0.0001.pkl")
+    estimator = joblib.load("./md_models/triplet_phases_only_ridge_0.0001.pkl")
 
     phasecut_x = 0.4
     phasecut_y = 0.4
@@ -58,9 +58,8 @@ def main():
     meas_input = np.concatenate([delta_meas_mux_b1, delta_meas_muy_b1, delta_meas_mux_b2, delta_meas_muy_b2])
     
     pred_output = estimator.predict([meas_input])[0]
-
-    plot_example_errors(pred_output)
-    error_tfs = save_np_errors_tfs(pred_output, "pred_triplet_err.tfs")
+    
+    error_tfs = save_np_errors_tfs(pred_output, "pred_triplet_err.tfs") # For corrections -1!!
     tfs_to_local_corr(error_tfs)
     q2_k1l_values, q1_left_k1l, q1_right_k1l, q3_left_k1l, q3_right_k1l = compute_corrections(error_tfs.set_index("NAME"))
     print("KNOB VALUES: ", q2_k1l_values, q1_left_k1l, q1_right_k1l, q3_left_k1l, q3_right_k1l)
@@ -96,7 +95,7 @@ def save_np_errors_tfs(np_errors, filename):
 
     # Recons_df is a dataframe with the correct names and errors but not format
     recons_df = pd.DataFrame(columns=["NAME","K1L"])
-    recons_df.K1L = np_errors[:-4] # No mqt knob
+    recons_df.K1L = np_errors #[:-4] # No mqt knob
     recons_df.NAME = names[:32] #Only triplets
     
     for beam, error_tfs_model in enumerate([error_tfs_model_b2]):
@@ -106,15 +105,15 @@ def save_np_errors_tfs(np_errors, filename):
                 error_tfs_model.loc[i, 'K1L'] = recons_df.loc[recons_df['NAME'] == error_tfs_model.loc[i, 'NAME']].values[0][1]
     
     error_tfs_model_b2 = error_tfs_model_b2.loc[error_tfs_model_b2['K1L']!=0]
-    tfs.writer.write_tfs(tfs_file_path=f"./measurements/{filename}", data_frame=error_tfs_model_b2)
+    tfs.writer.write_tfs(tfs_file_path=f"./corrections/{filename}", data_frame=error_tfs_model_b2)
 
     return error_tfs_model_b2
 
 def tfs_to_local_corr(tfs_errors):
     tfs_errors.index = tfs_errors.NAME
 
-    Q2_LEN = 5.5
-    Q1Q3_LEN = 6.37
+    Q2_LEN = -5.5 # Negative sign to make corrections!
+    Q1Q3_LEN = -6.37
 
     for IP_n in np.array([1,2,5,8]):
         with open("./corrections/IP_corrections_template.txt".format(IP_n), 'r') as template:
@@ -152,7 +151,9 @@ def compute_corrections(tfs_file):
         q3_left_values.append(tfs_file.loc[name, "K1L"])
     for name in Q3_RIGHT:
         q3_right_values.append(tfs_file.loc[name, "K1L"])
-    return np.array(q2_group_values), np.array(q1_left_values), np.array(q1_right_values), np.array(q3_left_values), np.array(q3_right_values)
+
+    corrections = -1*np.array(q2_group_values), -1*np.array(q1_left_values), -1*np.array(q1_right_values), -1*np.array(q3_left_values), -1*np.array(q3_right_values)
+    return corrections
 
 
 if __name__ == "__main__":

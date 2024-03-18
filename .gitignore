@@ -1,21 +1,18 @@
 Literature/
 
-src/generate_data/data/
-src/generate_data/data_45cm/
-src/generate_data/data_best_know_md/
-src/generate_data/data_global_corr_md/
-src/generate_data/data_local_corr_md/
-src/generate_data/data_only_arcs/
-src/generate_data/data_pre_quench/
-src/generate_data/estimators/
-src/generate_data/estimators_pre_quench/
+src/linear/data*/
+src/linear/estimators/
+src/linear/estimators_pre_quench/
 
 src/md/measurements/
 src/md/md_models/
+
+src/md_light/measurements/
+src/md_light/md_models/
 
 src/twiss_reconstruction/models/
 
 afs/
 
-src/supervised_learning/models
-src/supervised_learning/datasets
+src/non_linear/models
+src/non_linear/datasets

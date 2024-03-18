@@ -1,6 +1,0 @@
-***pymad.recv: binary data 4 bytes
-***pymad.recv: [io.stdout:setvbuf('line')
-    py:send(1)] 40 bytes
-***pymad.send: [int_] 4 bytes
-***pymad.send: binary data 4 bytes
-***pymad.recv: binary data 4 bytes
